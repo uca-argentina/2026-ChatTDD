@@ -22,6 +22,18 @@ Game class >> withSpaces: amountOfSpaces [
 	^(self new)initializeSpaces: amountOfSpaces.
 ]
 
+{ #category : 'as yet unclassified' }
+Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
+	amountOfSpaces<1 ifTrue:[
+		Error signal: 'Board spaces cannot be less than 1'].
+	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips.
+]
+
+{ #category : 'as yet unclassified' }
+Game >> amountOfShips [
+	^ships size
+]
+
 { #category : 'testing' }
 Game >> hasEnded [
 	^(ships anySatisfy: [:ship | ship>=totalSpaces]).
@@ -32,6 +44,14 @@ Game >> initializeSpaces: amountOfSpaces [
 
 	totalSpaces := amountOfSpaces.
 	ships := { 0.0. 0 }.
+	player:=1
+]
+
+{ #category : 'initialization' }
+Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips [ 
+	totalSpaces := amountOfSpaces.
+	ships := OrderedCollection new.
+	1 to: amountOfShips do: [ :i | ships add:0 ].
 	player:=1
 ]
 
