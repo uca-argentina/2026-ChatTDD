@@ -81,6 +81,34 @@ Tests >> test08WhenThereAre2ShipsAndOneMoves3AndOtherMoves5ThenOneIsOn3AndTheOth
 ]
 
 { #category : 'tests' }
+Tests >> test09WhenFirstShipWinsThenTheGameEnds [
+
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip:7.
+	aGame moveShip.
+	self assert: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+Tests >> test10WhenSecondShipWinsThenTheGameEnds [
+
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip.
+	aGame moveShip:7.
+	self assert: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+Tests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
+
+		|aGame|
+	aGame:= Game withSpaces: 7 andShips: 4.
+	self assert: (aGame amountOfShips = 4).
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy
