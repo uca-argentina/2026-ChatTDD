@@ -36,7 +36,7 @@ Game >> hasEnded [
 Game >> initializeSpaces: amountOfSpaces [
 
 	totalSpaces := amountOfSpaces.
-	ships := { 0.0 }.
+	ships := { 0. 0 }.
 	player:=1
 ]
 
@@ -46,6 +46,15 @@ Game >> moveShip [
 	| tmp1 |
 	tmp1 := ships at: player.
 	ships at: player put: tmp1 + 5.
+	player := player \\ ships size + 1
+]
+
+{ #category : 'as yet unclassified' }
+Game >> moveShip: anInteger [ 
+
+	| tmp1 |
+	tmp1 := ships at: player.
+	ships at: player put: tmp1 + anInteger .
 	player := player \\ ships size + 1
 ]
 
