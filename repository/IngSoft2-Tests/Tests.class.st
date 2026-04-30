@@ -71,6 +71,16 @@ Tests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
 ]
 
 { #category : 'tests' }
+Tests >> test08WhenThereAre2ShipsAndOneMoves3AndOtherMoves5ThenOneIsOn3AndTheOtherOneOn5 [
+
+	|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip.
+	aGame moveShip:3.
+	self assert: (((aGame shipPosition: 2)= 3) and: ((aGame shipPosition: 1)= 5)).
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy

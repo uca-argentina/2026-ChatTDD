@@ -50,6 +50,15 @@ Game >> moveShip [
 ]
 
 { #category : 'as yet unclassified' }
+Game >> moveShip: anInteger [ 
+
+	| tmp1 |
+	tmp1 := ships at: player.
+	ships at: player put: tmp1 + anInteger .
+	player := player \\ ships size + 1
+]
+
+{ #category : 'as yet unclassified' }
 Game >> shipPosition: shipNumber [
 
 	^ ships at: shipNumber
