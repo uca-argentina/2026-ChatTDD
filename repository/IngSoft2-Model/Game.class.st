@@ -2,8 +2,9 @@ Class {
 	#name : 'Game',
 	#superclass : 'Object',
 	#instVars : [
-		'position',
-		'totalSpaces'
+		'totalSpaces',
+		'ships',
+		'player'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -21,18 +22,35 @@ Game class >> withSpaces: amountOfSpaces [
 	^(self new)initializeSpaces: amountOfSpaces.
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> amountOfShips [
+	^ships size
+]
+
 { #category : 'testing' }
 Game >> hasEnded [
-	^(position>=totalSpaces).
+	^(ships anySatisfy: [:ship | ship>=totalSpaces]).
 ]
 
 { #category : 'as yet unclassified' }
-Game >> initializeSpaces: anInteger [
-	position:= 0.
-	totalSpaces:= anInteger 
+Game >> initializeSpaces: amountOfSpaces [
+
+	totalSpaces := amountOfSpaces.
+	ships := { 0. 0 }.
+	player:=1
 ]
 
 { #category : 'as yet unclassified' }
 Game >> moveShip [
-	position:=5.
+
+	| tmp1 |
+	tmp1 := ships at: player.
+	ships at: player put: tmp1 + 5.
+	player := player \\ ships size + 1
+]
+
+{ #category : 'as yet unclassified' }
+Game >> shipPosition: shipNumber [
+
+	^ ships at: shipNumber
 ]

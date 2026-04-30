@@ -55,6 +55,22 @@ Tests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 ]
 
 { #category : 'tests' }
+Tests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	self assert: ((aGame amountOfShips)= 2).
+]
+
+{ #category : 'tests' }
+Tests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip.
+	aGame moveShip.
+	self assert: ((aGame shipPosition: 2)= 5).
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy
