@@ -36,7 +36,7 @@ Game >> hasEnded [
 Game >> initializeSpaces: amountOfSpaces [
 
 	totalSpaces := amountOfSpaces.
-	ships := { 0.0 }.
+	ships := { 0. 0 }.
 	player:=1
 ]
 

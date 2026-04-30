@@ -57,7 +57,7 @@ Tests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 { #category : 'tests' }
 Tests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 		|aGame|
-	aGame:= Game withSpaces: 7 andShips: 2.
+	aGame:= Game withSpaces: 7.
 	self assert: ((aGame amountOfShips)= 2).
 ]
 
