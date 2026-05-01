@@ -85,8 +85,9 @@ Tests >> test09WhenFirstShipWinsThenTheGameEnds [
 
 		|aGame|
 	aGame:= Game withSpaces: 7.
-	aGame moveShip:7.
+	aGame moveShip:2.
 	aGame moveShip.
+	aGame moveShip:5.
 	self assert: (aGame hasEnded).
 ]
 
@@ -122,6 +123,32 @@ Tests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
 	aGame:= Game default.
 	aGame moveShip:1.
 	self assert: (aGame declareWinner = 'No winner').
+]
+
+{ #category : 'tests' }
+Tests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
+		|aGame |
+	aGame:= Game withSpaces:5 andShips:2.
+	aGame moveShip:1.
+	aGame moveShip.
+	self assert: (aGame declareWinner = 2).
+]
+
+{ #category : 'tests' }
+Tests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
+		|aGame |
+		
+		self
+			should:[
+				aGame:= Game withSpaces: 5 andShips: 2.
+				aGame moveShip.
+				aGame moveShip.
+				]
+			raise: Error
+			withExceptionDo:[ :error |
+				self
+					assert: error messageText
+					equals: 'Game is over. Ships cannot move anymore.']	
 ]
 
 { #category : 'tests' }

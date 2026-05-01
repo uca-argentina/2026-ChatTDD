@@ -36,7 +36,7 @@ Game >> amountOfShips [
 
 { #category : 'as yet unclassified' }
 Game >> declareWinner [
-	self hasEnded ifTrue: [ ^1 ] ifFalse: [ ^'No winner' ].
+	self hasEnded ifTrue: [ ^ships detectIndex: [:each | each >= 5] ] ifFalse: [ ^'No winner' ].
 ]
 
 { #category : 'testing' }
@@ -64,9 +64,14 @@ Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips [
 { #category : 'as yet unclassified' }
 Game >> moveShip [
 
+
 	| tmp1 |
+
+	self hasEnded ifTrue:[
+		Error signal: 'Game is over. Ships cannot move anymore.'].
+	
 	tmp1 := ships at: player.
-	ships at: player put: tmp1 + 5.
+	ships at: player put: tmp1 + 5 .
 	player := player \\ ships size + 1
 ]
 
@@ -74,6 +79,10 @@ Game >> moveShip [
 Game >> moveShip: anInteger [ 
 
 	| tmp1 |
+
+	self hasEnded ifTrue:[
+		Error signal: 'Game is over. Ships cannot move anymore.'].
+	
 	tmp1 := ships at: player.
 	ships at: player put: tmp1 + anInteger .
 	player := player \\ ships size + 1
