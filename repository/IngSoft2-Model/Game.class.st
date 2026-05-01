@@ -39,6 +39,16 @@ Game >> declareWinner [
 	self hasEnded ifTrue: [ ^ships detectIndex: [:each | each >= 5] ] ifFalse: [ ^'No winner' ].
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> finalPositionOfCurrentPlayer [
+	| position |
+	self hasEnded ifFalse:[
+		Error signal: 'Game is not over. Final positions are not define yet.'].
+	(ships at: 1) > totalSpaces ifTrue: [ position := totalSpaces ] ifFalse: [ position := (ships at: 1) ].
+	
+	^ { 'Player 1' . 'Position ', position asString }.
+]
+
 { #category : 'testing' }
 Game >> hasEnded [
 	^(ships anySatisfy: [:ship | ship>=totalSpaces]).
