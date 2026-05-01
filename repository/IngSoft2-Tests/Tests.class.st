@@ -109,6 +109,22 @@ Tests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 ]
 
 { #category : 'tests' }
+Tests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
+		|aGame |
+	aGame:= Game default.
+	aGame moveShip:5.
+	self assert: (aGame declareWinner = 1).
+]
+
+{ #category : 'tests' }
+Tests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
+		|aGame |
+	aGame:= Game default.
+	aGame moveShip:1.
+	self assert: (aGame declareWinner = 'No winner').
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy

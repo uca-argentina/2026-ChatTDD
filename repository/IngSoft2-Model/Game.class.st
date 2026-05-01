@@ -12,7 +12,7 @@ Class {
 
 { #category : 'accessing' }
 Game class >> default [
-	^(self new)initializeSpaces: 5.
+	^(self new)initializeSpaces: 5 andShips: 1.
 ]
 
 { #category : 'as yet unclassified' }
@@ -32,6 +32,11 @@ Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
 { #category : 'as yet unclassified' }
 Game >> amountOfShips [
 	^ships size
+]
+
+{ #category : 'as yet unclassified' }
+Game >> declareWinner [
+	self hasEnded ifTrue: [ ^1 ] ifFalse: [ ^'No winner' ].
 ]
 
 { #category : 'testing' }
