@@ -12,7 +12,7 @@ Class {
 
 { #category : 'accessing' }
 Game class >> default [
-	^(self new)initializeSpaces: 5.
+	^(self new)initializeSpaces: 5 andShips: 1.
 ]
 
 { #category : 'as yet unclassified' }
@@ -23,8 +23,20 @@ Game class >> withSpaces: amountOfSpaces [
 ]
 
 { #category : 'as yet unclassified' }
+Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
+	amountOfSpaces<1 ifTrue:[
+		Error signal: 'Board spaces cannot be less than 1'].
+	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips .
+]
+
+{ #category : 'as yet unclassified' }
 Game >> amountOfShips [
 	^ships size
+]
+
+{ #category : 'as yet unclassified' }
+Game >> declareWinner [
+	self hasEnded ifTrue: [ ^ships detectIndex: [:each | each >= 5] ] ifFalse: [ ^'No winner' ].
 ]
 
 { #category : 'testing' }
@@ -40,12 +52,26 @@ Game >> initializeSpaces: amountOfSpaces [
 	player:=1
 ]
 
+{ #category : 'initialization' }
+Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips [
+
+	totalSpaces := amountOfSpaces.
+	ships := OrderedCollection new.
+	1 to: amountOfShips do: [ :i | ships add: 0 ].
+	player:=1
+]
+
 { #category : 'as yet unclassified' }
 Game >> moveShip [
 
+
 	| tmp1 |
+
+	self hasEnded ifTrue:[
+		Error signal: 'Game is over. Ships cannot move anymore.'].
+	
 	tmp1 := ships at: player.
-	ships at: player put: tmp1 + 5.
+	ships at: player put: tmp1 + 5 .
 	player := player \\ ships size + 1
 ]
 
@@ -53,6 +79,10 @@ Game >> moveShip [
 Game >> moveShip: anInteger [ 
 
 	| tmp1 |
+
+	self hasEnded ifTrue:[
+		Error signal: 'Game is over. Ships cannot move anymore.'].
+	
 	tmp1 := ships at: player.
 	ships at: player put: tmp1 + anInteger .
 	player := player \\ ships size + 1

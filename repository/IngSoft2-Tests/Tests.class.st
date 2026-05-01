@@ -81,6 +81,77 @@ Tests >> test08WhenThereAre2ShipsAndOneMoves3AndOtherMoves5ThenOneIsOn3AndTheOth
 ]
 
 { #category : 'tests' }
+Tests >> test09WhenFirstShipWinsThenTheGameEnds [
+
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip:2.
+	aGame moveShip.
+	aGame moveShip:5.
+	self assert: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+Tests >> test10WhenSecondShipWinsThenTheGameEnds [
+
+		|aGame|
+	aGame:= Game withSpaces: 7.
+	aGame moveShip.
+	aGame moveShip:7.
+	self assert: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+Tests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
+
+		|aGame|
+	aGame:= Game withSpaces: 7 andShips: 4.
+	self assert: (aGame amountOfShips = 4).
+]
+
+{ #category : 'tests' }
+Tests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
+		|aGame |
+	aGame:= Game default.
+	aGame moveShip:5.
+	self assert: (aGame declareWinner = 1).
+]
+
+{ #category : 'tests' }
+Tests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
+		|aGame |
+	aGame:= Game default.
+	aGame moveShip:1.
+	self assert: (aGame declareWinner = 'No winner').
+]
+
+{ #category : 'tests' }
+Tests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
+		|aGame |
+	aGame:= Game withSpaces:5 andShips:2.
+	aGame moveShip:1.
+	aGame moveShip.
+	self assert: (aGame declareWinner = 2).
+]
+
+{ #category : 'tests' }
+Tests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
+		|aGame |
+		
+		self
+			should:[
+				aGame:= Game withSpaces: 5 andShips: 2.
+				aGame moveShip.
+				aGame moveShip.
+				]
+			raise: Error
+			withExceptionDo:[ :error |
+				self
+					assert: error messageText
+					equals: 'Game is over. Ships cannot move anymore.']	
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy
