@@ -16,7 +16,7 @@ Tests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 Tests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 		|aGame |
 	aGame:= Game default.
-	aGame moveShip.
+	aGame play.
 	self assert: (aGame hasEnded).
 ]
 
@@ -24,7 +24,7 @@ Tests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 Tests >> test03WhenTheShipMovesButDoesntCrossFinishLineThenTheGameDoesNotEnd [
 		|aGame|
 	aGame:= Game withSpaces: 7.
-	aGame moveShip.
+	aGame play.
 	self deny: (aGame hasEnded).
 ]
 
@@ -65,39 +65,42 @@ Tests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 Tests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
 		|aGame|
 	aGame:= Game withSpaces: 7.
-	aGame moveShip.
-	aGame moveShip.
+	aGame play.
+	aGame play.
 	self assert: ((aGame shipPosition: 2)= 5).
 ]
 
 { #category : 'tests' }
 Tests >> test08WhenThereAre2ShipsAndOneMoves3AndOtherMoves5ThenOneIsOn3AndTheOtherOneOn5 [
 
-	|aGame|
-	aGame:= Game withSpaces: 7.
-	aGame moveShip.
-	aGame moveShip:3.
+	|aGame aFixedDie|
+	aFixedDie := FixedDie thatRolls: {5. 3}.
+	aGame:= Game withSpaces: 7 andDice: aFixedDie.
+	aGame play.
+	aGame play.
 	self assert: (((aGame shipPosition: 2)= 3) and: ((aGame shipPosition: 1)= 5)).
 ]
 
 { #category : 'tests' }
 Tests >> test09WhenFirstShipWinsThenTheGameEnds [
 
-		|aGame|
-	aGame:= Game withSpaces: 7.
-	aGame moveShip:2.
-	aGame moveShip.
-	aGame moveShip:5.
+		|aGame aFixedDie |
+	aFixedDie := FixedDie thatRolls: {2. 5. 5.}.
+	aGame:= Game withSpaces: 7 andDice: aFixedDie.
+	aGame play.
+	aGame play.
+	aGame play.
 	self assert: (aGame hasEnded).
 ]
 
 { #category : 'tests' }
 Tests >> test10WhenSecondShipWinsThenTheGameEnds [
 
-		|aGame|
-	aGame:= Game withSpaces: 7.
-	aGame moveShip.
-	aGame moveShip:7.
+		|aGame aFixedDie |
+	aFixedDie := FixedDie thatRolls: {5. 7.}.
+	aGame:= Game withSpaces: 7 andDice: aFixedDie.
+	aGame play.
+	aGame play.
 	self assert: (aGame hasEnded).
 ]
 
@@ -113,7 +116,7 @@ Tests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 Tests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 		|aGame |
 	aGame:= Game default.
-	aGame moveShip:5.
+	aGame play.
 	self assert: (aGame declareWinner = 1).
 ]
 
@@ -127,10 +130,12 @@ Tests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
 
 { #category : 'tests' }
 Tests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
-		|aGame |
-	aGame:= Game withSpaces:5 andShips:2.
-	aGame moveShip:1.
-	aGame moveShip.
+		
+	|aGame aFixedDie |
+	aFixedDie := FixedDie thatRolls: {1. 7.}.
+	aGame:= Game withSpaces: 7 andShips:2 andDice: aFixedDie.
+	aGame play.
+	aGame play.
 	self assert: (aGame declareWinner = 2).
 ]
 
@@ -141,8 +146,8 @@ Tests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 		self
 			should:[
 				aGame:= Game withSpaces: 5 andShips: 2.
-				aGame moveShip.
-				aGame moveShip.
+				aGame play.
+				aGame play.
 				]
 			raise: Error
 			withExceptionDo:[ :error |
@@ -153,20 +158,22 @@ Tests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 
 { #category : 'tests' }
 Tests >> test16WhenTheGameEndedThenFinalPositionOfShip1Is7 [
-		|aGame |
-	aGame:= Game withSpaces:7 andShips:1.
-	aGame moveShip:2.
-	aGame moveShip.
-	self assert: (aGame finalPositionOfCurrentPlayer = {'Player 1'. 'Position 7'}).
+	|aGame aFixedDie |
+	aFixedDie := FixedDie thatRolls: {7.}.
+	aGame:= Game defaultWithDice: aFixedDie.
+	aGame play.
+	self assert: (aGame finalPositionOfCurrentPlayer = {'Player 1'. 'Position 5'}).
 ]
 
 { #category : 'tests' }
 Tests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefine [
-		|aGame |
+	|aGame aFixedDie |
+
 	self
 			should:[
-				aGame:= Game default.
-				aGame moveShip: 1.
+				aFixedDie := FixedDie thatRolls: {3.}.
+				aGame:= Game defaultWithDice: aFixedDie.
+				aGame play.
 				aGame finalPositionOfCurrentPlayer.
 				]
 			raise: Error
@@ -178,18 +185,21 @@ Tests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefine [
 
 { #category : 'tests' }
 Tests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
-		|aGame |
-	aGame:= Game default .
-	aGame moveShip:8.
+	| aFixedDie aGame |
+	aFixedDie := FixedDie thatRolls: {8.}.
+	aGame:= Game defaultWithDice: aFixedDie.
+	
+	aGame play.
 	self assert: (aGame finalPositionOfCurrentPlayer = {'Player 1'. 'Position 5'}).
 ]
 
 { #category : 'tests' }
 Tests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFinalPosition [
-		|aGame |
-	aGame:= Game withSpaces: 5 andShips: 2.
-	aGame moveShip:4.
-	aGame moveShip:5.
+	|aGame aFixedDie |
+	aFixedDie := FixedDie thatRolls: {4. 5.}.
+	aGame:= Game withSpaces: 5 andShips:2 andDice: aFixedDie.
+	aGame play.
+	aGame play.
 	self assert: (aGame finalPositions = {{'Player 1'. 'Position 4'} . {'Player 2'. 'Position 5'}}).
 ]
 
