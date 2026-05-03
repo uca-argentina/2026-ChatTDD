@@ -216,6 +216,43 @@ Tests >> test20WhenAGameHasMultipleDiceThenTheShipMovesTheSumOfTheDice [
 ]
 
 { #category : 'tests' }
+Tests >> test21WhenGameHasOneDieWith6SidesThenTheShipMovesBetween1and6 [
+
+|aGame aDie |
+	
+    aDie := Die default.
+
+    aGame:= Game withSpaces: 7 andDice: {aDie. }.
+    aGame play.
+    self assert: (((aGame shipPosition:1 )>=1) and: ((aGame shipPosition:1 )<=6)).
+]
+
+{ #category : 'tests' }
+Tests >> test22WhenGameHasOneDieWith10SidesThenTheShipMovesBetween1and3 [
+
+|aGame aDie |
+	
+    aDie := Die withSides: 3.
+
+    aGame:= Game withSpaces: 3 andDice: {aDie. }.
+    aGame play.
+
+    self assert: (((aGame shipPosition:1 )>=1) and: ((aGame shipPosition:1 )<=3)).
+]
+
+{ #category : 'tests' }
+Tests >> test23WhenGameHas2DieWith10And6SidesSidesThenTheShipMovesBetween1and16 [
+
+|aGame aDie anotherDie |
+	
+    aDie := Die withSides: 10.
+	 anotherDie := Die default.
+    aGame:= Game withSpaces: 10 andDice: {aDie. anotherDie. }.
+    aGame play.
+    self assert: (((aGame shipPosition:1 )>=1) and: ((aGame shipPosition:1 )<=16)).
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy
