@@ -185,6 +185,15 @@ Tests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
 ]
 
 { #category : 'tests' }
+Tests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFinalPosition [
+		|aGame |
+	aGame:= Game withSpaces: 5 andShips: 2.
+	aGame moveShip:4.
+	aGame moveShip:5.
+	self assert: (aGame finalPositions = {{'Player 1'. 'Position 4'} . {'Player 2'. 'Position 5'}}).
+]
+
+{ #category : 'tests' }
 Tests >> testDummy [
 
 	self assert: Dummy new isDummy

@@ -44,9 +44,27 @@ Game >> finalPositionOfCurrentPlayer [
 	| position |
 	self hasEnded ifFalse:[
 		Error signal: 'Game is not over. Final positions are not define yet.'].
-	(ships at: 1) > totalSpaces ifTrue: [ position := totalSpaces ] ifFalse: [ position := (ships at: 1) ].
+	(ships at: player) > totalSpaces ifTrue: [ position := totalSpaces ] ifFalse: [ position := (ships at: player) ].
 	
-	^ { 'Player 1' . 'Position ', position asString }.
+	^ { 'Player ', player asString . 'Position ', position asString }. 
+]
+
+{ #category : 'as yet unclassified' }
+Game >> finalPositions [
+    | results |
+
+    self hasEnded ifFalse: [
+        Error signal: 'Game is not over. Final positions are not defined yet.'
+    ].
+
+    results := OrderedCollection new.
+
+    1 to: ships size do: [:i |
+        player := i.
+        results add: self finalPositionOfCurrentPlayer
+    ].
+
+    ^ results asArray
 ]
 
 { #category : 'testing' }
