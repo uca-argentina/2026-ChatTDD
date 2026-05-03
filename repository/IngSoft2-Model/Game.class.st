@@ -16,7 +16,7 @@ Game class >> default [
 
 	| aFixedDie |
 	aFixedDie := FixedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: 5 andShips: 1 withDice: aFixedDie.
+	^(self new)initializeSpaces: 5 andShips: 1 withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
@@ -30,7 +30,7 @@ Game class >> withSpaces: amountOfSpaces [
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
 	aFixedDie := FixedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: amountOfSpaces andShips: 2 withDice: aFixedDie.
+	^(self new)initializeSpaces: amountOfSpaces andShips: 2 withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
@@ -46,7 +46,7 @@ Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
 	aFixedDie := FixedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: aFixedDie.
+	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
@@ -126,9 +126,10 @@ Game >> moveShip: anInteger [
 
 { #category : 'as yet unclassified' }
 Game >> play [
-	| tmp1 dieRoll|
+	| tmp1 dieRoll dieRolls|
 	
-	dieRoll := die roll.
+	dieRolls := die collect: [:each | each roll].
+	dieRoll := dieRolls sum.
 
 	self hasEnded ifTrue:[
 		Error signal: 'Game is over. Ships cannot move anymore.'].
