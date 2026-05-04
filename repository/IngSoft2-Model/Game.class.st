@@ -20,8 +20,8 @@ Game class >> default [
 ]
 
 { #category : 'as yet unclassified' }
-Game class >> defaultWithDice: aDie [ 
-		^(self new)initializeSpaces: 5 andShips: 1 withDice: aDie.
+Game class >> defaultWithDice: dice [
+		^(self new)initializeSpaces: 5 andShips: 1 withDice: dice.
 ]
 
 { #category : 'as yet unclassified' }
@@ -69,31 +69,18 @@ Game >> declareWinner [
 ]
 
 { #category : 'as yet unclassified' }
-Game >> finalPositionOfCurrentPlayer [
-	| position |
-	self hasEnded ifFalse:[
-		Error signal: 'Game is not over. Final positions are not define yet.'].
-	(ships at: player) > totalSpaces ifTrue: [ position := totalSpaces ] ifFalse: [ position := (ships at: player) ].
-	
-	^ { 'Player ', player asString . 'Position ', position asString }. 
-]
-
-{ #category : 'as yet unclassified' }
 Game >> finalPositions [
-    | results |
 
-    self hasEnded ifFalse: [
+    | position |
+	self hasEnded ifFalse: [
         Error signal: 'Game is not over. Final positions are not defined yet.'
     ].
 
-    results := OrderedCollection new.
+	1 to: (ships size) do: [ :i | (ships at: i) > totalSpaces ifTrue: [ ships at: i put: totalSpaces ] ].
+	
+    ^ ships
 
-    1 to: ships size do: [:i |
-        player := i.
-        results add: self finalPositionOfCurrentPlayer
-    ].
 
-    ^ results asArray
 ]
 
 { #category : 'testing' }
@@ -112,31 +99,33 @@ Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: gameD
 ]
 
 { #category : 'as yet unclassified' }
-Game >> moveShip: anInteger [ 
+Game >> moveShip: roll [ 
 
-	| tmp1 |
+	| posicionActual |
 
 	self hasEnded ifTrue:[
 		Error signal: 'Game is over. Ships cannot move anymore.'].
 	
-	tmp1 := ships at: player.
-	ships at: player put: tmp1 + anInteger .
+	posicionActual := ships at: player.
+	ships at: player put: posicionActual + roll .
 	player := player \\ ships size + 1
 ]
 
 { #category : 'as yet unclassified' }
 Game >> play [
-	| tmp1 dieRoll dieRolls|
+	| dieRoll dieRolls|
 	
 	dieRolls := die collect: [:each | each roll].
 	dieRoll := dieRolls sum.
 
-	self hasEnded ifTrue:[
-		Error signal: 'Game is over. Ships cannot move anymore.'].
-	
-	tmp1 := ships at: player.
-	ships at: player put: tmp1 + dieRoll .
-	player := player \\ ships size + 1
+	self moveShip: dieRoll .
+]
+
+{ #category : 'as yet unclassified' }
+Game >> playUntilEnds [
+	[ self hasEnded ] whileFalse: [ 
+    self play.
+] 
 ]
 
 { #category : 'as yet unclassified' }
