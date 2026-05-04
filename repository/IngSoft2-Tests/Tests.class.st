@@ -157,16 +157,16 @@ Tests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 ]
 
 { #category : 'tests' }
-Tests >> test16WhenTheGameEndedThenFinalPositionOfShip1Is7 [
+Tests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
 	|aGame aFixedDie |
-	aFixedDie := FixedDie thatRolls: {7.}.
+	aFixedDie := FixedDie thatRolls: {5.}.
 	aGame:= Game defaultWithDice: {aFixedDie}.
 	aGame play.
-	self assert: (aGame finalPositionOfCurrentPlayer = {'Player 1'. 'Position 5'}).
+	self assert: (aGame finalPositions = {5} asOrderedCollection ).
 ]
 
 { #category : 'tests' }
-Tests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefine [
+Tests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefined [
 	|aGame aFixedDie |
 
 	self
@@ -174,13 +174,13 @@ Tests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefine [
 				aFixedDie := FixedDie thatRolls: {3.}.
 				aGame:= Game defaultWithDice: {aFixedDie}.
 				aGame play.
-				aGame finalPositionOfCurrentPlayer.
+				aGame finalPositions .
 				]
 			raise: Error
 			withExceptionDo:[ :error |
 				self
 					assert: error messageText
-					equals: 'Game is not over. Final positions are not define yet.']	
+					equals: 'Game is not over. Final positions are not defined yet.']	
 ]
 
 { #category : 'tests' }
@@ -190,7 +190,7 @@ Tests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
 	aGame:= Game defaultWithDice: {aFixedDie}.
 	
 	aGame play.
-	self assert: (aGame finalPositionOfCurrentPlayer = {'Player 1'. 'Position 5'}).
+	self assert: (aGame finalPositions = {8} asOrderedCollection ).
 ]
 
 { #category : 'tests' }
@@ -200,7 +200,7 @@ Tests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFinalPosition
 	aGame:= Game withSpaces: 5 andShips:2 andDice: {aFixedDie}.
 	aGame play.
 	aGame play.
-	self assert: (aGame finalPositions = {{'Player 1'. 'Position 4'} . {'Player 2'. 'Position 5'}}).
+	self assert: (aGame finalPositions = {4. 5} asOrderedCollection ).
 ]
 
 { #category : 'tests' }
@@ -250,6 +250,18 @@ Tests >> test23WhenGameHas2DieWith10And6SidesSidesThenTheShipMovesBetween1and16 
     aGame:= Game withSpaces: 10 andDice: {aDie. anotherDie. }.
     aGame play.
     self assert: (((aGame shipPosition:1 )>=1) and: ((aGame shipPosition:1 )<=16)).
+]
+
+{ #category : 'tests' }
+Tests >> test24WhenMessagePlayUntilEndsIsCalledThenTheGameCanAutomaticallyEndWhenSomeOneWIns [
+
+|aGame aDie anotherDie |
+	
+    aDie := Die withSides: 10.
+	 anotherDie := Die default.
+    aGame:= Game withSpaces: 100 andShips: 4 andDice: {aDie. anotherDie. }.
+    aGame playUntilEnds.
+    self assert: (aGame hasEnded ).
 ]
 
 { #category : 'tests' }
