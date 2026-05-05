@@ -13,17 +13,17 @@ Ship class >> default [
 	^ (self new) initializePosition.
 ]
 
-{ #category : 'accessing' }
+{ #category : 'execution' }
 Ship >> fixPosition: totalSpaces [
 	(position > totalSpaces) ifTrue: [position := totalSpaces ].
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 Ship >> givePosition [
 	^ position .
 ]
 
-{ #category : 'testing' }
+{ #category : 'execution' }
 Ship >> hasCrossed: finishLine [
 	^ (position >= finishLine).
 ]
@@ -33,7 +33,7 @@ Ship >> initializePosition [
 	position:= 0.
 ]
 
-{ #category : 'accessing' }
+{ #category : 'execution' }
 Ship >> move: roll [ 
 	position := position + roll.
 ]
