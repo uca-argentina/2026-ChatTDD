@@ -64,28 +64,38 @@ Game >> amountOfShips [
 ]
 
 { #category : 'as yet unclassified' }
+Game >> changePlayer [
+
+	^ player := player \\ ships size + 1
+]
+
+{ #category : 'as yet unclassified' }
 Game >> declareWinner [
-	self hasEnded ifTrue: [ ^ships detectIndex: [:each | each >= 5] ] ifFalse: [ ^'No winner' ].
+
+	self hasEnded ifFalse: [ ^ 'No winner' ].
+
+	^ ships indexOf: (ships detect: [ :each | each hasCrossed: totalSpaces ]).
 ]
 
 { #category : 'as yet unclassified' }
 Game >> finalPositions [
 
-    | position |
+	| finalPositions |
 	self hasEnded ifFalse: [
         Error signal: 'Game is not over. Final positions are not defined yet.'
     ].
 
-	1 to: (ships size) do: [ :i | (ships at: i) > totalSpaces ifTrue: [ ships at: i put: totalSpaces ] ].
+	ships := ships collect: [ :each | each fixPosition: totalSpaces.].
+	finalPositions:= ships collect: [ :each | each givePosition.].
 	
-    ^ ships
+    ^ finalPositions.
 
 
 ]
 
 { #category : 'testing' }
 Game >> hasEnded [
-	^(ships anySatisfy: [:ship | ship>=totalSpaces]).
+	^(ships anySatisfy: [:ship | ship hasCrossed: totalSpaces]).
 ]
 
 { #category : 'initialization' }
@@ -93,32 +103,25 @@ Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: gameD
 	
 	totalSpaces := amountOfSpaces.
 	ships := OrderedCollection new.
-	1 to: amountOfShips do: [ :i | ships add: 0 ].
+	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
 	player:=1.
 	die := gameDice. 
-]
-
-{ #category : 'as yet unclassified' }
-Game >> moveShip: roll [ 
-
-	| posicionActual |
-
-	self hasEnded ifTrue:[
-		Error signal: 'Game is over. Ships cannot move anymore.'].
-	
-	posicionActual := ships at: player.
-	ships at: player put: posicionActual + roll .
-	player := player \\ ships size + 1
 ]
 
 { #category : 'as yet unclassified' }
 Game >> play [
 	| dieRoll dieRolls|
 	
+	self hasEnded ifTrue:[
+		Error signal: 'Game is over. Ships cannot move anymore.'].
+	
 	dieRolls := die collect: [:each | each roll].
 	dieRoll := dieRolls sum.
 
-	self moveShip: dieRoll .
+	(ships at: player) move: dieRoll .
+	
+	self changePlayer.
+	
 ]
 
 { #category : 'as yet unclassified' }
@@ -131,5 +134,5 @@ Game >> playUntilEnds [
 { #category : 'as yet unclassified' }
 Game >> shipPosition: shipNumber [
 
-	^ ships at: shipNumber
+	^ (ships at: shipNumber) givePosition.
 ]

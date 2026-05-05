@@ -67,7 +67,7 @@ Tests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
 	aGame:= Game withSpaces: 7.
 	aGame play.
 	aGame play.
-	self assert: ((aGame shipPosition: 2)= 5).
+	self assert: (aGame shipPosition: 2)equals: 5.
 ]
 
 { #category : 'tests' }
@@ -117,15 +117,15 @@ Tests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 		|aGame |
 	aGame:= Game default.
 	aGame play.
-	self assert: (aGame declareWinner = 1).
+	self assert: aGame declareWinner equals: 1.
 ]
 
 { #category : 'tests' }
 Tests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
 		|aGame |
-	aGame:= Game default.
-	aGame moveShip:1.
-	self assert: (aGame declareWinner = 'No winner').
+	aGame:= Game withSpaces: 6.
+	aGame play.
+	self assert: aGame declareWinner equals: 'No winner'.
 ]
 
 { #category : 'tests' }
@@ -162,7 +162,7 @@ Tests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
 	aFixedDie := FixedDie thatRolls: {5.}.
 	aGame:= Game defaultWithDice: {aFixedDie}.
 	aGame play.
-	self assert: (aGame finalPositions = {5} asOrderedCollection ).
+	self assert: aGame finalPositions equals: {5} asOrderedCollection.
 ]
 
 { #category : 'tests' }
@@ -190,7 +190,7 @@ Tests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
 	aGame:= Game defaultWithDice: {aFixedDie}.
 	
 	aGame play.
-	self assert: (aGame finalPositions = {8} asOrderedCollection ).
+	self assert: (aGame finalPositions = {5} asOrderedCollection ).
 ]
 
 { #category : 'tests' }
@@ -228,7 +228,7 @@ Tests >> test21WhenGameHasOneDieWith6SidesThenTheShipMovesBetween1and6 [
 ]
 
 { #category : 'tests' }
-Tests >> test22WhenGameHasOneDieWith10SidesThenTheShipMovesBetween1and3 [
+Tests >> test22WhenGameHasOneDieWith3SidesThenTheShipMovesBetween1and3 [
 
 |aGame aDie |
 	
@@ -249,7 +249,7 @@ Tests >> test23WhenGameHas2DieWith10And6SidesSidesThenTheShipMovesBetween1and16 
 	 anotherDie := Die default.
     aGame:= Game withSpaces: 10 andDice: {aDie. anotherDie. }.
     aGame play.
-    self assert: (((aGame shipPosition:1 )>=1) and: ((aGame shipPosition:1 )<=16)).
+    self assert: (((aGame shipPosition:1 )>=2) and: ((aGame shipPosition:1 )<=16)).
 ]
 
 { #category : 'tests' }
