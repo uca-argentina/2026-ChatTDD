@@ -15,7 +15,7 @@ Class {
 Game class >> default [
 
 	| aFixedDie |
-	aFixedDie := FixedDie thatRolls: {5.}.
+	aFixedDie := LoadedDie thatRolls: {5.}.
 	^(self new)initializeSpaces: 5 andShips: 1 withDice: {aFixedDie.}
 ]
 
@@ -29,7 +29,7 @@ Game class >> withSpaces: amountOfSpaces [
 	| aFixedDie |
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
-	aFixedDie := FixedDie thatRolls: {5.}.
+	aFixedDie := LoadedDie thatRolls: {5.}.
 	^(self new)initializeSpaces: amountOfSpaces andShips: 2 withDice: {aFixedDie.}
 ]
 
@@ -45,7 +45,7 @@ Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
 	| aFixedDie |
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
-	aFixedDie := FixedDie thatRolls: {5.}.
+	aFixedDie := LoadedDie thatRolls: {5.}.
 	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: {aFixedDie.}
 ]
 
@@ -58,18 +58,18 @@ Game class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [
 	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: dice.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'testing' }
 Game >> amountOfShips [
 	^ships size
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 Game >> changePlayer [
 
 	^ player := player \\ ships size + 1
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'status' }
 Game >> declareWinner [
 
 	self hasEnded ifFalse: [ ^ 'No winner' ].
@@ -77,7 +77,7 @@ Game >> declareWinner [
 	^ ships indexOf: (ships detect: [ :each | each hasCrossed: totalSpaces ]).
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'status' }
 Game >> finalPositions [
 
 	| finalPositions |
@@ -93,7 +93,7 @@ Game >> finalPositions [
 
 ]
 
-{ #category : 'testing' }
+{ #category : 'execution' }
 Game >> hasEnded [
 	^(ships anySatisfy: [:ship | ship hasCrossed: totalSpaces]).
 ]
@@ -108,7 +108,7 @@ Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: gameD
 	die := gameDice. 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 Game >> play [
 	| dieRoll dieRolls|
 	
@@ -124,14 +124,14 @@ Game >> play [
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 Game >> playUntilEnds [
 	[ self hasEnded ] whileFalse: [ 
     self play.
 ] 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'testing' }
 Game >> shipPosition: shipNumber [
 
 	^ (ships at: shipNumber) givePosition.

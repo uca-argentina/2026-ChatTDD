@@ -23,7 +23,7 @@ Die >> initializeSides: amountOfSides [
 	sides := amountOfSides.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 Die >> roll [
 	^ sides atRandom.
 ]
