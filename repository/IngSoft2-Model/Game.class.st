@@ -2,10 +2,10 @@ Class {
 	#name : 'Game',
 	#superclass : 'Object',
 	#instVars : [
-		'totalSpaces',
 		'ships',
 		'player',
-		'die'
+		'die',
+		'board'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -14,48 +14,63 @@ Class {
 { #category : 'accessing' }
 Game class >> default [
 
-	| aFixedDie |
+	| aFixedDie aTile|
+	aTile := BasicTile new.
 	aFixedDie := LoadedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: 5 andShips: 1 withDice: {aFixedDie.}
+	^(self new)initializeSpaces: 5 andTiles: aTile andShips: 1 withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
 Game class >> defaultWithDice: dice [
-		^(self new)initializeSpaces: 5 andShips: 1 withDice: dice.
+		| aTile |
+		aTile := BasicTile new.
+		^(self new)initializeSpaces: 5 andTiles: aTile andShips: 1 withDice: dice.
 ]
 
 { #category : 'as yet unclassified' }
 Game class >> withSpaces: amountOfSpaces [
-	| aFixedDie |
+	| aFixedDie aTile |
+	aTile := BasicTile new.
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
 	aFixedDie := LoadedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: amountOfSpaces andShips: 2 withDice: {aFixedDie.}
+	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: 2 withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
 Game class >> withSpaces: amountOfSpaces andDice: dice [
+	| aTile |
+	aTile := BasicTile new.	
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1']. 
-	^(self new)initializeSpaces: amountOfSpaces andShips: 2 withDice: dice
+	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: 2 withDice: dice
 ]
 
 { #category : 'as yet unclassified' }
 Game class >> withSpaces: amountOfSpaces andShips: amountOfShips [
-	| aFixedDie |
+	| aFixedDie aTile  |
+	aTile := BasicTile new.
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
 	aFixedDie := LoadedDie thatRolls: {5.}.
-	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: {aFixedDie.}
+	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: amountOfShips withDice: {aFixedDie.}
 ]
 
 { #category : 'as yet unclassified' }
 Game class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [ 
-
+	| aTile |
+	aTile := BasicTile new.
 	amountOfSpaces<1 ifTrue:[
 		Error signal: 'Board spaces cannot be less than 1'].
 
-	^(self new)initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: dice.
+	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: amountOfShips withDice: dice.
+]
+
+{ #category : 'as yet unclassified' }
+Game class >> withSpaces: amountOfSpaces andTiles: typeOfTile andDice: dice [ 
+	amountOfSpaces<1 ifTrue:[
+	Error signal: 'Board spaces cannot be less than 1']. 
+	^(self new)initializeSpaces: amountOfSpaces andTiles: typeOfTile andShips: 2 withDice: dice
 ]
 
 { #category : 'testing' }
@@ -74,7 +89,7 @@ Game >> declareWinner [
 
 	self hasEnded ifFalse: [ ^ 'No winner' ].
 
-	^ ships indexOf: (ships detect: [ :each | each hasCrossed: totalSpaces ]).
+	^ ships indexOf: (ships detect: [ :each | each hasCrossed: board size ]).
 ]
 
 { #category : 'status' }
@@ -85,7 +100,7 @@ Game >> finalPositions [
         Error signal: 'Game is not over. Final positions are not defined yet.'
     ].
 
-	ships := ships collect: [ :each | each fixPosition: totalSpaces.].
+	ships := ships collect: [ :each | each fixPosition: board size.].
 	finalPositions:= ships collect: [ :each | each givePosition.].
 	
     ^ finalPositions.
@@ -95,30 +110,41 @@ Game >> finalPositions [
 
 { #category : 'execution' }
 Game >> hasEnded [
-	^(ships anySatisfy: [:ship | ship hasCrossed: totalSpaces]).
+	^(ships anySatisfy: [:ship | ship hasCrossed: board size]).
 ]
 
 { #category : 'initialization' }
-Game >> initializeSpaces: amountOfSpaces andShips: amountOfShips withDice: gameDice [
+Game >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
 	
-	totalSpaces := amountOfSpaces.
+	board := OrderedCollection new.
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
+	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles ].
 	player:=1.
 	die := gameDice. 
 ]
 
+{ #category : 'testing' }
+Game >> isSpeedUp [
+	^ true
+]
+
 { #category : 'execution' }
 Game >> play [
-	| dieRoll dieRolls|
-	
+	| dieRoll dieRolls currentShip|
+	currentShip := ships at: player.
 	self hasEnded ifTrue:[
 		Error signal: 'Game is over. Ships cannot move anymore.'].
 	
 	dieRolls := die collect: [:each | each roll].
 	dieRoll := dieRolls sum.
 
-	(ships at: player) move: dieRoll .
+	currentShip move: dieRoll .
+	
+	self hasEnded ifFalse:[
+		currentShip move: ((board at: (currentShip givePosition)) giveEffect)].
+	
+	
 	
 	self changePlayer.
 	

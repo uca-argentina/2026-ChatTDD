@@ -263,3 +263,33 @@ Tests >> test24WhenMessagePlayUntilEndsIsCalledThenTheGameCanAutomaticallyEndWhe
     aGame playUntilEnds.
     self assert: (aGame hasEnded ).
 ]
+
+{ #category : 'tests' }
+Tests >> test25WhenShipLandsOnSpeedUpTileThenItMovesForward4Tiles [
+
+	| aGame aFixedDie aTile|
+	aFixedDie := LoadedDie thatRolls: {1}.
+	aTile := SpeedUpTile new.
+	aGame:= Game withSpaces: 6 andTiles: aTile andDice: {aFixedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 5. 
+]
+
+{ #category : 'tests' }
+Tests >> test26WhenShipsEndsOnASpeedUpTileThenGameEndsAndSpeedUpIsntPlayed [
+
+	| aGame aFixedDie |
+	
+	self
+			should:[
+				aFixedDie := LoadedDie thatRolls: {5}.
+				aGame:= Game withSpaces: 5 andDice: {aFixedDie}.
+				aGame play.
+				aGame play.
+				]
+			raise: Error
+			withExceptionDo:[ :error |
+				self
+					assert: error messageText
+					equals: 'Game is over. Ships cannot move anymore.']	
+]
