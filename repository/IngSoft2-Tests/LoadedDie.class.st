@@ -3,7 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'dieRolls',
-		'player'
+		'currentIndex'
 	],
 	#category : 'IngSoft2-Tests',
 	#package : 'IngSoft2-Tests'
@@ -17,14 +17,14 @@ LoadedDie class >> thatRolls: rolls [
 { #category : 'initialization' }
 LoadedDie >> initializeRolls: rolls [
 	dieRolls := rolls.
-	player:=1.
+	currentIndex :=1.
 ]
 
 { #category : 'execution' }
 LoadedDie >> roll [
 
 	| result |
-	result := dieRolls at: player.
-	player := player \\ dieRolls size + 1.
+	result := dieRolls at: currentIndex.
+	currentIndex := currentIndex \\ dieRolls size + 1.
 	^result
 ]

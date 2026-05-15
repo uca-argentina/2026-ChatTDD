@@ -3,7 +3,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'ships',
-		'player',
+		'currentShipIndex',
 		'dice',
 		'board'
 	],
@@ -34,15 +34,7 @@ Game >> amountOfShips [
 { #category : 'execution' }
 Game >> changePlayer [
 
-	^ player := player \\ ships size + 1
-]
-
-{ #category : 'status' }
-Game >> declareWinner [
-
-	self hasEnded ifFalse: [ ^ 'No winner' ].
-
-	^ ships indexOf: (ships detect: [ :each | each hasCrossed: board size ]).
+	currentShipIndex := currentShipIndex \\ ships size + 1
 ]
 
 { #category : 'status' }
@@ -53,8 +45,7 @@ Game >> finalPositions [
         Error signal: 'Game is not over. Final positions are not defined yet.'
     ].
 
-	ships := ships collect: [ :each | each fixPosition: board size.].
-	finalPositions:= ships collect: [ :each | each position.].
+	finalPositions := ships collect: [ :each | each position.].
 	
     ^ finalPositions.
 
@@ -63,7 +54,7 @@ Game >> finalPositions [
 
 { #category : 'execution' }
 Game >> hasEnded [
-	^(ships anySatisfy: [:ship | ship hasCrossed: board size]).
+	^(ships anySatisfy: [:ship | ship position >= board size]).
 ]
 
 { #category : 'initialization' }
@@ -73,7 +64,7 @@ Game >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountO
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
 	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles ].
-	player:=1.
+	currentShipIndex:=1.
 	dice := gameDice. 
 ]
 
@@ -85,19 +76,17 @@ Game >> isSpeedUp [
 { #category : 'execution' }
 Game >> play [
 	| dieRoll dieRolls currentShip|
-	currentShip := ships at: player.
+	currentShip := ships at: currentShipIndex.
 	self hasEnded ifTrue:[
 		Error signal: 'Game is over. Ships cannot move anymore.'].
 	
 	dieRolls := dice collect: [:each | each roll].
 	dieRoll := dieRolls sum.
 
-	currentShip move: dieRoll .
+	currentShip move: dieRoll limitedTo: (board size) .
 	
 	self hasEnded ifFalse:[
-		currentShip move: ((board at: (currentShip position)) giveEffect)].
-	
-	
+		currentShip move: ((board at: (currentShip position)) giveEffect) limitedTo: (board size).].
 	
 	self changePlayer.
 	
@@ -107,4 +96,13 @@ Game >> play [
 Game >> shipPosition: shipNumber [
 
 	^ (ships at: shipNumber) position.
+]
+
+{ #category : 'status' }
+Game >> winner [
+
+	self hasEnded ifFalse:[
+		Error signal: 'Game is not over yet.'].
+
+	^ ships indexOf: (ships detect: [ :each | each position >= (board size) ]).
 ]

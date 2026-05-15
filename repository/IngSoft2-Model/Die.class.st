@@ -14,8 +14,9 @@ Die class >> default [
 ]
 
 { #category : 'as yet unclassified' }
-Die class >> withSides: amountOfSides [ 
-	^ (self new) initializeSides: amountOfSides
+Die class >> withSides: amountOfSides [
+    amountOfSides < 2 ifTrue: [ Error signal: 'A die must have at least 2 sides' ].
+    ^ self new initializeSides: amountOfSides
 ]
 
 { #category : 'initialization' }
