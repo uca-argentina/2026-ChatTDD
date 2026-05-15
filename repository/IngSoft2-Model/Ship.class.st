@@ -19,11 +19,6 @@ Ship >> fixPosition: totalSpaces [
 ]
 
 { #category : 'execution' }
-Ship >> givePosition [
-	^ position .
-]
-
-{ #category : 'execution' }
 Ship >> hasCrossed: finishLine [
 	^ (position >= finishLine).
 ]
@@ -36,4 +31,9 @@ Ship >> initializePosition [
 { #category : 'execution' }
 Ship >> move: roll [ 
 	position := position + roll.
+]
+
+{ #category : 'execution' }
+Ship >> position [
+	^ position .
 ]
