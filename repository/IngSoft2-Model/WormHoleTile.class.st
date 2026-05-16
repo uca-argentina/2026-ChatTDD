@@ -6,6 +6,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-WormHoleTile >> giveEffect [
-	^-4.
+WormHoleTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+    triggeringShip move: -4 limitedTo: maxSize.
 ]

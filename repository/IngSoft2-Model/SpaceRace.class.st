@@ -70,20 +70,21 @@ SpaceRace >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: am
 
 { #category : 'execution' }
 SpaceRace >> play [
-	| dieRoll dieRolls currentShip|
-	currentShip := ships at: currentShipIndex.
-	self hasEnded ifTrue:[
-		Error signal: 'Game is over. Ships cannot move anymore.'].
-	
-	dieRolls := dice collect: [:each | each roll].
-	dieRoll := dieRolls sum.
+	| dieRoll currentShip |
+    currentShip := ships at: currentShipIndex.
+    self hasEnded ifTrue: [
+        Error signal: 'Game is over. Ships cannot move anymore.' ].
 
-	currentShip move: dieRoll limitedTo: (board size) .
-	
-	self hasEnded ifFalse:[
-		currentShip move: ((board at: (currentShip position)) giveEffect) limitedTo: (board size).].
-	
-	self changePlayer.
+    dieRoll := (dice collect: [ :each | each roll ]) sum.
+    currentShip move: dieRoll limitedTo: board size.
+
+    self hasEnded ifFalse: [
+        (board at: currentShip position)
+            giveEffectTo: currentShip
+            among: ships
+            limitedTo: board size. ].
+
+    self changePlayer.
 	
 ]
 
