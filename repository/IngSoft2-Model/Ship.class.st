@@ -20,7 +20,7 @@ Ship >> initializePosition [
 
 { #category : 'execution' }
 Ship >> move: roll limitedTo: maxPosition [
-    position := (position + roll) min: maxPosition.
+    position := (position + roll) min: maxPosition max:0.
 ]
 
 { #category : 'execution' }

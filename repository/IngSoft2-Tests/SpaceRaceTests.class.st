@@ -9,7 +9,7 @@ Class {
 SpaceRaceTests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	self deny: (aGame hasEnded).
 ]
 
@@ -17,7 +17,7 @@ SpaceRaceTests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 SpaceRaceTests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: (aGame hasEnded).
 ]
@@ -26,7 +26,7 @@ SpaceRaceTests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 SpaceRaceTests >> test03WhenTheShipMovesButDoesntCrossFinishLineThenTheGameDoesNotEnd [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 7 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self deny: (aGame hasEnded).
 ]
@@ -39,7 +39,7 @@ SpaceRaceTests >> test04WhenBoardLengthIsZeroThenGameNotCreated [
 
 	self
 		should: [
-		aGame := Game withSpaces: 0 andShips: 1 andDice: { aLoadedDie } ]
+		aGame := SpaceRace withSpaces: 0 andShips: 1 andDice: { aLoadedDie } ]
 		raise: Error
 		withExceptionDo: [ :error |
 				self
@@ -55,7 +55,7 @@ SpaceRaceTests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 
 	self
 		should: [
-		aGame := Game withSpaces: -3 andShips: 1 andDice: { aLoadedDie } ]
+		aGame := SpaceRace withSpaces: -3 andShips: 1 andDice: { aLoadedDie } ]
 		raise: Error
 		withExceptionDo: [ :error |
 				self
@@ -68,7 +68,7 @@ SpaceRaceTests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 SpaceRaceTests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	self assert: (aGame amountOfShips) equals: 2.
 ]
 
@@ -76,7 +76,7 @@ SpaceRaceTests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 SpaceRaceTests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	aGame play.
 	self assert: (aGame shipPosition: 2)equals: 5.
@@ -87,7 +87,7 @@ SpaceRaceTests >> test08WhenEachShipMovesThenItMovesItsOwnAmountOfSquares [
 
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	aGame play.
 	self assert: (aGame shipPosition: 1) equals: 5.
@@ -99,7 +99,7 @@ SpaceRaceTests >> test09WhenFirstShipWinsThenTheGameEnds [
 
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	aGame play.
 	aGame play.
@@ -111,7 +111,7 @@ SpaceRaceTests >> test10WhenSecondShipWinsThenTheGameEnds [
 
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5. 7.}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	aGame play.
 	self assert: (aGame hasEnded).
@@ -122,7 +122,7 @@ SpaceRaceTests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 7 andShips:4 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:4 andDice: {aLoadedDie}.
 	self assert: aGame amountOfShips equals: 4.
 ]
 
@@ -130,7 +130,7 @@ SpaceRaceTests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 SpaceRaceTests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: aGame winner equals: 1.
 ]
@@ -139,7 +139,7 @@ SpaceRaceTests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 SpaceRaceTests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 6 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 6 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	
 	self
@@ -157,7 +157,7 @@ SpaceRaceTests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
 		
 	|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {1. 7.}.
-	aGame:= Game withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 7 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	aGame play.
 	self assert: aGame winner equals: 2.
@@ -166,7 +166,7 @@ SpaceRaceTests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
 { #category : 'tests' }
 SpaceRaceTests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 		|aGame |
-		aGame := Game withSpaces: 5 andShips: 1 andDice: {(LoadedDie thatRolls: {6.})}.
+		aGame := SpaceRace withSpaces: 5 andShips: 1 andDice: {(LoadedDie thatRolls: {6.})}.
 		aGame play.  "la nave gana"
 		self should: [ aGame play ] raise: Error
 		withExceptionDo:[ :error |
@@ -179,7 +179,7 @@ SpaceRaceTests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 SpaceRaceTests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: aGame finalPositions equals: {5} asOrderedCollection.
 ]
@@ -188,7 +188,7 @@ SpaceRaceTests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
 SpaceRaceTests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefined [
 	|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {3.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self
 			should:[
@@ -205,7 +205,7 @@ SpaceRaceTests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefined [
 SpaceRaceTests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
 		|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {8.}.
-	aGame:= Game withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	
 	aGame play.
 	self assert: aGame finalPositions equals: {5} asOrderedCollection .
@@ -215,7 +215,7 @@ SpaceRaceTests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLa
 SpaceRaceTests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFinalPosition [
 	|aGame aLoadedDie |
 	aLoadedDie := LoadedDie thatRolls: {5. 0.}.
-	aGame:= Game withSpaces: 5 andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: aGame finalPositions equals: {5. 0} asOrderedCollection .
 ]
@@ -227,7 +227,7 @@ SpaceRaceTests >> test20WhenGameHasMultipleDiceThenTheShipsShouldMoveTheSumOfThe
 	
     aLoadedDie := LoadedDie thatRolls: {2}.
 	 anotherDie := LoadedDie thatRolls: {2}.
-    aGame:= Game withSpaces: 10 andShips:1 andDice: {aLoadedDie. anotherDie. }.
+    aGame:= SpaceRace withSpaces: 10 andShips:1 andDice: {aLoadedDie. anotherDie. }.
     aGame play.
     self assert: (aGame shipPosition:1 ) equals: 4.
 ]
@@ -238,7 +238,7 @@ SpaceRaceTests >> test21WhenShipLandsOnSpeedUpTileThenItMovesForward4Tiles [
 	| aGame aLoadedDie aTile|
 	aLoadedDie := LoadedDie thatRolls: {1}.
 	aTile := SpeedUpTile new.
-	aGame:= Game withSpaces: 6 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 6 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: (aGame shipPosition: 1) equals: 5. 
 ]
@@ -249,7 +249,7 @@ SpaceRaceTests >> test22WhenShipsEndsOnASpeedUpTileThenGameEndsAndSpeedUpIsntPla
 	| aGame aLoadedDie aTile |
 	aLoadedDie := LoadedDie thatRolls: {5}.
 	aTile := SpeedUpTile new.
-	aGame:= Game withSpaces: 5 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame:= SpaceRace withSpaces: 5 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
 	aGame play.
 	
 	self
@@ -265,9 +265,42 @@ SpaceRaceTests >> test22WhenShipsEndsOnASpeedUpTileThenGameEndsAndSpeedUpIsntPla
 SpaceRaceTests >> test23WhenShip1PlaysThenItsShip2sTurn [
     | aGame aDie |
     aDie := LoadedDie thatRolls: {4. 4.}.
-    aGame := Game withSpaces: 10 andShips: 2 andDice: {aDie}.
+    aGame := SpaceRace withSpaces: 10 andShips: 2 andDice: {aDie}.
     aGame play.  "juega nave 1, mueve 3"
     aGame play.  "juega nave 2, mueve 4"
     self assert: (aGame shipPosition: 1) equals: 4.
     self assert: (aGame shipPosition: 2) equals: 4.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test24WhenShipLandsOnSpeedUpAndMovesToAnotherSpeedUpTheEffectsDontStack [
+
+	| aGame aLoadedDie aTile|
+	aLoadedDie := LoadedDie thatRolls: {2}.
+	aTile := SpeedUpTile new.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 6. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test25WhenShipLandsOnWormHoleTileThenItMovesBack4Tiles [
+
+	| aGame aLoadedDie aTile|
+	aLoadedDie := LoadedDie thatRolls: {5}.
+	aTile := WormHoleTile new.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 1. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test26WhenShipLandsOnWormHoleTileThenItCannotGoBehindPosition0 [
+
+	| aGame aLoadedDie aTile|
+	aLoadedDie := LoadedDie thatRolls: {2}.
+	aTile := WormHoleTile new.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 0. 
 ]

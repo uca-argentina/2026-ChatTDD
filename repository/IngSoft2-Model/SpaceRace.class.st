@@ -1,5 +1,5 @@
 Class {
-	#name : 'Game',
+	#name : 'SpaceRace',
 	#superclass : 'Object',
 	#instVars : [
 		'ships',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Game class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [ 
+SpaceRace class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [ 
 	| aTile |
 	aTile := BasicTile new.
 	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
@@ -21,24 +21,24 @@ Game class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [
 ]
 
 { #category : 'as yet unclassified' }
-Game class >> withSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
+SpaceRace class >> withSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
 	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1']. 
 	^(self new)initializeSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips withDice: dice
 ]
 
 { #category : 'testing' }
-Game >> amountOfShips [
+SpaceRace >> amountOfShips [
 	^ships size
 ]
 
 { #category : 'execution' }
-Game >> changePlayer [
+SpaceRace >> changePlayer [
 
 	currentShipIndex := currentShipIndex \\ ships size + 1
 ]
 
 { #category : 'status' }
-Game >> finalPositions [
+SpaceRace >> finalPositions [
 
 	| finalPositions |
 	self hasEnded ifFalse: [
@@ -53,12 +53,12 @@ Game >> finalPositions [
 ]
 
 { #category : 'execution' }
-Game >> hasEnded [
+SpaceRace >> hasEnded [
 	^(ships anySatisfy: [:ship | ship position >= board size]).
 ]
 
 { #category : 'initialization' }
-Game >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
+SpaceRace >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
 	
 	board := OrderedCollection new.
 	ships := OrderedCollection new.
@@ -68,13 +68,8 @@ Game >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountO
 	dice := gameDice. 
 ]
 
-{ #category : 'testing' }
-Game >> isSpeedUp [
-	^ true
-]
-
 { #category : 'execution' }
-Game >> play [
+SpaceRace >> play [
 	| dieRoll dieRolls currentShip|
 	currentShip := ships at: currentShipIndex.
 	self hasEnded ifTrue:[
@@ -93,13 +88,13 @@ Game >> play [
 ]
 
 { #category : 'testing' }
-Game >> shipPosition: shipNumber [
+SpaceRace >> shipPosition: shipNumber [
 
 	^ (ships at: shipNumber) position.
 ]
 
 { #category : 'status' }
-Game >> winner [
+SpaceRace >> winner [
 
 	self hasEnded ifFalse:[
 		Error signal: 'Game is not over yet.'].
