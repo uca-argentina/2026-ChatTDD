@@ -304,3 +304,29 @@ SpaceRaceTests >> test26WhenShipLandsOnWormHoleTileThenItCannotGoBehindPosition0
 	aGame play.
 	self assert: (aGame shipPosition: 1) equals: 0. 
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test27WhenShipLandsOnMoonWalkTileThenShipIsntAffected [
+
+	| aGame aLoadedDie aTile|
+	aLoadedDie := LoadedDie thatRolls: {2}.
+	aTile := MoonWalkTile withAmountBack: 1.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 2. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTideThenTheOtherShipsMoveBackNTiles [
+
+	| aGame aLoadedDie aTile anAmountBack |
+	anAmountBack := 1.
+	aLoadedDie := LoadedDie thatRolls: {2}.
+	aTile := MoonWalkTile withAmountBack: anAmountBack.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:3 andDice: {aLoadedDie}.
+	aGame play.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 1. 
+	self assert: (aGame shipPosition: 2) equals: 2. 
+	self assert: (aGame shipPosition: 3) equals: 0. 
+]

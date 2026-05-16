@@ -6,6 +6,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-SpeedUpTile >> giveEffect [
-	^4.
+SpeedUpTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+    triggeringShip move: 4 limitedTo: maxSize.
 ]
