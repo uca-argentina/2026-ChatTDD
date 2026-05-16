@@ -2,7 +2,8 @@ Class {
 	#name : 'Ship',
 	#superclass : 'Object',
 	#instVars : [
-		'position'
+		'position',
+		'lap'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -16,11 +17,24 @@ Ship class >> default [
 { #category : 'initialization' }
 Ship >> initializePosition [
 	position:= 0.
+	lap:=0.
 ]
 
-{ #category : 'execution' }
-Ship >> move: roll limitedTo: maxPosition [
-    position := (position + roll) min: maxPosition max:0.
+{ #category : 'as yet unclassified' }
+Ship >> lap [
+	^ lap
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> move: roll limitedToSpaces: maxPosition andToLaps: maxLaps [
+	| positionCalc |
+	positionCalc := position + roll.
+	( positionCalc >= maxPosition) ifFalse: [ 
+		position := position + roll ]
+	ifTrue: [ 
+		position := position + roll - maxPosition.
+		lap := lap + 1
+	].
 ]
 
 { #category : 'execution' }

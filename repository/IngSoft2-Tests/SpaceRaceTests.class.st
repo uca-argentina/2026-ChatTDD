@@ -19,6 +19,7 @@ SpaceRaceTests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 	aLoadedDie := LoadedDie thatRolls: {5.}.
 	aGame:= SpaceRace withSpaces: 5 andShips:1 andDice: {aLoadedDie}.
 	aGame play.
+	aGame shipPosition: 1.
 	self assert: (aGame hasEnded).
 ]
 
@@ -389,4 +390,44 @@ SpaceRaceTests >> test33WhenShipIsPassedByOtherShipThenItFallsInTheRanking [
     aGame play.  "juega nave 1, pos 3"
     aGame play.  "juega nave 2, pos 4"
     self assert: (aGame shipRanking: 1) equals: 2.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test34WhenShipJustCompletesFirstLapThenTheGameHasntEnded [
+		|aGame aLoadedDie |
+	aLoadedDie := LoadedDie thatRolls: {5.}.
+	aGame:= SpaceRace withSpaces: 5 andLaps: 2 andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self deny: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test35WhenAShipPassesAllSpacesOfBoardThenItCompletedOneLap [
+		|aGame aLoadedDie |
+	aLoadedDie := LoadedDie thatRolls: {5.}.
+	aGame:= SpaceRace withSpaces: 5 andLaps: 2 andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipLaps: 1) equals: 1.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test36WhenAShipFinishesAllLapsThenTheGameEnds [
+		|aGame aLoadedDie |
+	aLoadedDie := LoadedDie thatRolls: {5.}.
+	aGame:= SpaceRace withSpaces: 5 andLaps: 2 andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	aGame play.
+	aGame play.
+	self assert: (aGame hasEnded).
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test37WhenAShipIsALapFurtherThenShipIsTheFirstOneInTheRanking [
+		|aGame aLoadedDie |
+	aLoadedDie := LoadedDie thatRolls: {6. 7.}.
+	aGame:= SpaceRace withSpaces: 10 andLaps: 2 andShips:2 andDice: {aLoadedDie}.
+	aGame play.
+	aGame play.
+	aGame play.
+	self assert: (aGame ranking) equals: {1. 2.}.
 ]
