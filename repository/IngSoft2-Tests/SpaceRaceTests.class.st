@@ -368,3 +368,25 @@ SpaceRaceTests >> test31WhenMultipleShipsLandOnHyperJumpThenJumpDistanceRotates 
 	self assert: (aGame shipPosition: 1) equals: 10. 
 	self assert: (aGame shipPosition: 2) equals: 12. 
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test32WhenSecondShipIsAheadFirstOneThenSecondShipIsFirstInRanking [
+    | aGame aDie |
+    aDie := LoadedDie thatRolls: {3. 4.}.
+    aGame := SpaceRace withSpaces: 8 andShips: 2 andDice: {aDie}.
+    aGame play.  "juega nave 1, pos 3"
+    aGame play.  "juega nave 2, pos 4"
+	 aGame play.  "juega nave 1, pos 6"
+	 aGame play.  "juega nave 2, pos 8"
+    self assert: (aGame ranking) equals: {2. 1}.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test33WhenShipIsPassedByOtherShipThenItFallsInTheRanking [
+    | aGame aDie |
+    aDie := LoadedDie thatRolls: {3. 4.}.
+    aGame := SpaceRace withSpaces: 8 andShips: 2 andDice: {aDie}.
+    aGame play.  "juega nave 1, pos 3"
+    aGame play.  "juega nave 2, pos 4"
+    self assert: (aGame shipRanking: 1) equals: 2.
+]
