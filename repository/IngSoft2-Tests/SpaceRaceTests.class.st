@@ -353,3 +353,18 @@ SpaceRaceTests >> test30WhenAShipLandsOnHyperJumpTileThenTheShipMovesInParsecs [
 	aGame play.
 	self assert: (aGame shipPosition: 1) equals: 7. 
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test31WhenMultipleShipsLandOnHyperJumpThenJumpDistanceRotates [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile default.
+	aGame:= SpaceRace withSpaces: 16 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play. "0 + 1 + 3*2 = 7"
+	aGame play. "0 + 1 + 2*2 = 5"
+	aGame play. "7 + 1 + 1*2 = 10"
+	aGame play. "5 + 1 + 3*2 = 12"
+	self assert: (aGame shipPosition: 1) equals: 10. 
+	self assert: (aGame shipPosition: 2) equals: 12. 
+]
