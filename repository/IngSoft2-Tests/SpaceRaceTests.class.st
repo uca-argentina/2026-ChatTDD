@@ -330,3 +330,14 @@ SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTideThenTheOtherShipsMoveBa
 	self assert: (aGame shipPosition: 2) equals: 2. 
 	self assert: (aGame shipPosition: 3) equals: 0. 
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test29WhenAShipLandsOnAtomicBombTIleThenAllShipsGoBackToTheStart [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {6}.
+	aTile := AtomicBombTile new.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 0. 
+]
