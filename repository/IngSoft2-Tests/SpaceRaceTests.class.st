@@ -340,4 +340,16 @@ SpaceRaceTests >> test29WhenAShipLandsOnAtomicBombTIleThenAllShipsGoBackToTheSta
 	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:1 andDice: {aLoadedDie}.
 	aGame play.
 	self assert: (aGame shipPosition: 1) equals: 0. 
+	
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test30WhenAShipLandsOnHyperJumpTileThenTheShipMovesInParsecs [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile default.
+	aGame:= SpaceRace withSpaces: 8 andTiles: aTile andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 7. 
 ]
