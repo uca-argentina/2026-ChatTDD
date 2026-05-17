@@ -88,10 +88,20 @@ SpaceRace >> play [
 	
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> ranking [
+	^(1 to: ships size) sorted: [ :shipA :shipB | ((ships at: shipA) position) > ((ships at: shipB) position) ].
+]
+
 { #category : 'testing' }
 SpaceRace >> shipPosition: shipNumber [
 
 	^ (ships at: shipNumber) position.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> shipRanking: ship [
+	^(self ranking) indexOf: ship.
 ]
 
 { #category : 'status' }

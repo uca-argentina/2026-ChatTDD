@@ -330,3 +330,63 @@ SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTideThenTheOtherShipsMoveBa
 	self assert: (aGame shipPosition: 2) equals: 2. 
 	self assert: (aGame shipPosition: 3) equals: 0. 
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test29WhenAShipLandsOnAtomicBombTIleThenAllShipsGoBackToTheStart [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {6}.
+	aTile := AtomicBombTile new.
+	aGame:= SpaceRace withSpaces: 7 andTiles: aTile andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 0. 
+	
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test30WhenAShipLandsOnHyperJumpTileThenTheShipMovesInParsecs [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile default.
+	aGame:= SpaceRace withSpaces: 8 andTiles: aTile andShips:1 andDice: {aLoadedDie}.
+	aGame play.
+	self assert: (aGame shipPosition: 1) equals: 7. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test31WhenMultipleShipsLandOnHyperJumpThenJumpDistanceRotates [
+
+	| aGame aLoadedDie aTile |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile default.
+	aGame:= SpaceRace withSpaces: 16 andTiles: aTile andShips:2 andDice: {aLoadedDie}.
+	aGame play. "0 + 1 + 3*2 = 7"
+	aGame play. "0 + 1 + 2*2 = 5"
+	aGame play. "7 + 1 + 1*2 = 10"
+	aGame play. "5 + 1 + 3*2 = 12"
+	self assert: (aGame shipPosition: 1) equals: 10. 
+	self assert: (aGame shipPosition: 2) equals: 12. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test32WhenSecondShipIsAheadFirstOneThenSecondShipIsFirstInRanking [
+    | aGame aDie |
+    aDie := LoadedDie thatRolls: {3. 4.}.
+    aGame := SpaceRace withSpaces: 8 andShips: 2 andDice: {aDie}.
+    aGame play.  "juega nave 1, pos 3"
+    aGame play.  "juega nave 2, pos 4"
+	 aGame play.  "juega nave 1, pos 6"
+	 aGame play.  "juega nave 2, pos 8"
+    self assert: (aGame ranking) equals: {2. 1}.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test33WhenShipIsPassedByOtherShipThenItFallsInTheRanking [
+    | aGame aDie |
+    aDie := LoadedDie thatRolls: {3. 4.}.
+    aGame := SpaceRace withSpaces: 8 andShips: 2 andDice: {aDie}.
+    aGame play.  "juega nave 1, pos 3"
+    aGame play.  "juega nave 2, pos 4"
+    self assert: (aGame shipRanking: 1) equals: 2.
+]
