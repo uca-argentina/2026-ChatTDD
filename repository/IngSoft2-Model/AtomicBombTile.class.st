@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
    allShips
-       do: [ :ship | ship move: ship position negated limitedTo: maxSize ].
+       do: [ :ship | ship move: (ship lapPosition - 1) negated limitedToSpaces: maxSize andLaps: laps ].
 ]

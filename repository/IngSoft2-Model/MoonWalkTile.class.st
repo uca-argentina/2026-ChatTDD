@@ -14,9 +14,9 @@ MoonWalkTile class >> withAmountBack: steps [
 ]
 
 { #category : 'as yet unclassified' }
-MoonWalkTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+MoonWalkTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
     (allShips reject: [ :ship | ship = triggeringShip ])
-        do: [ :ship | ship move: amountBack negated limitedTo: maxSize ].
+        do: [ :ship | ship move: amountBack negated limitedToSpaces: maxSize andLaps:laps ].
 ]
 
 { #category : 'initialization' }
