@@ -5,25 +5,18 @@ Class {
 		'ships',
 		'currentShipIndex',
 		'dice',
-		'board'
+		'board',
+		'totalParsecs'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-SpaceRace class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [ 
-	| aTile |
-	aTile := BasicTile new.
-	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
-
-	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: amountOfShips withDice: dice.
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace class >> withSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
+SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
+	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs can not be equal or less than 0']. 
 	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1']. 
-	^(self new)initializeSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips withDice: dice
+	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips withDice: dice
 ]
 
 { #category : 'testing' }
@@ -58,8 +51,9 @@ SpaceRace >> hasEnded [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
-	
+SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
+
+	totalParsecs := amountOfParsecs.
 	board := OrderedCollection new.
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
@@ -88,10 +82,20 @@ SpaceRace >> play [
 	
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> ranking [
+	^(1 to: ships size) sorted: [ :shipA :shipB | ((ships at: shipA) position) > ((ships at: shipB) position) ].
+]
+
 { #category : 'testing' }
 SpaceRace >> shipPosition: shipNumber [
 
 	^ (ships at: shipNumber) position.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> shipRanking: ship [
+	^(self ranking) indexOf: ship.
 ]
 
 { #category : 'status' }

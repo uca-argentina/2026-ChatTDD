@@ -2,9 +2,9 @@ Class {
 	#name : 'HyperJumpTile',
 	#superclass : 'Object',
 	#instVars : [
-		'parsec',
-		'jumpDistances',
-		'currentJump'
+		'parsecs',
+		'currentParsecsIndex',
+		'parsecFactor'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -16,15 +16,24 @@ HyperJumpTile class >> default [
 ]
 
 { #category : 'as yet unclassified' }
+HyperJumpTile class >> withParsecFactor: parsecPerTile [
+	^(self new) initializeWithParsecFactor: parsecPerTile .
+]
+
+{ #category : 'as yet unclassified' }
 HyperJumpTile >> giveEffectTo: triggeringShip among: aCollection limitedTo: maxSize [ 
-	triggeringShip move: ((jumpDistances at: currentJump) * parsec) limitedTo: maxSize.
-	currentJump := currentJump \\ jumpDistances size + 1
+	triggeringShip move: (self parsecToTile) limitedTo: maxSize.
+	currentParsecsIndex := currentParsecsIndex \\ parsecs size + 1
 ]
 
 { #category : 'initialization' }
-HyperJumpTile >> initializeParsecs [
+HyperJumpTile >> initializeWithParsecFactor: parsecPerTile [
+	parsecFactor:= parsecPerTile.
+	parsecs := { 80. 50. 20 }.
+	currentParsecsIndex := 1.
+]
 
-parsec :=2.
-jumpDistances := { 3. 2. 1 }.
-currentJump := 1.
+{ #category : 'as yet unclassified' }
+HyperJumpTile >> parsecToTile [
+	^ (parsecs at: currentParsecsIndex) // parsecFactor.
 ]

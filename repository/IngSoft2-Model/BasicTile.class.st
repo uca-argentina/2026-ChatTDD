@@ -7,5 +7,6 @@ Class {
 
 { #category : 'as yet unclassified' }
 BasicTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+ .
 	
 ]
