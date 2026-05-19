@@ -10,3 +10,8 @@ BasicTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSi
  .
 	
 ]
+
+{ #category : 'as yet unclassified' }
+BasicTile >> tile [
+ ^self
+]

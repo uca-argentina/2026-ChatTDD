@@ -69,7 +69,7 @@ SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amount
 	laps := amountOfLaps.
 	
 	board := OrderedCollection new.
-	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles ].
+	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles tile].
 	
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].

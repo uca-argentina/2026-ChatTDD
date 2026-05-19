@@ -534,3 +534,61 @@ SpaceRaceTests >> test42WhenShipLandsOnMoonWalkThenOtherShipsCanGoToPreviousLap 
     self assert: (aGame shipPosition: 1) equals: 2.
     self assert: (aGame shipLap: 1) equals: 1.
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test43WhenUsingBoardConstructorBasicTileAppearsBetween35And45Percent [
+
+	| constructor tiles cantidadBasic ratio |
+	constructor := BoardConstructor withMoonWalkAmountBack: 4 andParsecFactor: 100/8.
+	tiles := (1 to: 10000) collect: [:_ | constructor tile].
+	cantidadBasic := (tiles select: [:t | t isKindOf: BasicTile]) size.
+	ratio := cantidadBasic / 10000.
+	self assert: (ratio between: 0.35 and: 0.45).
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test44WhenUsingBoardConstructorSpeedUpTileAppearsBetween15And25Percent [
+
+	| constructor tiles cantidadSpeedUp ratio cantidadBasic |
+	constructor := BoardConstructor withMoonWalkAmountBack: 4 andParsecFactor: 100/8.
+	tiles := (1 to: 10000) collect: [:_ | constructor tile].
+	cantidadBasic := (tiles select: [:t | t isKindOf: BasicTile]) size.
+	cantidadSpeedUp := (tiles select: [:t | t isKindOf: SpeedUpTile ]) size.
+	ratio:= cantidadBasic /10000.
+	self assert: (ratio between: 0.35 and: 0.45).
+	ratio := cantidadSpeedUp / 10000.
+	self assert: (ratio between: 0.15 and: 0.25).
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test45WhenUsingBoardConstructorTilesAppearBetweenExpectedValues [
+    | constructor tiles counts total |
+	constructor := BoardConstructor withMoonWalkAmountBack: 4 andParsecFactor: 100/8.
+    tiles := (1 to: 10000) collect: [:_ | constructor tile].
+    total := tiles size.
+    
+    counts := Dictionary new.
+    counts at: BasicTile      put: (tiles select: [:t | t isKindOf: BasicTile]) size.
+    counts at: WormHoleTile   put: (tiles select: [:t | t isKindOf: WormHoleTile]) size.
+    counts at: SpeedUpTile    put: (tiles select: [:t | t isKindOf: SpeedUpTile]) size.
+    counts at: MoonWalkTile   put: (tiles select: [:t | t isKindOf: MoonWalkTile]) size.
+    counts at: HyperJumpTile  put: (tiles select: [:t | t isKindOf: HyperJumpTile]) size.
+    counts at: AtomicBombTile put: (tiles select: [:t | t isKindOf: AtomicBombTile]) size.
+    
+    "Verificamos que todos los porcentajes estén dentro del rango esperado"
+    {
+        { BasicTile.      0.35. 0.45 }.
+        { WormHoleTile.   0.15. 0.25 }.
+        { SpeedUpTile.    0.15. 0.25 }.
+        { MoonWalkTile.   0.07. 0.13 }.
+        { HyperJumpTile.  0.05. 0.11 }.
+        { AtomicBombTile. 0.00. 0.05 }.
+    } do: [:entry |
+        | tileClass min max ratio |
+        tileClass := entry at: 1.
+        min       := entry at: 2.
+        max       := entry at: 3.
+        ratio     := (counts at: tileClass) / total.
+        self assert: (ratio between: min and: max)
+		]
+]
