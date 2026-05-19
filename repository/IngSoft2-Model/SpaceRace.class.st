@@ -14,6 +14,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips andDice: dice [
+
+	amountOfLaps<1 ifTrue:[ Error signal: 'Amount of laps cannot be less than 1']. 
+	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
+	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
+	 
+	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips withDice: dice
+]
+
+{ #category : 'as yet unclassified' }
 SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTile andShips: amountOfShips andDice: dice [
 
 	amountOfLaps<1 ifTrue:[ Error signal: 'Amount of laps cannot be less than 1']. 
@@ -63,13 +73,31 @@ SpaceRace >> hasEnded [
 ]
 
 { #category : 'initialization' }
+SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips withDice: gameDice [
+
+	totalParsecs := amountOfParsecs.
+	laps := amountOfLaps.
+	
+	board := OrderedCollection new.
+	1 to: amountOfSpaces do: [ :i | board add: (boardGen generateTilewithParsecFactor: (totalParsecs/amountOfSpaces))].
+	
+	ships := OrderedCollection new.
+	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
+
+	dice := gameDice. 
+	
+	currentShipIndex:=1.
+	
+]
+
+{ #category : 'initialization' }
 SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
 
 	totalParsecs := amountOfParsecs.
 	laps := amountOfLaps.
 	
 	board := OrderedCollection new.
-	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles tile].
+	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles].
 	
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].

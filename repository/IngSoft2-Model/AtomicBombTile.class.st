@@ -10,8 +10,3 @@ AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: 
    allShips
        do: [ :ship | ship move: (ship lapPosition - 1) negated limitedToSpaces: maxSize andLaps: laps ].
 ]
-
-{ #category : 'as yet unclassified' }
-AtomicBombTile >> tile [
- ^self
-]

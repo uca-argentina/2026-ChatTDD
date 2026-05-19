@@ -37,8 +37,3 @@ HyperJumpTile >> initializeWithParsecFactor: parsecPerTile [
 HyperJumpTile >> parsecToTile [
 	^ (parsecs at: currentParsecsIndex) // parsecFactor.
 ]
-
-{ #category : 'as yet unclassified' }
-HyperJumpTile >> tile [
- ^self
-]

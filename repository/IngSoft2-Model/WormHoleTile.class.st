@@ -9,8 +9,3 @@ Class {
 WormHoleTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
     triggeringShip move: -4 limitedToSpaces: maxSize andLaps: laps.
 ]
-
-{ #category : 'as yet unclassified' }
-WormHoleTile >> tile [
- ^self
-]
