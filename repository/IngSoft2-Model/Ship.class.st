@@ -2,7 +2,9 @@ Class {
 	#name : 'Ship',
 	#superclass : 'Object',
 	#instVars : [
-		'position'
+		'currentLap',
+		'absPosition',
+		'lapPosition'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -13,17 +15,41 @@ Ship class >> default [
 	^ (self new) initializePosition.
 ]
 
+{ #category : 'accessing' }
+Ship >> currentLap [
+	^ currentLap.
+]
+
 { #category : 'initialization' }
 Ship >> initializePosition [
-	position:= 0.
+
+	absPosition := 1.
+	lapPosition := 1.
+	currentLap := 1
 ]
 
 { #category : 'execution' }
-Ship >> move: roll limitedTo: maxPosition [
-    position := (position + roll) min: maxPosition max:0.
+Ship >> lapPosition [
+	^ lapPosition .
 ]
 
 { #category : 'execution' }
-Ship >> position [
-	^ position .
+Ship >> move: amountToMove limitedToSpaces: maxPosition andLaps: amountOfLaps [
+
+   absPosition := (absPosition + amountToMove ) min: maxPosition * amountOfLaps max: 1.
+	self setCurrentLap: maxPosition.
+	self setLapPosition: maxPosition. 
+
+
+]
+
+{ #category : 'initialization' }
+Ship >> setCurrentLap: maxPosition [
+	currentLap := (absPosition - 1) // maxPosition + 1.
+
+]
+
+{ #category : 'initialization' }
+Ship >> setLapPosition: maxPosition [
+	lapPosition := (absPosition - 1) \\ maxPosition + 1.
 ]

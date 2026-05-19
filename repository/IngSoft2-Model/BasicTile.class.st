@@ -6,6 +6,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-BasicTile >> giveEffectTo: triggeringShip among: allShips limitedTo: maxSize [
+BasicTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+ .
 	
 ]

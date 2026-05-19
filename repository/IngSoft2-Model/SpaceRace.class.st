@@ -5,25 +5,39 @@ Class {
 		'ships',
 		'currentShipIndex',
 		'dice',
-		'board'
+		'board',
+		'totalParsecs',
+		'laps'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-SpaceRace class >> withSpaces: amountOfSpaces andShips: amountOfShips andDice: dice [ 
-	| aTile |
-	aTile := BasicTile new.
-	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
+SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips andDice: dice [
 
-	^(self new)initializeSpaces: amountOfSpaces andTiles: aTile andShips: amountOfShips withDice: dice.
+	amountOfLaps<1 ifTrue:[ Error signal: 'Amount of laps cannot be less than 1']. 
+	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
+	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
+	 
+	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips withDice: dice
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace class >> withSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
+SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTile andShips: amountOfShips andDice: dice [
+
+	amountOfLaps<1 ifTrue:[ Error signal: 'Amount of laps cannot be less than 1']. 
+	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
+	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
+	 
+	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTile andShips: amountOfShips withDice: dice
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
+	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
 	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1']. 
-	^(self new)initializeSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips withDice: dice
+	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: 1 andTiles: typeOfTile andShips: amountOfShips withDice: dice
 ]
 
 { #category : 'testing' }
@@ -45,7 +59,7 @@ SpaceRace >> finalPositions [
         Error signal: 'Game is not over. Final positions are not defined yet.'
     ].
 
-	finalPositions := ships collect: [ :each | each position.].
+	finalPositions := ships collect: [ :each | each lapPosition .].
 	
     ^ finalPositions.
 
@@ -54,18 +68,44 @@ SpaceRace >> finalPositions [
 
 { #category : 'execution' }
 SpaceRace >> hasEnded [
-	^(ships anySatisfy: [:ship | ship position >= board size]).
+    ^ ships anySatisfy: [:ship | (ship currentLap = laps) and: (ship lapPosition = board size)]
+
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeSpaces: amountOfSpaces andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
+SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips withDice: gameDice [
+
+	totalParsecs := amountOfParsecs.
+	laps := amountOfLaps.
 	
 	board := OrderedCollection new.
+	1 to: amountOfSpaces do: [ :i | board add: (boardGen generateTilewithParsecFactor: (totalParsecs/amountOfSpaces))].
+	
 	ships := OrderedCollection new.
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
-	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles ].
-	currentShipIndex:=1.
+
 	dice := gameDice. 
+	
+	currentShipIndex:=1.
+	
+]
+
+{ #category : 'initialization' }
+SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
+
+	totalParsecs := amountOfParsecs.
+	laps := amountOfLaps.
+	
+	board := OrderedCollection new.
+	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles].
+	
+	ships := OrderedCollection new.
+	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
+
+	dice := gameDice. 
+	
+	currentShipIndex:=1.
+	
 ]
 
 { #category : 'execution' }
@@ -76,13 +116,14 @@ SpaceRace >> play [
         Error signal: 'Game is over. Ships cannot move anymore.' ].
 
     dieRoll := (dice collect: [ :each | each roll ]) sum.
-    currentShip move: dieRoll limitedTo: board size.
+    currentShip move: dieRoll limitedToSpaces: board size andLaps: laps.
 
     self hasEnded ifFalse: [
-        (board at: currentShip position)
+        (board at: currentShip lapPosition)
             giveEffectTo: currentShip
             among: ships
-            limitedTo: board size. ].
+            limitedToSpaces: board size
+				andLaps: laps. ].
 
     self changePlayer.
 	
@@ -90,13 +131,20 @@ SpaceRace >> play [
 
 { #category : 'as yet unclassified' }
 SpaceRace >> ranking [
-	^(1 to: ships size) sorted: [ :shipA :shipB | ((ships at: shipA) position) > ((ships at: shipB) position) ].
+    ^ (1 to: ships size) sorted: [:shipA :shipB | 
+        ((ships at: shipA) currentLap * board size + (ships at: shipA) lapPosition) >
+        ((ships at: shipB) currentLap * board size + (ships at: shipB) lapPosition)].
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> shipLap: shipIndex [ 
+	^ (ships at: shipIndex) currentLap.
 ]
 
 { #category : 'testing' }
 SpaceRace >> shipPosition: shipNumber [
 
-	^ (ships at: shipNumber) position.
+	^ (ships at: shipNumber) lapPosition.
 ]
 
 { #category : 'as yet unclassified' }
@@ -107,8 +155,7 @@ SpaceRace >> shipRanking: ship [
 { #category : 'status' }
 SpaceRace >> winner [
 
-	self hasEnded ifFalse:[
-		Error signal: 'Game is not over yet.'].
-
-	^ ships indexOf: (ships detect: [ :each | each position >= (board size) ]).
+    self hasEnded ifFalse: [
+        Error signal: 'Game is not over yet.'].
+    ^ ships indexOf: (ships detect: [:each | (each currentLap = laps) and: (each lapPosition = board size) ]).
 ]
