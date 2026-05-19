@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'dieRolls',
-		'currentIndex'
+		'currentIndex',
+		'turnManager'
 	],
 	#category : 'IngSoft2-Tests',
 	#package : 'IngSoft2-Tests'
@@ -17,14 +18,14 @@ LoadedDie class >> thatRolls: rolls [
 { #category : 'initialization' }
 LoadedDie >> initializeRolls: rolls [
 	dieRolls := rolls.
-	currentIndex :=1.
+	turnManager := TurnManager withTotalTurns: dieRolls size
 ]
 
 { #category : 'execution' }
 LoadedDie >> roll [
 
 	| result |
-	result := dieRolls at: currentIndex.
-	currentIndex := currentIndex \\ dieRolls size + 1.
+	result := dieRolls at: turnManager currentTurn.
+	turnManager changeTurn.
 	^result
 ]

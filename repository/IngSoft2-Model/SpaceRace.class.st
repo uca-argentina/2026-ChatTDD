@@ -3,11 +3,11 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'ships',
-		'currentShipIndex',
 		'dice',
 		'board',
 		'totalParsecs',
-		'laps'
+		'laps',
+		'turnManager'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -23,32 +23,9 @@ SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfS
 	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: amountOfShips withDice: dice
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTile andShips: amountOfShips andDice: dice [
-
-	amountOfLaps<1 ifTrue:[ Error signal: 'Amount of laps cannot be less than 1']. 
-	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
-	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1'].
-	 
-	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTile andShips: amountOfShips withDice: dice
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace class >> withTotalParsecs:  amountOfParsecs dividedInSpaces: amountOfSpaces andTiles: typeOfTile andShips: amountOfShips andDice: dice [ 
-	amountOfParsecs<=0 ifTrue:[ Error signal: 'Total parsecs cannot be equal or less than 0']. 
-	amountOfSpaces<1 ifTrue:[ Error signal: 'Board spaces cannot be less than 1']. 
-	^(self new)initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: 1 andTiles: typeOfTile andShips: amountOfShips withDice: dice
-]
-
 { #category : 'testing' }
 SpaceRace >> amountOfShips [
 	^ships size
-]
-
-{ #category : 'execution' }
-SpaceRace >> changePlayer [
-
-	currentShipIndex := currentShipIndex \\ ships size + 1
 ]
 
 { #category : 'status' }
@@ -85,33 +62,14 @@ SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amount
 	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
 
 	dice := gameDice. 
-	
-	currentShipIndex:=1.
-	
-]
-
-{ #category : 'initialization' }
-SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andTiles: typeOfTiles andShips: amountOfShips withDice: gameDice [
-
-	totalParsecs := amountOfParsecs.
-	laps := amountOfLaps.
-	
-	board := OrderedCollection new.
-	1 to: amountOfSpaces do: [ :i | board add: typeOfTiles].
-	
-	ships := OrderedCollection new.
-	1 to: amountOfShips do: [ :i | ships add: Ship default. ].
-
-	dice := gameDice. 
-	
-	currentShipIndex:=1.
-	
+	turnManager:= TurnManager withTotalTurns: ships size
 ]
 
 { #category : 'execution' }
 SpaceRace >> play [
 	| dieRoll currentShip |
-    currentShip := ships at: currentShipIndex.
+    currentShip := ships at: turnManager currentTurn.
+	turnManager changeTurn.
     self hasEnded ifTrue: [
         Error signal: 'Game is over. Ships cannot move anymore.' ].
 
@@ -124,9 +82,6 @@ SpaceRace >> play [
             among: ships
             limitedToSpaces: board size
 				andLaps: laps. ].
-
-    self changePlayer.
-	
 ]
 
 { #category : 'as yet unclassified' }
