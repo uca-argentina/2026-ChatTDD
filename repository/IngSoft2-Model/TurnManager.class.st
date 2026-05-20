@@ -15,7 +15,7 @@ TurnManager class >> withTotalTurns: totalTurns [
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 TurnManager >> changeTurn [
 	currentTurn:= currentTurn\\ totalTurns + 1.
 ]

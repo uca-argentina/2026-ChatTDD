@@ -50,6 +50,12 @@ Ship >> name [
 ^name.
 ]
 
+{ #category : 'execution' }
+Ship >> resetToStartOfLap [
+
+	lapPosition := 1
+]
+
 { #category : 'initialization' }
 Ship >> setCurrentLap: maxPosition [
 	currentLap := (absPosition - 1) // maxPosition + 1.

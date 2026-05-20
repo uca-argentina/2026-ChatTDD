@@ -210,13 +210,22 @@ SpaceRaceTests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 
 { #category : 'tests' }
 SpaceRaceTests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
-		|aGame aLoadedDie aTile aBoardGenerator |
-	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
+
+	| aGame aLoadedDie aTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: { 5 }.
+	aTile := BasicTile new.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
-   	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 5 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'tie fighter' } andDice: {aLoadedDie }.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' }
+		         andDice: { aLoadedDie }.
 	aGame play.
-	self assert: aGame finalPositions equals: {{ 'tie fighter' . 5}} asOrderedCollection.
+	self
+		assert: aGame finalPositions
+		equals: { { 'tie fighter'. 1. 5 } }
 ]
 
 { #category : 'tests' }
@@ -241,26 +250,42 @@ SpaceRaceTests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefined [
 
 { #category : 'tests' }
 SpaceRaceTests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLastSpace [
-		|aGame aLoadedDie aTile aBoardGenerator |
-	aLoadedDie := LoadedDie thatRolls: {8.}.
-	
-	aTile:= BasicTile new.
+
+	| aGame aLoadedDie aTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: { 8 }.
+
+	aTile := BasicTile new.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
-   	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 5 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'tie fighter' } andDice: {aLoadedDie }.
-	
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' }
+		         andDice: { aLoadedDie }.
+
 	aGame play.
-	self assert: aGame finalPositions equals: {{ 'tie fighter' . 5 }} asOrderedCollection .
+	self assert: aGame finalPositions equals: { { 'tie fighter'. 1. 5 } }
 ]
 
 { #category : 'tests' }
 SpaceRaceTests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFinalPosition [
-	|aGame aLoadedDie aTile aBoardGenerator |
-	aLoadedDie := LoadedDie thatRolls: {5. 0.}.
-	aTile:= BasicTile new.
+
+	| aGame aLoadedDie aTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: { 5. 0 }.
+	aTile := BasicTile new.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
-   	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 5 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'millenium falcon'. 'tie fighter' }
+		         andDice: { aLoadedDie }.
 	aGame play.
-	self assert: aGame finalPositions equals: {{ 'millenium falcon' . 5 } . {'tie fighter' . 1}} asOrderedCollection .
+	self assert: aGame finalPositions equals: {
+			{ 'millenium falcon'. 1. 5 }.
+			{ 'tie fighter'. 1. 1 } }
 ]
 
 { #category : 'tests' }
@@ -454,7 +479,7 @@ SpaceRaceTests >> test33WhenSecondShipIsAheadFirstOneThenSecondShipIsFirstInRank
    	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 8 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aDie }.
     aGame play.  
     aGame play.
-    self assert: (aGame ranking) equals: {'tie fighter'. 'millenium falcon'} asOrderedCollection .
+    self assert: (aGame ranking) equals: {'tie fighter'. 'millenium falcon'} .
 ]
 
 { #category : 'tests' }
@@ -568,7 +593,7 @@ SpaceRaceTests >> test42WhenShip1IsAheadInLapsThenItIsFirstInRanking [
    	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 5 andLaps: 2 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
     aGame play. "nave 1 completa vuelta, lap=2"
     aGame play. "nave 2 avanza 1"
-    self assert: aGame ranking equals: {'millenium falcon'. 'tie fighter' } asOrderedCollection .
+    self assert: aGame ranking equals: {'millenium falcon'. 'tie fighter' } .
 ]
 
 { #category : 'tests' }
@@ -601,7 +626,7 @@ SpaceRaceTests >> test45WhenUsingBoardConstructorBasicTileAppearsBetween35And45P
 
 	| constructor tiles cantidadBasic ratio |
 	constructor := BoardGenerator new.
-	tiles := (1 to: 10000) collect: [:_ | constructor generateTilewithParsecFactor: (100/8)].
+	tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
 	cantidadBasic := (tiles select: [:t | t isKindOf: BasicTile]) size.
 	ratio := cantidadBasic / 10000.
 	self assert: (ratio between: 0.38 and: 0.42).
@@ -612,7 +637,7 @@ SpaceRaceTests >> test46WhenUsingBoardConstructorSpeedUpTileAppearsBetween15And2
 
 	| constructor tiles cantidadSpeedUp ratio |
 	constructor := BoardGenerator new.
-	tiles := (1 to: 10000) collect: [:_ | constructor generateTilewithParsecFactor: (100/8)].
+	tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
 	cantidadSpeedUp := (tiles select: [:t | t isKindOf: SpeedUpTile ]) size.
 	ratio := cantidadSpeedUp / 10000.
 	self assert: (ratio between: 0.18 and: 0.22).
@@ -622,7 +647,7 @@ SpaceRaceTests >> test46WhenUsingBoardConstructorSpeedUpTileAppearsBetween15And2
 SpaceRaceTests >> test47WhenUsingBoardConstructorTilesAppearBetweenExpectedValues [
     | constructor tiles counts total |
 	constructor := BoardGenerator new.
-    tiles := (1 to: 10000) collect: [:_ | constructor generateTilewithParsecFactor: (100/8)].
+    tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
     total := tiles size.
     
     counts := Dictionary new.

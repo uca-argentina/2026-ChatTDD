@@ -5,8 +5,8 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
-BoardGenerator >> generateTilewithParsecFactor: parsecFactor [
+{ #category : 'execution' }
+BoardGenerator >> generateTileWithParsecFactor: parsecFactor [
     | valor table |
     valor := 100 atRandom.
     table := {

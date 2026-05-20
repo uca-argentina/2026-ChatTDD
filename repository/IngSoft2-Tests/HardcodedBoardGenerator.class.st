@@ -14,7 +14,7 @@ HardcodedBoardGenerator class >> withTileType: aTile [
 ]
 
 { #category : 'as yet unclassified' }
-HardcodedBoardGenerator >> generateTilewithParsecFactor: parsecFactor [
+HardcodedBoardGenerator >> generateTileWithParsecFactor: parsecFactor [
 	^ tileType.
 ]
 
