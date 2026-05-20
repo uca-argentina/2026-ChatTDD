@@ -4,15 +4,16 @@ Class {
 	#instVars : [
 		'currentLap',
 		'absPosition',
-		'lapPosition'
+		'lapPosition',
+		'name'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'accessing' }
-Ship class >> default [
-	^ (self new) initializePosition.
+Ship class >> withName: name [
+	^ (self new) initializeWithName: name.
 ]
 
 { #category : 'accessing' }
@@ -21,8 +22,9 @@ Ship >> currentLap [
 ]
 
 { #category : 'initialization' }
-Ship >> initializePosition [
-
+Ship >> initializeWithName: shipName [
+	
+	name := shipName.
 	absPosition := 1.
 	lapPosition := 1.
 	currentLap := 1
@@ -41,6 +43,17 @@ Ship >> move: amountToMove limitedToSpaces: maxPosition andLaps: amountOfLaps [
 	self setLapPosition: maxPosition. 
 
 
+]
+
+{ #category : 'accessing' }
+Ship >> name [
+^name.
+]
+
+{ #category : 'execution' }
+Ship >> resetToStartOfLap [
+
+	lapPosition := 1
 ]
 
 { #category : 'initialization' }

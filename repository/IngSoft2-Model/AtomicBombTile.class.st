@@ -5,8 +5,8 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
    allShips
-       do: [ :ship | ship move: (ship lapPosition - 1) negated limitedToSpaces: maxSize andLaps: laps ].
+       do: [ :ship | ship resetToStartOfLap ].
 ]
