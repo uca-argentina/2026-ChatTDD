@@ -1,10 +1,11 @@
 Class {
 	#name : 'HyperJumpTile',
-	#superclass : 'Object',
+	#superclass : 'Tile',
 	#instVars : [
 		'parsecs',
 		'currentParsecsIndex',
-		'parsecFactor'
+		'parsecFactor',
+		'turnManager'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -23,17 +24,17 @@ HyperJumpTile class >> withParsecFactor: parsecPerTile [
 { #category : 'as yet unclassified' }
 HyperJumpTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
 	triggeringShip move: (self parsecToTile) limitedToSpaces: maxSize andLaps: laps.
-	currentParsecsIndex := currentParsecsIndex \\ parsecs size + 1
+	turnManager changeTurn.
 ]
 
 { #category : 'initialization' }
 HyperJumpTile >> initializeWithParsecFactor: parsecPerTile [
 	parsecFactor:= parsecPerTile.
 	parsecs := { 80. 50. 20 }.
-	currentParsecsIndex := 1.
+	turnManager := TurnManager withTotalTurns: parsecs size
 ]
 
 { #category : 'as yet unclassified' }
 HyperJumpTile >> parsecToTile [
-	^ (parsecs at: currentParsecsIndex) // parsecFactor.
+	^ (parsecs at: turnManager currentTurn) // parsecFactor.
 ]

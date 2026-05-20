@@ -1,6 +1,6 @@
 Class {
 	#name : 'MoonWalkTile',
-	#superclass : 'Object',
+	#superclass : 'Tile',
 	#instVars : [
 		'amountBack'
 	],
