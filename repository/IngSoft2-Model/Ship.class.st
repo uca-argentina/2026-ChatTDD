@@ -2,38 +2,67 @@ Class {
 	#name : 'Ship',
 	#superclass : 'Object',
 	#instVars : [
-		'position'
+		'currentLap',
+		'absPosition',
+		'lapPosition',
+		'name'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'accessing' }
-Ship class >> default [
-	^ (self new) initializePosition.
+Ship class >> withName: name [
+	^ (self new) initializeWithName: name.
 ]
 
-{ #category : 'execution' }
-Ship >> fixPosition: totalSpaces [
-	(position > totalSpaces) ifTrue: [position := totalSpaces ].
-]
-
-{ #category : 'execution' }
-Ship >> givePosition [
-	^ position .
-]
-
-{ #category : 'execution' }
-Ship >> hasCrossed: finishLine [
-	^ (position >= finishLine).
+{ #category : 'accessing' }
+Ship >> currentLap [
+	^ currentLap.
 ]
 
 { #category : 'initialization' }
-Ship >> initializePosition [
-	position:= 0.
+Ship >> initializeWithName: shipName [
+	
+	name := shipName.
+	absPosition := 1.
+	lapPosition := 1.
+	currentLap := 1
 ]
 
 { #category : 'execution' }
-Ship >> move: roll [ 
-	position := position + roll.
+Ship >> lapPosition [
+	^ lapPosition .
+]
+
+{ #category : 'execution' }
+Ship >> move: amountToMove limitedToSpaces: maxPosition andLaps: amountOfLaps [
+
+   absPosition := (absPosition + amountToMove ) min: maxPosition * amountOfLaps max: 1.
+	self setCurrentLap: maxPosition.
+	self setLapPosition: maxPosition. 
+
+
+]
+
+{ #category : 'accessing' }
+Ship >> name [
+^name.
+]
+
+{ #category : 'execution' }
+Ship >> resetToStartOfLap [
+
+	lapPosition := 1
+]
+
+{ #category : 'initialization' }
+Ship >> setCurrentLap: maxPosition [
+	currentLap := (absPosition - 1) // maxPosition + 1.
+
+]
+
+{ #category : 'initialization' }
+Ship >> setLapPosition: maxPosition [
+	lapPosition := (absPosition - 1) \\ maxPosition + 1.
 ]
