@@ -104,6 +104,11 @@ SpaceRace >> ranking [
         (shipB currentLap * board size + shipB lapPosition)]) collect: [:ship | ship name].
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> selectShip: shipName [
+	^(ships detect: [:each | each name = shipName ])
+]
+
 { #category : 'testing' }
 SpaceRace >> shipLap: shipName [
 	^ (ships detect: [:each | each name = shipName ]) currentLap.
@@ -117,6 +122,16 @@ SpaceRace >> shipPosition: shipName [
 { #category : 'status' }
 SpaceRace >> shipRanking: ship [
 	^(self ranking) indexOf: ship.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> shipsHand: shipName [
+	^ (ships detect: [:each | each name = shipName ]) hand.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useCard: aCard fromShip: ShipUsing [
+	(self selectShip: ShipUsing) useCard: aCard.
 ]
 
 { #category : 'status' }

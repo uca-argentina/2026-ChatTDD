@@ -5,49 +5,64 @@ Class {
 		'currentLap',
 		'absPosition',
 		'lapPosition',
-		'name'
+		'name',
+		'hand'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'accessing' }
-Ship class >> withName: name [
-	^ (self new) initializeWithName: name.
+Ship class >> withName: arg1 [
+
+	^ self new initializeWithName: arg1
+]
+
+{ #category : 'adding' }
+Ship >> addToHand: aCard [ 
+	hand add: aCard.
 ]
 
 { #category : 'accessing' }
 Ship >> currentLap [
-	^ currentLap.
+
+	^ currentLap
+]
+
+{ #category : 'accessing' }
+Ship >> hand [
+	^ hand.
 ]
 
 { #category : 'initialization' }
-Ship >> initializeWithName: shipName [
-	
-	name := shipName.
+Ship >> initializeWithName: arg1 [
+
+	name := arg1.
 	absPosition := 1.
 	lapPosition := 1.
-	currentLap := 1
+	currentLap := 1.
+	hand := OrderedCollection new.
 ]
 
 { #category : 'execution' }
 Ship >> lapPosition [
-	^ lapPosition .
+
+	^ lapPosition
 ]
 
 { #category : 'execution' }
-Ship >> move: amountToMove limitedToSpaces: maxPosition andLaps: amountOfLaps [
+Ship >> move: arg1 limitedToSpaces: arg2 andLaps: arg3 [
 
-   absPosition := (absPosition + amountToMove ) min: maxPosition * amountOfLaps max: 1.
-	self setCurrentLap: maxPosition.
-	self setLapPosition: maxPosition. 
-
-
+	absPosition := absPosition + arg1 min: arg2 * arg3 max: 1.
+	self
+		setCurrentLap: arg2;
+		setLapPosition: arg2
 ]
 
 { #category : 'accessing' }
 Ship >> name [
-^name.
+
+	^ name
 ]
 
 { #category : 'execution' }
@@ -57,12 +72,18 @@ Ship >> resetToStartOfLap [
 ]
 
 { #category : 'initialization' }
-Ship >> setCurrentLap: maxPosition [
-	currentLap := (absPosition - 1) // maxPosition + 1.
+Ship >> setCurrentLap: arg1 [
 
+	currentLap := absPosition - 1 // arg1 + 1
 ]
 
 { #category : 'initialization' }
-Ship >> setLapPosition: maxPosition [
-	lapPosition := (absPosition - 1) \\ maxPosition + 1.
+Ship >> setLapPosition: arg1 [
+
+	lapPosition := absPosition - 1 \\ arg1 + 1
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> useCard: aCard [ 
+	hand remove: aCard.
 ]

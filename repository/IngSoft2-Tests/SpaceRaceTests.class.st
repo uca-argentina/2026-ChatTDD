@@ -675,3 +675,48 @@ SpaceRaceTests >> test47WhenUsingBoardConstructorTilesAppearBetweenExpectedValue
         self assert: (ratio between: min and: max)
 		]
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test48WhenShipLandsOnCardTileThenItReceivesACard [
+
+	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	aCard := Card new.
+	aTile := HardcodedCardTile thatGives: { aCard }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' }
+		         andDice: { aLoadedDie }.
+	aGame play.
+	self
+		assert: (aGame shipsHand: 'tie fighter')
+		equals: { aCard } asOrderedCollection
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test49WhenShipUsesCardThenItsDeletedFromItsHand [
+
+	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	aCard := Card new.
+	aTile := HardcodedCardTile thatGives: { aCard }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' }
+		         andDice: { aLoadedDie }.
+		
+	aGame play. 
+	aGame useCard: aCard fromShip: 'tie fighter'.
+	aGame play. 
+	self
+		assert: (aGame shipsHand: 'tie fighter')
+		equals: { } asOrderedCollection
+]
