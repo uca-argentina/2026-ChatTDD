@@ -32,8 +32,12 @@ Ship >> calculateEffects [
 
 { #category : 'editing keys' }
 Ship >> cancel: aCard [ 
-	(cardHistory includes: aCard) ifFalse: [Error signal: 'Card isnt affecting this ship' ].
-	cardHistory remove: aCard.
+	cardHistory remove: aCard ifAbsent: nil.
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> checkCard: aCard [ 
+	^ (cardHistory includes: aCard).
 ]
 
 { #category : 'accessing' }

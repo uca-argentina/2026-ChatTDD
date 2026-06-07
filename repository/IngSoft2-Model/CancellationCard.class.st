@@ -7,5 +7,6 @@ Class {
 
 { #category : 'as yet unclassified' }
 CancellationCard >> effectTo: aShip among: allShips andCancel: aCard [ 
-	aShip cancel: aCard.
+	(allShips anySatisfy: [ : ship | ship checkCard: aCard ]) ifFalse: [Error signal: 'Card isnt affecting this ship' ].
+	allShips do: [ :ship | ship cancel: aCard ].
 ]
