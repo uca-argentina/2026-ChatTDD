@@ -846,3 +846,56 @@ SpaceRaceTests >> test54WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 	self
 		assert: (aGame shipPosition: 'tie fighter') equals: 8.
 ]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test55WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
+
+	| aGame aLoadedDie aTile aBoardGenerator acceleration |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	acceleration := AccelerationCard new.
+	aTile := HardcodedCardTile thatGives: { acceleration }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 10
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter'. 'x wing' }
+		         andDice: { aLoadedDie }.
+		
+	aGame play. 
+	aGame useCard: acceleration fromShip: 'tie fighter'.
+	aGame play.
+	aGame play.
+
+	self assert: (aGame shipPosition: 'tie fighter') equals: 8.
+	self assert: (aGame shipPosition: 'x wing') equals: 5.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test56WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
+
+	| aGame aLoadedDie aTile aBoardGenerator overload cancellation |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	overload := OverloadCard new.
+	cancellation := CancellationCard new.
+	aTile := HardcodedCardTile thatGives: { overload. cancellation }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 10
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter'. 'xwing' }
+		         andDice: { aLoadedDie }.
+		
+	aGame play.
+	aGame play.
+	aGame useCard: overload fromShip: 'tie fighter' toShip: 'xwing'.
+	aGame useCard: cancellation fromShip: 'xwing' toShip: 'xwing' cancel: overload .
+	aGame play.
+	aGame play.
+
+	self
+		assert: (aGame shipPosition: 'xwing') equals: 7.
+]

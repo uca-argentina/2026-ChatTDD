@@ -30,6 +30,12 @@ Ship >> calculateEffects [
 
 ]
 
+{ #category : 'editing keys' }
+Ship >> cancel: aCard [ 
+	(cardHistory includes: aCard) ifFalse: [Error signal: 'Card isnt affecting this ship' ].
+	cardHistory remove: aCard.
+]
+
 { #category : 'accessing' }
 Ship >> currentLap [
 

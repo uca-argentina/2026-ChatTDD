@@ -140,14 +140,21 @@ SpaceRace >> shipsHand: shipName [
 { #category : 'as yet unclassified' }
 SpaceRace >> useCard: aCard fromShip: ShipUsing [
 	(self selectShip: ShipUsing) useCard: aCard.
+	aCard effectTo: (self selectShip: ShipUsing ) among: ships .
 	cardHistory add: aCard.
 ]
 
 { #category : 'as yet unclassified' }
 SpaceRace >> useCard: aCard fromShip: shipUsing toShip: shipAffected [ 
 	(self selectShip: shipUsing) useCard: aCard.
-	(self selectShip: shipAffected ) effectBy: aCard.
-	aCard effectTo: shipAffected .
+	aCard effectTo: (self selectShip: shipAffected ) among: ships .
+	cardHistory add: aCard.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useCard: aCard fromShip: shipUsing toShip: shipAffected cancel: cardEffect [
+	(self selectShip: shipUsing) useCard: aCard.
+	aCard effectTo: (self selectShip: shipAffected ) among: ships andCancel: cardEffect .
 	cardHistory add: aCard.
 ]
 

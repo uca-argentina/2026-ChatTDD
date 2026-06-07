@@ -2,7 +2,9 @@ Class {
 	#name : 'HardcodedCardTile',
 	#superclass : 'Object',
 	#instVars : [
-		'cards'
+		'cards',
+		'currentTurn',
+		'totalTurns'
 	],
 	#category : 'IngSoft2-Tests',
 	#package : 'IngSoft2-Tests'
@@ -16,10 +18,13 @@ HardcodedCardTile class >> thatGives: typeCards [
 { #category : 'execution' }
 HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
 
-	triggeringShip addToHand: (cards at:1)
+	triggeringShip addToHand: (cards at: currentTurn).
+	currentTurn:= currentTurn\\ totalTurns + 1.
 ]
 
 { #category : 'initialization' }
 HardcodedCardTile >> initializeWithTypeCards: typeCards [
 	cards := typeCards asOrderedCollection.
+	currentTurn := 1.
+	totalTurns := typeCards size.
 ]

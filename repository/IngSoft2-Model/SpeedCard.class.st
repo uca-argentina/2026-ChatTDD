@@ -17,3 +17,9 @@ SpeedCard >> effect [
 SpeedCard >> effectTo: aShip [
 	shipAffected := aShip.
 ]
+
+{ #category : 'as yet unclassified' }
+SpeedCard >> effectTo: aShip among: allShips [ 
+	shipAffected := aShip name.
+	aShip effectBy: self.
+]
