@@ -7,7 +7,8 @@ Class {
 		'board',
 		'totalParsecs',
 		'laps',
-		'turnManager'
+		'turnManager',
+		'cardHistory'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -36,6 +37,11 @@ SpaceRace >> applyTileEffectFor: aShip [
 		among: ships
 		limitedToSpaces: board size
 		andLaps: laps
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> cardHistory [
+	^ cardHistory.
 ]
 
 { #category : 'status' }
@@ -68,7 +74,9 @@ SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amount
 	ships := shipNames collect: [ :name | Ship withName: name ].
 
 	dice := gameDice. 
-	turnManager:= TurnManager withTotalTurns: ships size
+	turnManager:= TurnManager withTotalTurns: ships size.
+	
+	cardHistory := OrderedCollection new.
 ]
 
 { #category : 'testing' }
@@ -132,6 +140,15 @@ SpaceRace >> shipsHand: shipName [
 { #category : 'as yet unclassified' }
 SpaceRace >> useCard: aCard fromShip: ShipUsing [
 	(self selectShip: ShipUsing) useCard: aCard.
+	cardHistory add: aCard.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useCard: aCard fromShip: shipUsing toShip: shipAffected [ 
+	(self selectShip: shipUsing) useCard: aCard.
+	(self selectShip: shipAffected ) effectBy: aCard.
+	aCard effectTo: shipAffected .
+	cardHistory add: aCard.
 ]
 
 { #category : 'status' }
