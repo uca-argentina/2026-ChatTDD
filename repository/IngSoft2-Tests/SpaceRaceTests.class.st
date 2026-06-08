@@ -677,12 +677,32 @@ SpaceRaceTests >> test47WhenUsingBoardConstructorTilesAppearBetweenExpectedValue
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test48WhenShipLandsOnCardTileThenItReceivesACard [
+SpaceRaceTests >> test48WhenShipIsCreatedThenItStartsWithTwoCards [
 
 	| aGame aLoadedDie aTile aBoardGenerator aCard |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCard := Card new.
-	aTile := HardcodedCardTile thatGives: { aCard }.
+	aTile := BasicTile new.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' }
+		         andDice: { aLoadedDie }.
+	self
+		assert: ((aGame shipsHand: 'tie fighter') size)
+		equals: 2
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test49WhenShipLandsOnCardTileThenItReceivesACard [
+
+	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	aCard := Card new.
+	aTile := CardTile default.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withTotalParsecs: 100
@@ -693,17 +713,17 @@ SpaceRaceTests >> test48WhenShipLandsOnCardTileThenItReceivesACard [
 		         andDice: { aLoadedDie }.
 	aGame play.
 	self
-		assert: (aGame shipsHand: 'tie fighter')
-		equals: { aCard } asOrderedCollection
+		assert: ((aGame shipsHand: 'tie fighter') size)
+		equals: 3
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test49WhenShipUsesCardThenItsDeletedFromItsHand [
+SpaceRaceTests >> test50WhenShipUsesCardThenItsDeletedFromItsHand [
 
-	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
-	aCard := Card new.
-	aTile := HardcodedCardTile thatGives: { aCard }.
+	overload := OverloadCard new.
+	aTile := HardcodedCardTile thatGives: { overload }.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withTotalParsecs: 100
@@ -714,19 +734,19 @@ SpaceRaceTests >> test49WhenShipUsesCardThenItsDeletedFromItsHand [
 		         andDice: { aLoadedDie }.
 		
 	aGame play. 
-	aGame useCard: aCard fromShip: 'tie fighter'.
+	aGame useCard: overload fromShip: 'tie fighter'.
 	aGame play. 
 	self
-		assert: (aGame shipsHand: 'tie fighter')
-		equals: { } asOrderedCollection
+		assert: ((aGame shipsHand: 'tie fighter') size)
+		equals: 2
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test50WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsError [
+SpaceRaceTests >> test51WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsError [
 
-	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
-	aCard := Card new.
+	overload := OverloadCard new.
 	aTile := BasicTile new.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
 	aGame := SpaceRace
@@ -741,7 +761,7 @@ SpaceRaceTests >> test50WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsErr
 	
 	self
 		should: [
-   		aGame useCard: aCard fromShip: 'tie fighter'.]
+   		aGame useCard: overload fromShip: 'tie fighter'.]
 		raise: Error
 		withExceptionDo: [ :error |
 				self
@@ -750,12 +770,12 @@ SpaceRaceTests >> test50WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsErr
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test51WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
+SpaceRaceTests >> test52WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 
-	| aGame aLoadedDie aTile aBoardGenerator aCard |
+	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
-	aCard := Card new.
-	aTile := HardcodedCardTile thatGives: { aCard }.
+	overload := OverloadCard new.
+	aTile := HardcodedCardTile thatGives: { overload }.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withTotalParsecs: 100
@@ -766,16 +786,44 @@ SpaceRaceTests >> test51WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 		         andDice: { aLoadedDie }.
 		
 	aGame play. 
-	aGame useCard: aCard fromShip: 'tie fighter'.
+	aGame useCard: overload fromShip: 'tie fighter'.
 
 	self
 		assert: (aGame cardHistory)
-		equals: { aCard } asOrderedCollection
+		equals: { overload } asOrderedCollection
 	
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test52WhenOverloadCardAppliedThenShipAffectedMovesTwoSpacesLess [
+SpaceRaceTests >> test53WhenAShipTriesToUseAPermanentCardOutsideItsTurnThenItIsNotAllowed [
+
+	| aGame aLoadedDie aTile aBoardGenerator overload |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	overload := OverloadCard new.
+	aTile := HardcodedCardTile thatGives: { overload }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 5
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter' . 'x-wing' }
+		         andDice: { aLoadedDie }.
+		
+	aGame play. 
+
+	self
+		should: [
+   		aGame useCard: overload fromShip: 'tie fighter'.]
+		raise: Error
+		withExceptionDo: [ :error |
+				self
+					assert: error messageText
+					equals: 'Ship cant use permanent card outside its turn' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test54WhenOverloadCardAppliedThenShipAffectedMovesTwoSpacesLess [
 
 	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
@@ -800,7 +848,7 @@ SpaceRaceTests >> test52WhenOverloadCardAppliedThenShipAffectedMovesTwoSpacesLes
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test53WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackInSpaces [
+SpaceRaceTests >> test55WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackInSpaces [
 
 	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 1 }.
@@ -824,7 +872,7 @@ SpaceRaceTests >> test53WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackIn
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test54WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
+SpaceRaceTests >> test56WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 
 	| aGame aLoadedDie aTile aBoardGenerator speed |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
@@ -848,7 +896,7 @@ SpaceRaceTests >> test54WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test55WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
+SpaceRaceTests >> test57WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
 
 	| aGame aLoadedDie aTile aBoardGenerator acceleration |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
@@ -864,16 +912,49 @@ SpaceRaceTests >> test55WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
 		         andDice: { aLoadedDie }.
 		
 	aGame play. 
+	aGame play.
 	aGame useCard: acceleration fromShip: 'tie fighter'.
 	aGame play.
 	aGame play.
 
 	self assert: (aGame shipPosition: 'tie fighter') equals: 8.
-	self assert: (aGame shipPosition: 'x wing') equals: 5.
+	self assert: (aGame shipPosition: 'x wing') equals: 8.
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test56WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
+SpaceRaceTests >> test58WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyways [
+
+	| aGame aLoadedDie aTile aBoardGenerator overload cancellation acceleration |
+	aLoadedDie := LoadedDie thatRolls: { 3 }.
+	
+	overload := OverloadCard new.
+	cancellation := CancellationCard new.
+	acceleration := AccelerationCard new.
+	
+	aTile := HardcodedCardTile thatGives: { overload. cancellation. acceleration }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aGame := SpaceRace
+		         withTotalParsecs: 100
+		         dividedInSpaces: 10
+		         andLaps: 1
+		         andBoardGenerator: aBoardGenerator
+		         andShips: { 'tie fighter'. 'xwing' . 'millenium falcon'}
+		         andDice: { aLoadedDie }.
+		
+	aGame play.
+	aGame play.
+	aGame play.
+	aGame useCard: overload fromShip: 'tie fighter' toShip: 'xwing'.
+	aGame play.
+	aGame play.
+	aGame useCard: cancellation fromShip: 'xwing' toShip: 'xwing' cancel: overload .
+
+	self
+		assert: (aGame shipPosition: 'xwing') equals: 5.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test59WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
 
 	| aGame aLoadedDie aTile aBoardGenerator overload cancellation |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.

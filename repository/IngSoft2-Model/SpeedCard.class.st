@@ -1,6 +1,6 @@
 Class {
 	#name : 'SpeedCard',
-	#superclass : 'Object',
+	#superclass : 'PermanentCard',
 	#instVars : [
 		'shipAffected'
 	],

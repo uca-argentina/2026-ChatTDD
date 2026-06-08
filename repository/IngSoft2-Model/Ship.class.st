@@ -59,11 +59,13 @@ Ship >> hand [
 { #category : 'initialization' }
 Ship >> initializeWithName: arg1 [
 
+	| cardGenerator |
 	name := arg1.
 	absPosition := 1.
 	lapPosition := 1.
 	currentLap := 1.
-	hand := OrderedCollection new.
+	cardGenerator := CardGenerator new.
+	hand := {cardGenerator giveRandomCard . cardGenerator giveRandomCard} asOrderedCollection .
 	cardHistory := OrderedCollection new.
 ]
 

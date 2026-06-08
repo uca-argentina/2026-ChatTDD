@@ -10,7 +10,8 @@ BoardGenerator >> generateTileWithParsecFactor: parsecFactor [
     | valor table |
     valor := 100 atRandom.
     table := {
-        { 40.  [ BasicTile new ] }.
+        { 30.  [ BasicTile new ] }.
+		  { 40.  [ CardTile new ] }.
         { 60.  [ WormHoleTile new ] }.
         { 80.  [ SpeedUpTile new ] }.
         { 90.  [ MoonWalkTile withAmountBack: 10 atRandom ] }.
