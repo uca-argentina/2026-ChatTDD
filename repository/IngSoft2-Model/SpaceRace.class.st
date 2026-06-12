@@ -50,13 +50,19 @@ SpaceRace >> applyTileEffectFor: arg1 [
 
 { #category : 'as yet unclassified' }
 SpaceRace >> cardHistory [
-	^ cardHistory.
+
+	^ cardHistory
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> checkTurn: ship [
-	^turnManager currentTurn = (ships indexOf: ship).
+SpaceRace >> cardHistoryNames [
+	^ self cardHistory collect:[:card | card name].
+]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> checkTurn: arg1 [
+
+	^ turnManager currentTurn = (ships indexOf: arg1)
 ]
 
 { #category : 'status' }
@@ -79,20 +85,17 @@ SpaceRace >> hasEnded [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeWithTotalParsecs: amountOfParsecs dividedInSpaces: amountOfSpaces andLaps: amountOfLaps andBoardGenerator: boardGen andShips: shipNames withDice: gameDice [
+SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 withDice: arg6 [
 
-	totalParsecs := amountOfParsecs.
-	laps := amountOfLaps.
-	
-	board := (1 to: amountOfSpaces) collect: [ :i |  boardGen generateTileWithParsecFactor: (totalParsecs / amountOfSpaces) ].
-	
+	totalParsecs := arg1.
+	laps := arg3.
+	board := (1 to: arg2) collect: [ :arg7 |
+		         arg4 generateTileWithParsecFactor: totalParsecs / arg2 ].
 	ships := OrderedCollection new.
-	ships := shipNames collect: [ :name | Ship withName: name ].
-
-	dice := gameDice. 
-	turnManager:= TurnManager withTotalTurns: ships size.
-	
-	cardHistory := OrderedCollection new.
+	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ].
+	dice := arg6.
+	turnManager := TurnManager withTotalTurns: ships size.
+	cardHistory := OrderedCollection new
 ]
 
 { #category : 'testing' }
@@ -131,8 +134,9 @@ SpaceRace >> ranking [
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> selectShip: shipName [
-	^(ships detect: [:each | each name = shipName ])
+SpaceRace >> selectShip: arg1 [
+
+	^ ships detect: [ :arg2 | arg2 name = arg1 ]
 ]
 
 { #category : 'testing' }
@@ -142,9 +146,9 @@ SpaceRace >> shipLap: arg1 [
 ]
 
 { #category : 'testing' }
-SpaceRace >> shipPosition: arg1 [
+SpaceRace >> shipPosition: shipName [
 
-	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) lapPosition
+	^ (ships detect: [ :ship | ship name = shipName ]) lapPosition
 ]
 
 { #category : 'status' }
@@ -154,43 +158,43 @@ SpaceRace >> shipRanking: arg1 [
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> shipsHand: shipName [
-	^ (ships detect: [:each | each name = shipName ]) hand.
+SpaceRace >> shipsHand: arg1 [
+
+	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) hand
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> useCard: aCard fromShip: ShipUsing [
+SpaceRace >> useCard: cardName fromShip: shipUsing [
 
-	| ship |
-	ship := self selectShip: ShipUsing.
-	(aCard isPermanent and: [ (self checkTurn: ship) not ]) ifTrue: [
-        Error signal: 'Ship cant use permanent card outside its turn' ].
-	ship useCard: aCard.
-	aCard effectTo: (self selectShip: ShipUsing) among: ships.
+	| ship turnCondition aCard |
+	ship := self selectShip: shipUsing.
+	turnCondition := turnManager turnMatches: (ships indexOf: ship).
+	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
+	aCard effectTo: (self selectShip: shipUsing) among: ships.
 	cardHistory add: aCard
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> useCard: aCard fromShip: shipUsing toShip: shipAffected [
+SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 
-	| ship |
+	| ship turnCondition aCard |
 	ship := self selectShip: shipUsing.
-	(aCard isPermanent and: [ (self checkTurn: ship) not ]) ifTrue: [
-        Error signal: 'Ship cant use permanent card outside its turn' ].
-	ship useCard: aCard.
+	turnCondition := turnManager turnMatches: (ships indexOf: ship).
+	aCard := ship useCard: cardName withTurnCondition: turnCondition.
 	aCard effectTo: (self selectShip: shipAffected) among: ships.
 	cardHistory add: aCard
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> useCard: aCard fromShip: shipUsing toShip: shipAffected cancel: cardEffect [
-	| ship |
-    ship := self selectShip: shipUsing.
-    (aCard isPermanent and: [ (self checkTurn: ship) not ]) ifTrue: [
-        Error signal: 'Ship cant use permanent card outside its turn' ].
-    ship useCard: aCard.
-    aCard effectTo: (self selectShip: shipAffected) among: ships andCancel: cardEffect.
-    cardHistory add: aCard.
+SpaceRace >> useCard: arg1 fromShip: arg2 toShip: arg3 cancel: arg4 [
+
+	| tmp1 |
+	tmp1 := self selectShip: arg2.
+	(arg1 isPlayable and: [ (self checkTurn: tmp1) not ]) ifTrue: [
+		Error signal: 'Ship cant use permanent card outside its turn' ].
+	tmp1 useCard: arg1.
+	arg1 effectTo: (self selectShip: arg3) among: ships andCancel: arg4.
+	cardHistory add: arg1
 ]
 
 { #category : 'status' }

@@ -6,6 +6,7 @@ Class {
 }
 
 { #category : 'testing' }
-InstantCard >> isPermanent [
-^false
+InstantCard >> isPlayable: canPlayerUseCard [
+
+	^ true
 ]

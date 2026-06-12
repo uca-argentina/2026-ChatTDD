@@ -4,26 +4,45 @@ Class {
 	#instVars : [
 		'cards',
 		'totalTurns',
-		'turnManager'
+		'turnManager',
+		'counters'
 	],
 	#category : 'IngSoft2-Tests',
 	#package : 'IngSoft2-Tests'
 }
 
 { #category : 'as yet unclassified' }
-HardcodedCardTile class >> thatGives: typeCards [
-	^(self new) initializeWithTypeCards: typeCards.
+HardcodedCardTile class >> thatGives: arg1 [
+
+	^ self new initializeWithTypeCards: arg1
+]
+
+{ #category : 'as yet unclassified' }
+HardcodedCardTile >> createCard: cardType [
+    | name |
+    name := cardType asString asLowercase.
+
+    name = 'overload' ifTrue: [ ^OverloadCard usingCounter: (counters at:1) ].
+    name = 'speed' ifTrue: [ ^SpeedCard usingCounter: (counters at:2) ].
+    name = 'acceleration' ifTrue: [ ^AccelerationCard usingCounter: (counters at:3) ].
+    name = 'cancellation' ifTrue: [ ^CancellationCard usingCounter: (counters at:4) ].
+]
+
+{ #category : 'as yet unclassified' }
+HardcodedCardTile >> currentCardType [
+ ^ cards at: (turnManager currentTurn)
 ]
 
 { #category : 'execution' }
 HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
 
-	triggeringShip addToHand: (cards at: (turnManager currentTurn)).
+	triggeringShip addToHand: (self createCard: (self currentCardType)).
 	turnManager changeTurn.
 ]
 
 { #category : 'initialization' }
 HardcodedCardTile >> initializeWithTypeCards: typeCards [
 	cards := typeCards asOrderedCollection.
+	counters := { Counter start. Counter start. Counter start. Counter start.} asOrderedCollection.
 	turnManager := TurnManager withTotalTurns: typeCards size
 ]

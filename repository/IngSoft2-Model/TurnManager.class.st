@@ -30,3 +30,8 @@ TurnManager >> initializeWithTotalTurns: amountOfTurns [
 	totalTurns:= amountOfTurns.
 	currentTurn:= 1
 ]
+
+{ #category : 'as yet unclassified' }
+TurnManager >> turnMatches: shipsTurn [ 
+	^ self currentTurn = shipsTurn .
+]

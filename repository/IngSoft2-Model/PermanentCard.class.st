@@ -6,6 +6,8 @@ Class {
 }
 
 { #category : 'testing' }
-PermanentCard >> isPermanent [
-^true
+PermanentCard >> isPlayable: canPlayerUseCard [
+
+	^ canPlayerUseCard ifFalse: [
+		Error signal: 'Ship cant use permanent card outside its turn' ].
 ]

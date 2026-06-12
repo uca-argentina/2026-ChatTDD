@@ -20,24 +20,27 @@ Ship class >> withName: arg1 [
 ]
 
 { #category : 'adding' }
-Ship >> addToHand: aCard [ 
-	hand add: aCard.
+Ship >> addToHand: arg1 [
+
+	hand add: arg1
 ]
 
 { #category : 'as yet unclassified' }
 Ship >> calculateEffects [
-	^ cardHistory sum: [ :card | card effect ] ifEmpty: 0 
 
+	^ cardHistory sum: [ :arg1 | arg1 effect ] ifEmpty: 0
 ]
 
 { #category : 'editing keys' }
-Ship >> cancel: aCard [ 
-	cardHistory remove: aCard ifAbsent: nil.
+Ship >> cancel: arg1 [
+
+	cardHistory remove: arg1 ifAbsent: nil
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> checkCard: aCard [ 
-	^ (cardHistory includes: aCard).
+Ship >> checkCard: arg1 [
+
+	^ cardHistory includes: arg1
 ]
 
 { #category : 'accessing' }
@@ -47,26 +50,30 @@ Ship >> currentLap [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> effectBy: aCard [ 
-	cardHistory add: aCard.
+Ship >> effectBy: arg1 [
+
+	cardHistory add: arg1
 ]
 
 { #category : 'accessing' }
 Ship >> hand [
-	^ hand.
+
+	^ hand
 ]
 
 { #category : 'initialization' }
 Ship >> initializeWithName: arg1 [
 
-	| cardGenerator |
+	| tmp1 |
 	name := arg1.
 	absPosition := 1.
 	lapPosition := 1.
 	currentLap := 1.
-	cardGenerator := CardGenerator new.
-	hand := {cardGenerator giveRandomCard . cardGenerator giveRandomCard} asOrderedCollection .
-	cardHistory := OrderedCollection new.
+	tmp1 := CardGenerator new.
+	hand := {
+		        tmp1 giveRandomCard.
+		        tmp1 giveRandomCard } asOrderedCollection.
+	cardHistory := OrderedCollection new
 ]
 
 { #category : 'execution' }
@@ -77,17 +84,13 @@ Ship >> lapPosition [
 
 { #category : 'execution' }
 Ship >> move: arg1 limitedToSpaces: arg2 andLaps: arg3 [
-	| efects |
-	efects := self calculateEffects.
-	absPosition := (absPosition + arg1 + efects) min: arg2 * arg3 max: 1.
+
+	| tmp1 |
+	tmp1 := self calculateEffects.
+	absPosition := absPosition + arg1 + tmp1 min: arg2 * arg3 max: 1.
 	self
 		setCurrentLap: arg2;
 		setLapPosition: arg2
-		
-	
-"calcularEfectos:
-	^ historialCartas sum: [ :carta | carta effect ]
-"
 ]
 
 { #category : 'accessing' }
@@ -100,6 +103,14 @@ Ship >> name [
 Ship >> resetToStartOfLap [
 
 	lapPosition := 1
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> searchCardInHand: cardName [
+
+	^ hand
+		  detect: [ :card | card name = cardName ]
+		  ifNone: [ Error signal: 'Cant use card that isnt in your hand' ]
 ]
 
 { #category : 'initialization' }
@@ -115,7 +126,25 @@ Ship >> setLapPosition: arg1 [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> useCard: aCard [ 
-	(hand includes: aCard) ifFalse: [ Error signal: 'Cant use card that isnt in your hand'].
-	hand remove: aCard.
+Ship >> useCard: cardName [
+
+	| selectedCard |
+	selectedCard := self searchCardInHand: cardName.
+
+	selectedCard isPlayable.
+
+	hand remove: selectedCard.
+	^ selectedCard
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> useCard: cardName withTurnCondition: canPlayerUseCard [
+
+	| selectedCard |
+	selectedCard := self searchCardInHand: cardName.
+
+	selectedCard isPlayable: canPlayerUseCard.
+
+	hand remove: selectedCard.
+	^ selectedCard
 ]

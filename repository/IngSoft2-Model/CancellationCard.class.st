@@ -6,7 +6,14 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-CancellationCard >> effectTo: aShip among: allShips andCancel: aCard [ 
-	(allShips anySatisfy: [ : ship | ship checkCard: aCard ]) ifFalse: [Error signal: 'Card isnt affecting this ship' ].
-	allShips do: [ :ship | ship cancel: aCard ].
+CancellationCard >> effectTo: arg1 among: arg2 andCancel: arg3 [
+
+	(arg2 anySatisfy: [ :arg4 | arg4 checkCard: arg3 ]) ifFalse: [
+		Error signal: 'Card isnt affecting this ship' ].
+	arg2 do: [ :arg5 | arg5 cancel: arg3 ]
+]
+
+{ #category : 'accessing' }
+CancellationCard >> name [
+	^ 'cancellation'.
 ]
