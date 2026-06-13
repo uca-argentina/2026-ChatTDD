@@ -6,6 +6,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Card >> effectTo: aShip among: aCollection [ 
-	":)"
+Card >> effectTo: arg1 among: arg2 [
+
+	
 ]

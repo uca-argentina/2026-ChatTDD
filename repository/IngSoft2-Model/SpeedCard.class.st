@@ -1,25 +1,38 @@
 Class {
 	#name : 'SpeedCard',
-	#superclass : 'Object',
+	#superclass : 'PermanentCard',
 	#instVars : [
-		'shipAffected'
+		'shipAffected',
+		'name'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
+SpeedCard class >> usingCounter: extCounter [
+	^(self new) initializeNameUsingCounter: extCounter.
+]
+
+{ #category : 'as yet unclassified' }
 SpeedCard >> effect [
-	^ 1.
+
+	^ 1
 ]
 
 { #category : 'as yet unclassified' }
-SpeedCard >> effectTo: aShip [
-	shipAffected := aShip.
+SpeedCard >> effectTo: arg1 among: arg2 [
+
+	shipAffected := arg1 name.
+	arg1 effectBy: self
 ]
 
-{ #category : 'as yet unclassified' }
-SpeedCard >> effectTo: aShip among: allShips [ 
-	shipAffected := aShip name.
-	aShip effectBy: self.
+{ #category : 'initialization' }
+SpeedCard >> initializeNameUsingCounter: counter [ 
+	name:= 'speed', (counter add)asString.
+]
+
+{ #category : 'accessing' }
+SpeedCard >> name [
+	^ name
 ]
