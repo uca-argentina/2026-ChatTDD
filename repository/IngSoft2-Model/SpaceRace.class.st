@@ -142,6 +142,7 @@ SpaceRace >> selectShip: arg1 [
 { #category : 'initialization' }
 SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTargetCard: targetCardName [ 
 	| ship |
+	(cardHistory anySatisfy: [ :card | card isPermanent ]) ifFalse: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect'  ].
 	ship := self selectShip:shipName.
 	ship setCancellationCard: cancellationCardName toTargetCard: targetCardName.
 ]

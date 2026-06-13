@@ -960,6 +960,33 @@ SpaceRaceTests >> test59WhenCancellationCardUsedThenASelectedPermanentEffectIsRe
 ]
 
 { #category : 'tests' }
+SpaceRaceTests >> test60WhenCancellationCardIsUsedButThereAreNotAnyPermanentsThenItRaisesError [
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play; 
+        play. 
+
+    self
+        should: [ aGame setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1'. ]
+        raise: Error
+        withExceptionDo: [ :error |
+            self assert: error messageText equals: 'Cannot use cancellation card, there are no permanent cards in effect' ]
+
+]
+
+{ #category : 'tests' }
 SpaceRaceTests >> test60WhenCancellationCardTargetsACardNotAffectingAnyShipThenErrorIsRaised [ 
 
     | aGame aLoadedDie aCardTile aBoardGenerator |
