@@ -5,6 +5,17 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
+{ #category : 'as yet unclassified' }
+BoardGenerator >> generateHyperJumpValues [
+    | units size |
+    units := #('Parsecs' 'Light years').
+    size := (2 + 5 atRandom).
+    ^ (1 to: size) collect: [ :each |
+        { (10 + 90 atRandom).
+          (units at: units size atRandom) }
+    ]
+]
+
 { #category : 'execution' }
 BoardGenerator >> generateTileWithParsecFactor: arg1 [
 
@@ -28,7 +39,7 @@ BoardGenerator >> generateTileWithParsecFactor: arg1 [
 			        [ MoonWalkTile withAmountBack: 10 atRandom ] }.
 		        {
 			        98.
-			        [ HyperJumpTile withParsecFactor: arg1 ] }.
+			        [ HyperJumpTile withParsecFactor: arg1 and: self generateHyperJumpValues ] }.
 		        {
 			        100.
 			        [ AtomicBombTile new ] } }.
