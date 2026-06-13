@@ -428,7 +428,7 @@ SpaceRaceTests >> test30WhenTotalParsecsAreEqualOrLessThan0ThenSpaceRaceIsntCrea
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: {1}.
-	aTile := HyperJumpTile withParsecFactor: 100/8.
+	aTile := HyperJumpTile withParsecFactor: 100/8 and: { {80. 'Parsecs'}. {50 . 'Parsecs'}. {20 . 'Parsecs'} }.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
 	
 	self
@@ -447,7 +447,7 @@ SpaceRaceTests >> test31WhenAShipLandsOnHyperJumpTileThenTheShipMovesInParsecs [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: {1}.
-	aTile := HyperJumpTile withParsecFactor: 100/8.
+	aTile := HyperJumpTile withParsecFactor: 100/8 and: { {80. 'Parsecs'}. {50 . 'Parsecs'}. {20 . 'Parsecs'} }.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
    	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 8 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -459,7 +459,7 @@ SpaceRaceTests >> test32WhenMultipleShipsLandOnHyperJumpThenJumpDistanceRotates 
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: {1}.
-	aTile := HyperJumpTile withParsecFactor: 100/16.
+	aTile := HyperJumpTile withParsecFactor: 100/16 and: { {80. 'Parsecs'}. {50 . 'Parsecs'}. {20 . 'Parsecs'} }.
 	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
    	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 25 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play. "1+ (80//6.25) = 13"
@@ -1195,4 +1195,32 @@ SpaceRaceTests >> test66WhenCancellationCardIsUsedThenAccelerationEffectIsRemove
 
     self assert: (aGame shipPosition: 'tie fighter') equals: 11.
     self assert: (aGame shipPosition: 'xwing') equals: 11
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test67WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYears [
+
+	| aGame aLoadedDie aTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile withParsecFactor: 100/8 and: { {80. 'Light years'}. {50 . 'Light years'}. {20 . 'Light years'} }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+   	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 8 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'tie fighter' } andDice: {aLoadedDie }.
+	aGame play.
+	self assert: (aGame shipPosition: 'tie fighter' ) equals: 4. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test68WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYearsAndParsecs [
+
+	| aGame aLoadedDie aTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: {1}.
+	aTile := HyperJumpTile withParsecFactor: 100/16 and: { {80. 'Parsecs'}. {50 . 'Light years'}. {20 . 'Parsecs'} }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+   	aGame:= SpaceRace withTotalParsecs: 100 dividedInSpaces: 25 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
+	aGame play. "1+ (80//6.25) = 13"
+	aGame play. "1+ (50//3//6.25) = 3"
+	aGame play. "13 + 1 + (20//6.25) = 17"
+	aGame play. "3 + 1 + (80//6.25) = 16" 
+	self assert: (aGame shipPosition: 'millenium falcon') equals: 18. 
+	self assert: (aGame shipPosition: 'tie fighter' ) equals: 17. 
 ]
