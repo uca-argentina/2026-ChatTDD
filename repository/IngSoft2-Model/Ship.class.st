@@ -19,6 +19,11 @@ Ship class >> withName: arg1 [
 	^ self new initializeWithName: arg1
 ]
 
+{ #category : 'as yet unclassified' }
+Ship >> activeCardsNames [
+	^ cardHistory collect: [ :card | card name ].
+]
+
 { #category : 'adding' }
 Ship >> addToHand: arg1 [
 
@@ -32,22 +37,17 @@ Ship >> calculateEffects [
 ]
 
 { #category : 'editing keys' }
-Ship >> cancel: cardName [
+Ship >> cancel: target [
 
 	| cardToCancel |
-	cardToCancel:= cardHistory detect: [ :card | card name = cardName ].
+	cardToCancel:= cardHistory detect: [ :card | card = target ].
 	cardHistory remove: cardToCancel.
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> cardHistoryNames [
-	^ cardHistory collect: [ :card | card name ].
-]
+Ship >> checkCard: target [
 
-{ #category : 'as yet unclassified' }
-Ship >> checkCard: cardName [
-
-	^ cardHistory anySatisfy: [ :card | card name = cardName]
+	^ cardHistory anySatisfy: [ :card | card = target]
 ]
 
 { #category : 'accessing' }

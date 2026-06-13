@@ -8,7 +8,7 @@ Class {
 		'totalParsecs',
 		'laps',
 		'turnManager',
-		'cardHistory'
+		'activeCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -32,6 +32,17 @@ SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 an
 		  withDice: arg6
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> activeCards [
+
+	^ activeCards
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> activeCardsNames [
+	^ self activeCards collect:[:card | card name].
+]
+
 { #category : 'testing' }
 SpaceRace >> amountOfShips [
 
@@ -46,17 +57,6 @@ SpaceRace >> applyTileEffectFor: arg1 [
 		among: ships
 		limitedToSpaces: board size
 		andLaps: laps
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace >> cardHistory [
-
-	^ cardHistory
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace >> cardHistoryNames [
-	^ self cardHistory collect:[:card | card name].
 ]
 
 { #category : 'as yet unclassified' }
@@ -95,7 +95,7 @@ SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg
 	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
 	dice := arg6.
 	turnManager := TurnManager withTotalTurns: ships size.
-	cardHistory := OrderedCollection new
+	activeCards := OrderedCollection new
 ]
 
 { #category : 'testing' }
@@ -140,16 +140,31 @@ SpaceRace >> selectShip: arg1 [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTargetCard: targetCardName [ 
-	| ship |
-	(cardHistory anySatisfy: [ :card | card isPermanent ]) ifFalse: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect'  ].
-	ship := self selectShip:shipName.
-	ship setCancellationCard: cancellationCardName toTargetCard: targetCardName.
+SpaceRace >> setAndUseCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCardName [
+
+	| targetCard |
+	
+	activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
+	
+	targetCard:= activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+	
+	 self setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: targetCard .
+    self useCard: 'cancellation1' fromShip: 'xwing'.
+	activeCards remove: targetCard .
+
+]
+
+{ #category : 'initialization' }
+SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTargetCard: targetCard [
+	
+    | ship |
+ship := self selectShip:shipName.
+    ship setCancellationCard: cancellationCardName toTargetCard: targetCard.
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> shipCardHistoryNames: shipName [ 
-	^ (self selectShip: shipName) cardHistoryNames
+SpaceRace >> shipActiveCardsNames: shipName [ 
+	^ (self selectShip: shipName) activeCardsNames
 ]
 
 { #category : 'testing' }
@@ -184,7 +199,8 @@ SpaceRace >> useCard: cardName fromShip: shipUsing [
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
 	aCard effectTo: (self selectShip: shipUsing) among: ships.
-	cardHistory add: aCard
+	
+	(aCard isPermanent) ifTrue: [activeCards add: aCard].
 ]
 
 { #category : 'as yet unclassified' }
@@ -192,22 +208,12 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 
 	| ship turnCondition aCard |
 	ship := self selectShip: shipUsing.
+	
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard := ship useCard: cardName withTurnCondition: turnCondition.
+	
 	aCard effectTo: (self selectShip: shipAffected) among: ships.
-	cardHistory add: aCard
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace >> useCard: arg1 fromShip: arg2 toShip: arg3 cancel: arg4 [
-
-	| tmp1 |
-	tmp1 := self selectShip: arg2.
-	(arg1 isPlayable and: [ (self checkTurn: tmp1) not ]) ifTrue: [
-		Error signal: 'Ship cant use permanent card outside its turn' ].
-	tmp1 useCard: arg1.
-	arg1 effectTo: (self selectShip: arg3) among: ships andCancel: arg4.
-	cardHistory add: arg1
+	(aCard isPermanent) ifTrue: [activeCards add: aCard].
 ]
 
 { #category : 'status' }
