@@ -8,7 +8,7 @@ Class {
 		'totalParsecs',
 		'laps',
 		'turnManager',
-		'activeCards'
+		'cardHistory'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -34,8 +34,7 @@ SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 an
 
 { #category : 'as yet unclassified' }
 SpaceRace >> activeCards [
-
-	^ activeCards
+ ^ ships flatCollect: [ :ship | ship activeCards ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -57,6 +56,11 @@ SpaceRace >> applyTileEffectFor: arg1 [
 		among: ships
 		limitedToSpaces: board size
 		andLaps: laps
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> cardHistoryNames [
+	^ cardHistory collect:[:card | card name].
 ]
 
 { #category : 'as yet unclassified' }
@@ -94,8 +98,8 @@ SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg
 	ships := OrderedCollection new.
 	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
 	dice := arg6.
-	turnManager := TurnManager withTotalTurns: ships size.
-	activeCards := OrderedCollection new
+	turnManager := TurnManager withTotalTurns: (ships size).
+	cardHistory := OrderedCollection new.
 ]
 
 { #category : 'testing' }
@@ -144,13 +148,12 @@ SpaceRace >> setAndUseCancellationCard: cancellationCardName fromShip: shipUsing
 
 	| targetCard |
 	
-	activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
+	self activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
 	
-	targetCard:= activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+	targetCard:= self activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
 	
-	 self setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: targetCard .
-    self useCard: 'cancellation1' fromShip: 'xwing'.
-	activeCards remove: targetCard .
+	 self setCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
+    self useCard: cancellationCardName  fromShip: shipUsing .
 
 ]
 
@@ -200,7 +203,7 @@ SpaceRace >> useCard: cardName fromShip: shipUsing [
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
 	aCard effectTo: (self selectShip: shipUsing) among: ships.
 	
-	(aCard isPermanent) ifTrue: [activeCards add: aCard].
+	cardHistory add: aCard.
 ]
 
 { #category : 'as yet unclassified' }
@@ -213,7 +216,8 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 	aCard := ship useCard: cardName withTurnCondition: turnCondition.
 	
 	aCard effectTo: (self selectShip: shipAffected) among: ships.
-	(aCard isPermanent) ifTrue: [activeCards add: aCard].
+	
+	cardHistory add: aCard.
 ]
 
 { #category : 'status' }

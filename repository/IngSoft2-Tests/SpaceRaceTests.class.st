@@ -779,7 +779,7 @@ SpaceRaceTests >> test52WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 	aGame
 		play;
 		useCard: 'overload1' fromShip: 'tie fighter'.
-	self assert: aGame activeCardsNames equals: { 'overload1' } asOrderedCollection
+	self assert: aGame activeCardsNames equals: { 'overload1' }
 ]
 
 { #category : 'tests' }
@@ -947,7 +947,7 @@ SpaceRaceTests >> test59WhenInstantCardIsUsedThenItDoesntShowUpInActiveCards [
 
     aGame setAndUseCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1'.
 
-    self assert: (aGame activeCardsNames) equals: { } asOrderedCollection .
+    self assert: (aGame activeCardsNames) equals: { }  .
 
     aGame
         play;

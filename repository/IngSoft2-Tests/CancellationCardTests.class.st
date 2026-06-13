@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'tests' }
-CancellationCardTests >> test01WhenFirstSpeedCardCardIsCreatedItsNameIsSpeed1 [
+CancellationCardTests >> test01WhenFirstCancellationCardCardIsCreatedItsNameIsCancellation1 [
 
 	| cancellation counter |
 	counter := Counter start.
@@ -15,7 +15,7 @@ CancellationCardTests >> test01WhenFirstSpeedCardCardIsCreatedItsNameIsSpeed1 [
 ]
 
 { #category : 'tests' }
-CancellationCardTests >> test02WhenACardIsCreatedTheNameReflectsItsPositionAmongAllOtherSpeedCards [
+CancellationCardTests >> test02WhenACardIsCreatedTheNameReflectsItsPositionAmongAllOtherCancellationCards [
 
 	| cancellation counter cancellation2 cancellation3 |
 	counter := Counter start.

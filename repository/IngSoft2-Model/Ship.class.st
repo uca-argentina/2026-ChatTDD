@@ -7,7 +7,7 @@ Class {
 		'lapPosition',
 		'name',
 		'hand',
-		'cardHistory'
+		'activeCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -19,9 +19,14 @@ Ship class >> withName: arg1 [
 	^ self new initializeWithName: arg1
 ]
 
+{ #category : 'accessing' }
+Ship >> activeCards [
+^ activeCards .
+]
+
 { #category : 'as yet unclassified' }
 Ship >> activeCardsNames [
-	^ cardHistory collect: [ :card | card name ].
+	^ activeCards collect: [ :card | card name ].
 ]
 
 { #category : 'adding' }
@@ -33,21 +38,21 @@ Ship >> addToHand: arg1 [
 { #category : 'as yet unclassified' }
 Ship >> calculateEffects [
 
-	^ cardHistory sum: [ :arg1 | arg1 effect ] ifEmpty: 0
+	^ activeCards sum: [ :arg1 | arg1 effect ] ifEmpty: 0
 ]
 
 { #category : 'editing keys' }
 Ship >> cancel: target [
 
 	| cardToCancel |
-	cardToCancel:= cardHistory detect: [ :card | card = target ].
-	cardHistory remove: cardToCancel.
+	cardToCancel:= activeCards detect: [ :card | card = target ].
+	activeCards remove: cardToCancel.
 ]
 
 { #category : 'as yet unclassified' }
 Ship >> checkCard: target [
 
-	^ cardHistory anySatisfy: [ :card | card = target]
+	^ activeCards anySatisfy: [ :card | card = target]
 ]
 
 { #category : 'accessing' }
@@ -57,9 +62,9 @@ Ship >> currentLap [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> effectBy: arg1 [
+Ship >> effectBy: card [
 
-	cardHistory add: arg1
+	activeCards add: card
 ]
 
 { #category : 'accessing' }
@@ -80,7 +85,7 @@ Ship >> initializeWithName: arg1 [
 	hand := {
 		        tmp1 giveRandomCard.
 		        tmp1 giveRandomCard } asOrderedCollection.
-	cardHistory := OrderedCollection new
+	activeCards := OrderedCollection new
 ]
 
 { #category : 'execution' }
