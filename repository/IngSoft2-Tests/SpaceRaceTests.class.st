@@ -5,6 +5,26 @@ Class {
 	#package : 'IngSoft2-Tests'
 }
 
+{ #category : 'as yet unclassified' }
+SpaceRaceTests >> methodSelectorAndArgumentNames [
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'speed' . 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 10
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter' . 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		useCard: 'speed1' fromShip: 'tie fighter';
+		play.
+	self assert: (aGame shipPosition: 'tie fighter') equals: 8
+]
+
 { #category : 'tests' }
 SpaceRaceTests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 	|aGame aLoadedDie aTile aBoardGenerator |
@@ -730,7 +750,7 @@ SpaceRaceTests >> test50WhenShipUsesCardThenItsDeletedFromItsHand [
 		         andDice: { aLoadedDie }.
 		
 	aGame play. 
-	aGame useCard: 'overload1' fromShip: 'tie fighter'.
+	aGame useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter'.
 	aGame play. 
 	self
 		assert: ((aGame shipsHand: 'tie fighter') size)
@@ -754,7 +774,7 @@ SpaceRaceTests >> test51WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsErr
 		        andDice: { tmp2 }.
 	tmp1 play.
 	self
-		should: [ tmp1 useCard: tmp5 fromShip: 'tie fighter' ]
+		should: [ tmp1 useCard: tmp5 fromShip: 'tie fighter' toShip: 'tie fighter'.]
 		raise: Error
 		withExceptionDo: [ :arg1 |
 				self
@@ -778,7 +798,7 @@ SpaceRaceTests >> test52WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 		        andDice: { aDie }.
 	aGame
 		play;
-		useCard: 'overload1' fromShip: 'tie fighter'.
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter'.
 	self assert: aGame activeCardsNames equals: { 'overload1' }
 ]
 
@@ -799,33 +819,12 @@ SpaceRaceTests >> test53WhenAShipTriesToUseAPermanentCardOutsideItsTurnThenItIsN
 		play.
 
 	self
-		should: [ aGame useCard: 'overload1' fromShip: 'tie fighter']
+		should: [ aGame useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter'.]
 		raise: Error
 		withExceptionDo: [ :arg1 |
 				self
 					assert: arg1 messageText
 					equals: 'Ship cant use permanent card outside its turn' ]
-]
-
-{ #category : 'tests' }
-SpaceRaceTests >> test54WhenOverloadCardAppliedThenShipAffectedMovesTwoSpacesLess [
-
-	| aGame aDie aCardTile aBoardGenerator |
-	aDie := LoadedDie thatRolls: { 3 }.
-	aCardTile := HardcodedCardTile thatGives: { 'overload' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
-	aGame := SpaceRace
-		        withTotalParsecs: 100
-		        dividedInSpaces: 5
-		        andLaps: 1
-		        andBoardGenerator: aBoardGenerator 
-		        andShips: { 'tie fighter'}
-		        andDice: { aDie }.
-	aGame
-		play;
-		useCard: 'overload1' fromShip: 'tie fighter';
-		play.
-	self assert: (aGame shipPosition: 'tie fighter') equals: 5
 ]
 
 { #category : 'tests' }
@@ -844,7 +843,7 @@ SpaceRaceTests >> test55WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackIn
 		        andDice: { aDie }.
 	aGame
 		play;
-		useCard: 'overload1' fromShip: 'tie fighter'.
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter'.
 	self assert: (aGame shipPosition: 'tie fighter') equals: 1
 ]
 
@@ -864,7 +863,7 @@ SpaceRaceTests >> test56WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 		        andDice: { aDie }.
 	aGame
 		play;
-		useCard: 'speed1' fromShip: 'tie fighter';
+		useCard: 'speed1' fromShip: 'tie fighter' toShip: 'tie fighter';
 		play.
 	self assert: (aGame shipPosition: 'tie fighter') equals: 8
 ]
@@ -1223,4 +1222,241 @@ SpaceRaceTests >> test68WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYe
 	aGame play. "3 + 1 + (80//6.25) = 16" 
 	self assert: (aGame shipPosition: 'millenium falcon') equals: 18. 
 	self assert: (aGame shipPosition: 'tie fighter' ) equals: 17. 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test69WhenRedoCardUsedThenItShowsUpInAffectedShipActiveCards [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ;
+		play.
+		
+	self assert: (aGame shipActiveCardsNames: 'tie fighter') equals: { 'redo1' } asOrderedCollection 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test70WhenRedoCardUsedThenItShowsUpInCardHistory [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing'.
+	self assert: (aGame cardHistoryNames) equals: { 'overload1' }asOrderedCollection.
+	aGame
+		play.
+	self assert: (aGame cardHistoryNames) equals: { 'overload1' }asOrderedCollection.
+	aGame
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ;
+		play.
+		
+	self assert: (aGame cardHistoryNames) equals: { 'overload1'. 'redo1' }asOrderedCollection 
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test71WhenRedoAffectsAShipThenItsBehaviourIsChanged [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ;
+		play;
+		play.
+		
+	self assert: (aGame shipPosition: 'tie fighter') equals: 8.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test72WhenRedoCardIsUsedThenTheAffectedShipShouldChangeBehaviour [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ;
+		play;
+		play.
+		
+	self assert: (aGame shipPosition: 'tie fighter') equals: 8.
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test73WhenRedoCardIsUsedButNoCardHasBeenUsedBeforeThenItThrowsError [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		play.
+		
+    self
+        should: [ aGame useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter'  ]
+        raise: Error
+        withExceptionDo: [ :error |
+            self assert: error messageText equals: 'Cannot use redo card, no cards have been played yet' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test74WhenRedoTargetsAPermanentCardThenItShouldOnlyBePlayedInShipsTurn [
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play.
+	
+		self
+		should: [ aGame useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing';
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter']
+		raise: Error
+		withExceptionDo: [ :arg1 |
+				self
+					assert: arg1 messageText
+					equals: 'Ship cant use permanent card outside its turn' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test75FALTAWhenRedoTargetsAnInstantCardThenItCanBePlayedOutsideShipsTurn [
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing'}
+		        andDice: { aDie }.
+	aGame
+		play;
+		play.
+	
+		self
+		should: [ aGame useCard: 'overload1' fromShip: 'tie fighter' toShip: 'x-wing';
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter']
+		raise: Error
+		withExceptionDo: [ :arg1 |
+				self
+					assert: arg1 messageText
+					equals: 'Ship cant use permanent card outside its turn' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test76WhenRedoTargetsSpeedThenShipAffectedByRedoAddsOneToItsRoll [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'speed'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing' }
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'speed1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter';
+		play;
+		play.
+	self assert: (aGame shipPosition: 'tie fighter') equals: 11
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test77WhenRedoTargetsAccelerationThenAllCards [
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		        withTotalParsecs: 100
+		        dividedInSpaces: 15
+		        andLaps: 1
+		        andBoardGenerator: aBoardGenerator 
+		        andShips: { 'tie fighter'. 'x-wing' }
+		        andDice: { aDie }.
+	aGame
+		play;
+		play;
+		useCard: 'acceleration1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'all';
+		play;
+		play;
+		play.
+	self assert: (aGame shipPosition: 'tie fighter') equals: 13.
+	self assert: (aGame shipPosition: 'x-wing') equals: 14
 ]

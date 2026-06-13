@@ -126,10 +126,10 @@ Ship >> searchCardInHand: cardName [
 ]
 
 { #category : 'initialization' }
-Ship >> setCancellationCard: cancellationCardName toTargetCard: targetCardName [
+Ship >> setCard: cardName toTargetCard: targetCard [
 	| card |
-	card := self searchCardInHand: cancellationCardName.
-	card target: targetCardName.
+	card := self searchCardInHand: cardName.
+	card target: targetCard.
 ]
 
 { #category : 'initialization' }

@@ -152,17 +152,17 @@ SpaceRace >> setAndUseCancellationCard: cancellationCardName fromShip: shipUsing
 	
 	targetCard:= self activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
 	
-	 self setCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
+	 self setCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
     self useCard: cancellationCardName  fromShip: shipUsing .
 
 ]
 
 { #category : 'initialization' }
-SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTargetCard: targetCard [
+SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard [
 	
     | ship |
 ship := self selectShip:shipName.
-    ship setCancellationCard: cancellationCardName toTargetCard: targetCard.
+    ship setCard: cardName toTargetCard: targetCard.
 ]
 
 { #category : 'as yet unclassified' }
@@ -201,7 +201,7 @@ SpaceRace >> useCard: cardName fromShip: shipUsing [
 	ship := self selectShip: shipUsing.
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
-	aCard effectTo: (self selectShip: shipUsing) among: ships.
+	aCard effectTo: 'all' among: ships.
 	
 	cardHistory add: aCard.
 ]
@@ -218,6 +218,23 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 	aCard effectTo: (self selectShip: shipAffected) among: ships.
 	
 	cardHistory add: aCard.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip [
+	
+	| targetCard |
+	
+	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
+	
+	targetCard:= cardHistory last.
+	
+	self setCard: redo fromShip: shipUsing  toTargetCard: targetCard.
+	
+	(affectedShip = 'all') 
+		ifFalse: [self useCard: redo fromShip: shipUsing toShip: affectedShip ]
+		ifTrue: [self useCard: redo fromShip: shipUsing ]
+	
 ]
 
 { #category : 'status' }

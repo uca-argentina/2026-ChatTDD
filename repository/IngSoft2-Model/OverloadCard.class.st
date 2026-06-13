@@ -46,3 +46,8 @@ OverloadCard >> initializeNameUsingCounter: extCounter [
 OverloadCard >> name [
 	^ name
 ]
+
+{ #category : 'class management' }
+OverloadCard >> rename: newName [
+	name := newName.
+]

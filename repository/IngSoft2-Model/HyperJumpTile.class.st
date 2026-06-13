@@ -11,8 +11,9 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-HyperJumpTile class >> withParsecFactor: parsecPerTile [
-	^(self new) initializeWithParsecFactor: parsecPerTile .
+HyperJumpTile class >> withParsecFactor: arg1 [
+
+	^ self new initializeWithParsecFactor: arg1
 ]
 
 { #category : 'as yet unclassified' }

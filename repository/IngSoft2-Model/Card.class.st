@@ -7,6 +7,6 @@ Class {
 
 { #category : 'as yet unclassified' }
 Card >> effectTo: arg1 among: arg2 [
-
+	^ self subclassResponsibility.
 	
 ]
