@@ -34,7 +34,7 @@ HardcodedCardTile >> currentCardType [
 ]
 
 { #category : 'execution' }
-HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 
 	triggeringShip addToHand: (self createCard: (self currentCardType)).
 	turnManager changeTurn.

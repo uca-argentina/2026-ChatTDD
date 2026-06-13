@@ -1,12 +1,12 @@
 Class {
-	#name : 'BoardGenerator',
+	#name : 'TileGenerator',
 	#superclass : 'Object',
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-BoardGenerator >> generateHyperJumpValues [
+TileGenerator >> generateHyperJumpValues [
     | units size |
     units := #('Parsecs' 'Light years').
     size := (2 + 5 atRandom).
@@ -17,7 +17,7 @@ BoardGenerator >> generateHyperJumpValues [
 ]
 
 { #category : 'execution' }
-BoardGenerator >> generateTileWithParsecFactor: arg1 [
+TileGenerator >> generateTileWithParsecFactor: arg1 [
 
 	| tmp1 tmp2 |
 	tmp1 := 100 atRandom.

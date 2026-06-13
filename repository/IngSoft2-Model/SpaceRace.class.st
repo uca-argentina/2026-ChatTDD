@@ -5,14 +5,17 @@ Class {
 		'ships',
 		'dice',
 		'board',
-		'totalParsecs',
-		'laps',
 		'turnManager',
 		'activeCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
+
+{ #category : 'as yet unclassified' }
+SpaceRace class >> withBoard: board andShips: ships andDice: dice [
+	^ self new initializeWithBoard: board andShips: ships withDice: dice
+]
 
 { #category : 'as yet unclassified' }
 SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 andDice: arg6 [
@@ -49,16 +52,6 @@ SpaceRace >> amountOfShips [
 	^ ships size
 ]
 
-{ #category : 'execution' }
-SpaceRace >> applyTileEffectFor: arg1 [
-
-	(board at: arg1 lapPosition)
-		giveEffectTo: arg1
-		among: ships
-		limitedToSpaces: board size
-		andLaps: laps
-]
-
 { #category : 'as yet unclassified' }
 SpaceRace >> checkTurn: arg1 [
 
@@ -71,26 +64,23 @@ SpaceRace >> finalPositions [
 	self hasEnded ifFalse: [
 		Error signal:
 			'Game is not over. Final positions are not defined yet.' ].
-	^ ships collect: [ :arg1 |
+	^ ships collect: [ :ship |
 			  {
-				  arg1 name.
-				  arg1 currentLap.
-				  arg1 lapPosition } ]
+				  ship name.
+				  board shipLap:ship.
+				  board lapPosition:ship } ]
 ]
 
 { #category : 'execution' }
 SpaceRace >> hasEnded [
 
-	^ ships anySatisfy: [ :arg1 | self isWinner: arg1 ]
+	^ ships anySatisfy: [ :ship | board isWinner: ship ]
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 withDice: arg6 [
+SpaceRace >> initializeWithBoard: aBoard andShips: arg5 withDice: arg6 [
 
-	totalParsecs := arg1.
-	laps := arg3.
-	board := (1 to: arg2) collect: [ :arg7 |
-		         arg4 generateTileWithParsecFactor: totalParsecs / arg2 ].
+	board := aBoard.
 	ships := OrderedCollection new.
 	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
 	dice := arg6.
@@ -98,39 +88,31 @@ SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg
 	activeCards := OrderedCollection new
 ]
 
-{ #category : 'testing' }
-SpaceRace >> isWinner: arg1 [
+{ #category : 'as yet unclassified' }
+SpaceRace >> lapPosition: ship [
 
-	^ arg1 currentLap = laps and: [ arg1 lapPosition = board size ]
-]
-
-{ #category : 'execution' }
-SpaceRace >> moveShip: arg1 [
-
-	| tmp1 |
-	tmp1 := (dice collect: [ :arg2 | arg2 roll ]) sum.
-	arg1 move: tmp1 limitedToSpaces: board size andLaps: laps
+^board lapPosition: (self selectShip: ship)
 ]
 
 { #category : 'execution' }
 SpaceRace >> play [
 
-	| tmp1 |
-	tmp1 := ships at: turnManager currentTurn.
+	| ship roll |
+	ship := ships at: turnManager currentTurn.
+	roll:= (dice collect: [ :aDie | aDie roll ]) sum.
 	self hasEnded ifTrue: [
 		Error signal: 'Game is over. Ships cannot move anymore.' ].
-	self moveShip: tmp1.
-	self hasEnded ifFalse: [ self applyTileEffectFor: tmp1 ].
+	board moveShip: ship with: roll.
+	self hasEnded ifFalse: [ board applyTileEffectFor: ship among:ships ].
 	turnManager changeTurn
 ]
 
 { #category : 'status' }
 SpaceRace >> ranking [
 
-	^ (ships sorted: [ :arg1 :arg2 |
-			   arg1 currentLap * board size + arg1 lapPosition
-			   > (arg2 currentLap * board size + arg2 lapPosition) ]) collect: [
-		  :arg3 | arg3 name ]
+	^ (ships sorted: [ :aShip :anotherShip |
+		   aShip position > anotherShip position ]) collect: [ :ship |
+		  ship name ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -168,15 +150,15 @@ SpaceRace >> shipActiveCardsNames: shipName [
 ]
 
 { #category : 'testing' }
-SpaceRace >> shipLap: arg1 [
+SpaceRace >> shipLap: ship [
 
-	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) currentLap
+^board shipLap: (self selectShip: ship)
 ]
 
-{ #category : 'testing' }
+{ #category : 'as yet unclassified' }
 SpaceRace >> shipPosition: shipName [
 
-	^ (ships detect: [ :ship | ship name = shipName ]) lapPosition
+	^ (ships detect: [ :ship | ship name = shipName ]) position
 ]
 
 { #category : 'status' }
@@ -220,5 +202,5 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 SpaceRace >> winner [
 
 	self hasEnded ifFalse: [ Error signal: 'Game is not over yet.' ].
-	^ (ships detect: [ :arg1 | self isWinner: arg1 ]) name
+	^ (ships detect: [ :ship | board isWinner: ship ]) name
 ]
