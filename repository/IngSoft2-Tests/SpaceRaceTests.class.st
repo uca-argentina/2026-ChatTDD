@@ -897,58 +897,249 @@ SpaceRaceTests >> test57WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
 { #category : 'tests' }
 SpaceRaceTests >> test58WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyways [
 
-	| tmp1 tmp2 tmp3 tmp4  |
-	tmp2 := LoadedDie thatRolls: { 3 }.
-	tmp3 := HardcodedCardTile thatGives: { 'overload'. 'cancellation'.}.
-	tmp4 := HardcodedBoardGenerator withTileType: tmp3.
-	tmp1 := SpaceRace
-		        withTotalParsecs: 100
-		        dividedInSpaces: 10
-		        andLaps: 1
-		        andBoardGenerator: tmp4
-		        andShips: { 'tie fighter'. 'xwing'. 'millenium falcon' }
-		        andDice: { tmp2 }.
-	tmp1
-		play;
-		play;
-		play;
-		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
-		play;
-		play;
-		setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard:'overload1';
-		useCard: 'cancellation1'
-		fromShip: 'xwing'
-		toShip: 'xwing'.
-	self assert: (tmp1 shipPosition: 'xwing') equals: 5
+    | tmp1 tmp2 tmp3 tmp4  |
+    tmp2 := LoadedDie thatRolls: { 3 }.
+    tmp3 := HardcodedCardTile thatGives: { 'overload'. 'cancellation'.}.
+    tmp4 := HardcodedBoardGenerator withTileType: tmp3.
+    tmp1 := SpaceRace
+                withTotalParsecs: 100
+                dividedInSpaces: 20
+                andLaps: 1
+                andBoardGenerator: tmp4
+                andShips: { 'tie fighter'. 'xwing'. }
+                andDice: { tmp2 }.
+    tmp1
+        play;
+        play;
+        useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
+        play;
+        play;
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard:'overload1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing';
+        play;
+        play.
+    self assert: (tmp1 shipPosition: 'xwing') equals: 8
 ]
 
 { #category : 'tests' }
 SpaceRaceTests >> test59WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
 
-	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 |
-	tmp2 := LoadedDie thatRolls: { 3 }.
-	tmp5 := OverloadCard new.
-	tmp6 := CancellationCard new.
-	tmp3 := HardcodedCardTile thatGives: {
-			        tmp5.
-			        tmp6 }.
-	tmp4 := HardcodedBoardGenerator withTileType: tmp3.
-	tmp1 := SpaceRace
-		        withTotalParsecs: 100
-		        dividedInSpaces: 10
-		        andLaps: 1
-		        andBoardGenerator: tmp4
-		        andShips: { 'tie fighter'. 'xwing' }
-		        andDice: { tmp2 }.
-	tmp1
-		play;
-		play;
-		useCard: tmp5 fromShip: 'tie fighter' toShip: 'xwing';
-		useCard: tmp6
-		fromShip: 'xwing'
-		toShip: 'xwing'
-		cancel: tmp5;
-		play;
-		play.
-	self assert: (tmp1 shipPosition: 'xwing') equals: 7
+| aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play;
+        play; 
+        useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
+        play;
+        play.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'overload1' } asOrderedCollection .
+    self assert: (aGame shipPosition: 'xwing') equals: 5.
+
+    aGame
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing'.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { } asOrderedCollection .
+
+    aGame
+        play;
+        play.
+
+    self assert: (aGame shipPosition: 'xwing') equals: 8
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test60WhenCancellationCardTargetsACardNotAffectingAnyShipThenErrorIsRaised [ 
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play; 
+        play. 
+
+    aGame setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1'.
+
+    self
+        should: [ aGame useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing' ]
+        raise: Error
+        withExceptionDo: [ :error |
+            self assert: error messageText equals: 'Card not affecting any ship' ]
+
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test61WhenCancellationCardIsUsedThenOverloadEffectIsRemovedFromShipAffected [ 
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play;
+        play;
+        useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
+        play;
+        play.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'overload1' } asOrderedCollection .
+    self assert: (aGame shipPosition: 'xwing') equals: 5.
+
+    aGame
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing'.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { } asOrderedCollection .
+
+    aGame
+        play;
+        play. 
+    self assert: (aGame shipPosition: 'xwing') equals: 8
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test62WhenCancellationCardIsUsedThenSpeedEffectIsRemovedFromShipAffected [
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'speed'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play; "tie fighter: 1 -> 4, recibe 'speed1'"
+        play; "xwing: 1 -> 4, recibe 'cancellation1'"
+        useCard: 'speed1' fromShip: 'tie fighter' toShip: 'xwing';
+        play; "tie fighter: 4 -> 7, recibe 'speed2'"
+        play. "xwing: 4 + 3 + 1(speed) = 8, recibe 'cancellation2'"
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'speed1' } asOrderedCollection .
+    self assert: (aGame shipPosition: 'xwing') equals: 8.
+
+    aGame
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'speed1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing'.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { } asOrderedCollection .
+
+    aGame
+        play;
+        play.
+
+    self assert: (aGame shipPosition: 'xwing') equals: 11
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test63WhenCancellationCardIsUsedThenAccelerationEffectIsRemovedOnlyFromShipAffected [
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 200
+                 dividedInSpaces: 20
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play;
+        play;
+        useCard: 'acceleration1' fromShip: 'tie fighter' toShip: 'xwing';
+        play;
+        play.
+
+    self assert: (aGame shipCardHistoryNames: 'tie fighter') equals: { 'acceleration1' } asOrderedCollection .
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'acceleration1' } asOrderedCollection .
+
+    aGame
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'acceleration1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing'.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { } asOrderedCollection .
+    self assert: (aGame shipCardHistoryNames: 'tie fighter') equals: { } asOrderedCollection .
+
+    aGame
+        play;
+        play.
+
+    self assert: (aGame shipPosition: 'tie fighter') equals: 11.
+    self assert: (aGame shipPosition: 'xwing') equals: 11
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test64WhenShipHasTwoStackedEffectsOfSameTypeThenCancellationRemovesOnlyTheTargetedInstance [
+
+    | aGame aLoadedDie aCardTile aBoardGenerator |
+    aLoadedDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload'. 'cancellation' }.
+    aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withTotalParsecs: 300
+                 dividedInSpaces: 30
+                 andLaps: 1
+                 andBoardGenerator: aBoardGenerator
+                 andShips: { 'tie fighter'. 'xwing' }
+                 andDice: { aLoadedDie }.
+
+    aGame
+        play;
+        play;
+        useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
+        play; 
+        play; 
+        useCard: 'overload2' fromShip: 'tie fighter' toShip: 'xwing';
+        play;
+        play. 
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'overload1'. 'overload2' } asOrderedCollection .
+    self assert: (aGame shipPosition: 'xwing') equals: 4.
+
+    aGame
+        setCancellationCard: 'cancellation1' fromShip: 'xwing' toTargetCard: 'overload1';
+        useCard: 'cancellation1' fromShip: 'xwing' toShip: 'xwing'.
+
+    self assert: (aGame shipCardHistoryNames: 'xwing') equals: { 'overload2' } asOrderedCollection .
+
+    aGame
+        play;
+        play. 
+
+    self assert: (aGame shipPosition: 'xwing') equals: 5
 ]

@@ -92,7 +92,7 @@ SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg
 	board := (1 to: arg2) collect: [ :arg7 |
 		         arg4 generateTileWithParsecFactor: totalParsecs / arg2 ].
 	ships := OrderedCollection new.
-	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ].
+	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
 	dice := arg6.
 	turnManager := TurnManager withTotalTurns: ships size.
 	cardHistory := OrderedCollection new
@@ -144,6 +144,11 @@ SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTarg
 	| ship |
 	ship := self selectShip:shipName.
 	ship setCancellationCard: cancellationCardName toTargetCard: targetCardName.
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> shipCardHistoryNames: shipName [ 
+	^ (self selectShip: shipName) cardHistoryNames
 ]
 
 { #category : 'testing' }

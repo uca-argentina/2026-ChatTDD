@@ -2,7 +2,8 @@ Class {
 	#name : 'CancellationCard',
 	#superclass : 'InstantCard',
 	#instVars : [
-		'name'
+		'name',
+		'target'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -14,11 +15,13 @@ CancellationCard class >> usingCounter: counter [
 ]
 
 { #category : 'as yet unclassified' }
-CancellationCard >> effectTo: arg1 among: arg2 andCancel: arg3 [
+CancellationCard >> effectTo: affectedShip among: ships [
 
-	(arg2 anySatisfy: [ :arg4 | arg4 checkCard: arg3 ]) ifFalse: [
-		Error signal: 'Card isnt affecting this ship' ].
-	arg2 do: [ :arg5 | arg5 cancel: arg3 ]
+	| affected |
+	affected := ships select: [ :ship | ship checkCard: target ].
+	affected isEmpty ifTrue: [
+		Error signal: 'Card not affecting any ship' ].
+	affected do: [ :ship | ship cancel: target ]
 ]
 
 { #category : 'initialization' }
@@ -28,5 +31,10 @@ CancellationCard >> initializeNameUsingCounter: counter [
 
 { #category : 'accessing' }
 CancellationCard >> name [
-	^ 'cancellation'.
+	^ name.
+]
+
+{ #category : 'accessing' }
+CancellationCard >> target: targetCardName [ 
+	target:= targetCardName.
 ]

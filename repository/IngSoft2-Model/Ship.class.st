@@ -32,15 +32,22 @@ Ship >> calculateEffects [
 ]
 
 { #category : 'editing keys' }
-Ship >> cancel: arg1 [
+Ship >> cancel: cardName [
 
-	cardHistory remove: arg1 ifAbsent: nil
+	| cardToCancel |
+	cardToCancel:= cardHistory detect: [ :card | card name = cardName ].
+	cardHistory remove: cardToCancel.
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> checkCard: arg1 [
+Ship >> cardHistoryNames [
+	^ cardHistory collect: [ :card | card name ].
+]
 
-	^ cardHistory includes: arg1
+{ #category : 'as yet unclassified' }
+Ship >> checkCard: cardName [
+
+	^ cardHistory anySatisfy: [ :card | card name = cardName]
 ]
 
 { #category : 'accessing' }
