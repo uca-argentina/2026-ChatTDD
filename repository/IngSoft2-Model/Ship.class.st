@@ -55,12 +55,6 @@ Ship >> checkCard: target [
 	^ activeCards anySatisfy: [ :card | card = target]
 ]
 
-{ #category : 'accessing' }
-Ship >> currentLap [
-
-	^ currentLap
-]
-
 { #category : 'as yet unclassified' }
 Ship >> effectBy: card [
 
@@ -89,20 +83,19 @@ Ship >> initializeWithName: arg1 [
 ]
 
 { #category : 'execution' }
-Ship >> lapPosition [
+Ship >> move: amount [
 
-	^ lapPosition
+	| effects |
+	effects := self calculateEffects.
+	position := position + amount + effects
 ]
 
 { #category : 'execution' }
-Ship >> move: arg1 limitedToSpaces: arg2 andLaps: arg3 [
+Ship >> move: amount limitedTo:maximumTiles [
 
-	| tmp1 |
-	tmp1 := self calculateEffects.
-	absPosition := absPosition + arg1 + tmp1 min: arg2 * arg3 max: 1.
-	self
-		setCurrentLap: arg2;
-		setLapPosition: arg2
+	| effects |
+	effects := self calculateEffects.
+	position := position + amount + effects min: maximumTiles max:1
 ]
 
 { #category : 'accessing' }
@@ -111,10 +104,9 @@ Ship >> name [
 	^ name
 ]
 
-{ #category : 'execution' }
-Ship >> resetToStartOfLap [
-
-	lapPosition := 1
+{ #category : 'accessing' }
+Ship >> position [
+^position
 ]
 
 { #category : 'as yet unclassified' }
@@ -130,18 +122,6 @@ Ship >> setCard: cardName toTargetCard: targetCard [
 	| card |
 	card := self searchCardInHand: cardName.
 	card target: targetCard.
-]
-
-{ #category : 'initialization' }
-Ship >> setCurrentLap: arg1 [
-
-	currentLap := absPosition - 1 // arg1 + 1
-]
-
-{ #category : 'initialization' }
-Ship >> setLapPosition: arg1 [
-
-	lapPosition := absPosition - 1 \\ arg1 + 1
 ]
 
 { #category : 'as yet unclassified' }

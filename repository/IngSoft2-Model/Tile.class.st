@@ -6,6 +6,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Tile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+Tile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 	self subclassResponsibility 
 ]

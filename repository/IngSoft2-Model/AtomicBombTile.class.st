@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'execution' }
-AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+AtomicBombTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
    allShips
-       do: [ :ship | ship resetToStartOfLap ].
+       do: [ :ship | aBoard moveShip: ship with: ((aBoard lapPosition: ship) -1)negated  ].
 ]

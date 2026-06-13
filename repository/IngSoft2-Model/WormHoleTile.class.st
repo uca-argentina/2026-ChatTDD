@@ -6,6 +6,6 @@ Class {
 }
 
 { #category : 'execution' }
-WormHoleTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
-    triggeringShip move: -4 limitedToSpaces: maxSize andLaps: laps.
+WormHoleTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
+    aBoard moveShip: triggeringShip with: -4
 ]

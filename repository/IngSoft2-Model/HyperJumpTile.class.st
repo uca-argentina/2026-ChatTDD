@@ -29,8 +29,8 @@ HyperJumpTile >> currentValueToTile [
 ]
 
 { #category : 'execution' }
-HyperJumpTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
-	triggeringShip move: (self currentValueToTile) limitedToSpaces: maxSize andLaps: laps.
+HyperJumpTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
+	aBoard moveShip: triggeringShip with:(self currentValueToTile).
 	turnManager changeTurn.
 ]
 
