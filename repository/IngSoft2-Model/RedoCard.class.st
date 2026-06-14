@@ -38,3 +38,9 @@ RedoCard >> name [
 RedoCard >> target: targetCard [
 	target := (targetCard deepCopy) rename: name.
 ]
+
+{ #category : 'as yet unclassified' }
+RedoCard >> target: targetCard cancelling: aCard [
+	target := (targetCard deepCopy) rename: name.
+	target target: aCard.
+]

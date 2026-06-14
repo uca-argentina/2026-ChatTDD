@@ -120,6 +120,13 @@ Ship >> setCard: cardName toTargetCard: targetCard [
 	card target: targetCard.
 ]
 
+{ #category : 'initialization' }
+Ship >> setCard: cardName toTargetCard: targetCard cancelling: aCard [
+	| card |
+	card := self searchCardInHand: cardName.
+	card target: targetCard cancelling: aCard.
+]
+
 { #category : 'as yet unclassified' }
 Ship >> useCard: cardName [
 

@@ -1077,7 +1077,7 @@ SpaceRaceTests >> test58WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyw
 		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'xwing';
 		play;
 		play;
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'overload1';
 		play;
@@ -1115,7 +1115,7 @@ SpaceRaceTests >> test59WhenInstantCardIsUsedThenItDoesntShowUpInActiveCards [
 	self assert: (aGame shipPosition: 'xwing') equals: 5.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'overload1'.
 
@@ -1158,7 +1158,7 @@ SpaceRaceTests >> test60WhenCancellationCardUsedThenASelectedPermanentEffectIsRe
 	self assert: (aGame shipPosition: 'xwing') equals: 5.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'overload1'.
 
@@ -1197,7 +1197,7 @@ SpaceRaceTests >> test61WhenCancellationCardIsUsedButThereAreNotAnyPermanentsThe
 	self
 		should: [
 				aGame
-					setAndUseCancellationCard: 'cancellation1'
+					useCancellationCard: 'cancellation1'
 					fromShip: 'xwing'
 					toTargetCard: 'speed1' ]
 		raise: Error
@@ -1235,7 +1235,7 @@ SpaceRaceTests >> test62WhenCancellationCardTargetsACardNotAffectingAnyShipThenE
 	self
 		should: [
 				aGame
-					setAndUseCancellationCard: 'cancellation1'
+					useCancellationCard: 'cancellation1'
 					fromShip: 'xwing'
 					toTargetCard: 'overload2' ]
 		raise: Error
@@ -1279,7 +1279,7 @@ SpaceRaceTests >> test63WhenShipHasTwoStackedEffectsOfSameTypeThenCancellationRe
 	self assert: (aGame shipPosition: 'xwing') equals: 4.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'overload1'.
 
@@ -1324,7 +1324,7 @@ SpaceRaceTests >> test64WhenCancellationCardIsUsedThenOverloadEffectIsRemovedFro
 	self assert: (aGame shipPosition: 'xwing') equals: 5.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'overload1'.
 
@@ -1369,7 +1369,7 @@ SpaceRaceTests >> test65WhenCancellationCardIsUsedThenSpeedEffectIsRemovedFromSh
 	self assert: (aGame shipPosition: 'xwing') equals: 8.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'speed1'.
 
@@ -1416,7 +1416,7 @@ SpaceRaceTests >> test66WhenCancellationCardIsUsedThenAccelerationEffectIsRemove
 		equals: { 'acceleration1' } asOrderedCollection.
 
 	aGame
-		setAndUseCancellationCard: 'cancellation1'
+		useCancellationCard: 'cancellation1'
 		fromShip: 'xwing'
 		toTargetCard: 'acceleration1'.
 
@@ -1705,7 +1705,7 @@ SpaceRaceTests >> test76WhenRedoTargetsSpeedThenShipAffectedByRedoAddsOneToItsRo
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test77WhenRedoTargetsAccelerationThenAllCards [
+SpaceRaceTests >> test77WhenRedoTargetsAccelerationThenAllShipsRollOneMore [
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'redo' }.
@@ -1729,4 +1729,164 @@ SpaceRaceTests >> test77WhenRedoTargetsAccelerationThenAllCards [
 		play.
 	self assert: (aGame shipPosition: 'tie fighter') equals: 13.
 	self assert: (aGame shipPosition: 'x-wing') equals: 14
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test78WhenRedoTargetsCancellationWithDifferentCardThenThatCardIsRemoved [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'speed'. 'cancellation'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+                 withBoard: (Board
+                          withSpaces: 15
+                          andLaps: 1
+                          andTileGenerator: aBoardGenerator
+                          andParsecsPerTile: 100 / 6)
+                 andShips: { 'tie fighter'. 'x-wing' }
+                 andDice: { aDie }.
+
+	aGame
+		play; 
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter';
+		play;
+		useCard: 'speed1' fromShip: 'x-wing' toShip: 'tie fighter'; 
+		useCancellationCard: 'cancellation1' fromShip: 'tie fighter' toTargetCard: 'overload1';
+		play.
+
+	aGame
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ifCancellingCancel: 'speed1'.
+
+	self assert: (aGame shipActiveCardsNames: 'tie fighter') equals: { } asOrderedCollection.
+	self assert: (aGame cardHistoryNames) equals: { 'overload1'. 'speed1'. 'cancellation1'. 'redo1' } asOrderedCollection
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test79WhenRedoCardIsUsedIfCancellingCancelButTheGivenCardIsNotActiveThenItThrowsError [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives:
+		             { 'overload'. 'speed'. 'cancellation'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+		         withBoard: (Board
+				          withSpaces: 15
+				          andLaps: 1
+				          andTileGenerator: aBoardGenerator
+				          andParsecsPerTile: 100 / 6)
+		         andShips: { 'tie fighter'. 'x-wing' }
+		         andDice: { aDie }.
+
+	aGame
+		play;
+		play;
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter';
+		play;
+		useCard: 'speed1' fromShip: 'x-wing' toShip: 'tie fighter';
+		useCancellationCard: 'cancellation1'
+		fromShip: 'tie fighter'
+		toTargetCard: 'overload1';
+		play.
+
+	self
+		should: [
+				aGame
+					useRedoCard: 'redo1'
+					fromShip: 'x-wing'
+					toShip: 'tie fighter'
+					ifCancellingCancel: 'speed99' ]
+		raise: Error
+		withExceptionDo: [ :error |
+				self
+					assert: error messageText
+					equals:
+					'Cannot use cancellation card on a card that isnt in effect' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test80WhenRedoCardIsUsedIfCancellingCancelButNoCardHasBeenUsedBeforeThenItThrowsError [ 
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+                 withBoard: (Board
+                          withSpaces: 15
+                          andLaps: 1
+                          andTileGenerator: aBoardGenerator
+                          andParsecsPerTile: 100 / 6)
+                 andShips: { 'tie fighter'. 'x-wing' }
+                 andDice: { aDie }.
+
+	aGame
+		play;
+		play;
+		play.
+
+	self
+		should: [ aGame useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ifCancellingCancel: 'overload1' ]
+		raise: Error
+		withExceptionDo: [ :error |
+			self assert: error messageText equals: 'Cannot use redo card, no cards have been played yet' ]
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test81WhenCancellationTargetsARedoOfSpeedThenItsEffectIsRemoved [ 
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'speed'. 'redo'. 'cancellation' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+                 withBoard: (Board
+                          withSpaces: 15
+                          andLaps: 1
+                          andTileGenerator: aBoardGenerator
+                          andParsecsPerTile: 100 / 6)
+                 andShips: { 'tie fighter'. 'x-wing' }
+                 andDice: { aDie }.
+
+	aGame
+		play;
+		play;
+		useCard: 'speed1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'x-wing';
+		useCancellationCard: 'cancellation1' fromShip: 'tie fighter' toTargetCard: 'redo1'.
+
+	self assert: (aGame shipActiveCardsNames: 'x-wing') equals: { 'speed1' } asOrderedCollection.
+	self assert: (aGame cardHistoryNames) equals: { 'speed1'. 'redo1'. 'cancellation1' } asOrderedCollection
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test82WhenCancellationTargetsARedoOfAccelerationThenItsEffectIsRemovedFromAllShips [
+
+	| aGame aDie aCardTile aBoardGenerator |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'redo'. 'cancellation' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRace
+                 withBoard: (Board
+                          withSpaces: 15
+                          andLaps: 1
+                          andTileGenerator: aBoardGenerator
+                          andParsecsPerTile: 100 / 6)
+                 andShips: { 'tie fighter'. 'x-wing' }
+                 andDice: { aDie }.
+
+	aGame
+		play;
+		play;
+		useCard: 'acceleration1' fromShip: 'tie fighter' toShip: 'x-wing';
+		play;
+		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'x-wing';
+		useCancellationCard: 'cancellation1' fromShip: 'tie fighter' toTargetCard: 'redo1'.
+
+	self assert: (aGame shipActiveCardsNames: 'tie fighter') equals: { 'acceleration1' } asOrderedCollection.
+	self assert: (aGame shipActiveCardsNames: 'x-wing') equals: { 'acceleration1' } asOrderedCollection.
+	self assert: (aGame cardHistoryNames) equals: { 'acceleration1'. 'redo1'. 'cancellation1' } asOrderedCollection
 ]

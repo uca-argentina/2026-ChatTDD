@@ -33,6 +33,11 @@ CancellationCard >> name [
 	^ name.
 ]
 
+{ #category : 'class management' }
+CancellationCard >> rename: newName [ 
+	name := newName.
+]
+
 { #category : 'accessing' }
 CancellationCard >> target: targetCardName [ 
 	target:= targetCardName.

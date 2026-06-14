@@ -126,25 +126,18 @@ SpaceRace >> selectShip: arg1 [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> setAndUseCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCardName [
-
-	| targetCard |
-	
-	self activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
-	
-	targetCard:= self activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
-	
-	 self setCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
-    self useCard: cancellationCardName  fromShip: shipUsing .
-
-]
-
-{ #category : 'initialization' }
 SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard [
 	
     | ship |
 ship := self selectShip:shipName.
     ship setCard: cardName toTargetCard: targetCard.
+]
+
+{ #category : 'initialization' }
+SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard cancelling: aCard [ 
+		| ship |
+	ship := self selectShip: shipName.
+	ship setCard: cardName toTargetCard: targetCard cancelling: aCard.
 ]
 
 { #category : 'as yet unclassified' }
@@ -174,6 +167,20 @@ SpaceRace >> shipRanking: arg1 [
 SpaceRace >> shipsHand: arg1 [
 
 	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) hand
+]
+
+{ #category : 'initialization' }
+SpaceRace >> useCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCardName [
+
+	| targetCard |
+	
+	self activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
+	
+	targetCard:= self activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+	
+	 self setCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
+    self useCard: cancellationCardName  fromShip: shipUsing .
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -222,18 +229,21 @@ SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip [
 { #category : 'as yet unclassified' }
 SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancellingCancel: affectedCardName [
 	
-	| targetCard affectedCard |
-	
+	| targetCard newCancelTarget |
+
 	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
-	
-	targetCard:= cardHistory last.
-	
-	self setCard: redo fromShip: shipUsing  toTargetCard: targetCard.
-	
-	(affectedShip = 'all') 
-		ifFalse: [self useCard: redo fromShip: shipUsing toShip: affectedShip ]
-		ifTrue: [self useCard: redo fromShip: shipUsing ]
-	
+
+	targetCard := cardHistory last.
+
+	newCancelTarget := self activeCards
+		detect: [ :card | card name = affectedCardName ]
+		ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+
+	self setCard: redo fromShip: shipUsing toTargetCard: targetCard cancelling: newCancelTarget.
+
+	(affectedShip = 'all')
+		ifFalse: [ self useCard: redo fromShip: shipUsing toShip: affectedShip ]
+		ifTrue: [ self useCard: redo fromShip: shipUsing ]
 ]
 
 { #category : 'status' }
