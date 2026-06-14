@@ -106,8 +106,8 @@ RepeatCardTest >> test05WhenLastTileUsedIsASMoonWalkTileThenRepeatCardApplyEffec
 	aGame play;
 	play.
 	aGame useCard: 'repeat1' fromShip: 'tie fighter' toShip: 'x wing'.
-	self assert: (aGame shipPosition: 'tie fighter') equals: 3.
-	self assert: (aGame shipPosition: 'x wing') equals: 3.
+	self assert: (aGame shipPosition: 'tie fighter') equals: 2.
+	self assert: (aGame shipPosition: 'x wing') equals: 4.
 ]
 
 { #category : 'tests' }
@@ -140,5 +140,21 @@ RepeatCardTest >> test07WhenLastTileUsedIsAtomicBombThenRepeatCardApplyEffectToA
 	aGame play;
 	play.
 	aGame useCard: 'repeat1' fromShip: 'millenium falcon' toShip: 'tie fighter'.
+	self assert: (aGame shipLap: 'millenium falcon' ) equals: 2.
 	self assert: (aGame shipLap: 'tie fighter' ) equals: 1.
+]
+
+{ #category : 'tests' }
+RepeatCardTest >> test08WhenLastTileUsedIsCardTileThenRepeatCardApplyEffectToASelectedShip [
+
+	| aGame aLoadedDie aCardTile aBoardGenerator |
+	aLoadedDie := LoadedDie thatRolls: { 2 }.
+	aCardTile := HardcodedCardTile thatGives: { 'overload' }.
+	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aGame := SpaceRaceHardcodedShips 
+		        withTotalParsecs: 100 dividedInSpaces: 10 andLaps: 1 andBoardGenerator: aBoardGenerator andShips:{ 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
+	aGame play;
+	play.
+	aGame useCard: 'repeat1' fromShip: 'millenium falcon' toShip: 'tie fighter'.
+	self assert: ((aGame selectShip: 'tie fighter') hand ) equals: { RepeatCard. RepeatCard. OverloadCard } asOrderedCollection .
 ]

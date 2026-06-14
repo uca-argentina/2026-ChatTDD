@@ -16,6 +16,6 @@ HardcodedShip >> initializeWithName: shipName [
 	cardGen := CardGenerator new.
 	hand := {
 		        RepeatCard usingCounter: Counter start.
-		        cardGen giveRandomCard } asOrderedCollection.
+		        OverloadCard usingCounter: Counter start } asOrderedCollection.
 	cardHistory := OrderedCollection new
 ]

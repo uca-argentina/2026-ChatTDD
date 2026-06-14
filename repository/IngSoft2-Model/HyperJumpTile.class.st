@@ -32,8 +32,3 @@ HyperJumpTile >> initializeWithParsecFactor: parsecPerTile [
 HyperJumpTile >> parsecToTile [
 	^ (parsecs at: turnManager currentTurn) // parsecFactor.
 ]
-
-{ #category : 'as yet unclassified' }
-HyperJumpTile >> repeatEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
-	self giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps
-]

@@ -8,7 +8,7 @@ Class {
 { #category : 'as yet unclassified' }
 SpaceRaceHardcodedShips >> applyLastTileEffectFor: ship [ 
 	lastTile 
-		repeatEffectTo: ship
+		giveEffectTo: ship
 		among: ships
 		limitedToSpaces: board size
 		andLaps: laps.
