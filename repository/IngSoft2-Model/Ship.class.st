@@ -2,12 +2,10 @@ Class {
 	#name : 'Ship',
 	#superclass : 'Object',
 	#instVars : [
-		'currentLap',
-		'absPosition',
-		'lapPosition',
+		'position',
 		'name',
 		'hand',
-		'cardHistory'
+		'activeCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -19,6 +17,16 @@ Ship class >> withName: arg1 [
 	^ self new initializeWithName: arg1
 ]
 
+{ #category : 'accessing' }
+Ship >> activeCards [
+^ activeCards .
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> activeCardsNames [
+	^ activeCards collect: [ :card | card name ].
+]
+
 { #category : 'adding' }
 Ship >> addToHand: arg1 [
 
@@ -28,38 +36,27 @@ Ship >> addToHand: arg1 [
 { #category : 'as yet unclassified' }
 Ship >> calculateEffects [
 
-	^ cardHistory sum: [ :arg1 | arg1 effect ] ifEmpty: 0
+	^ activeCards sum: [ :arg1 | arg1 effect ] ifEmpty: 0
 ]
 
 { #category : 'editing keys' }
-Ship >> cancel: cardName [
+Ship >> cancel: target [
 
 	| cardToCancel |
-	cardToCancel:= cardHistory detect: [ :card | card name = cardName ].
-	cardHistory remove: cardToCancel.
+	cardToCancel:= activeCards detect: [ :card | card = target ].
+	activeCards remove: cardToCancel.
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> cardHistoryNames [
-	^ cardHistory collect: [ :card | card name ].
+Ship >> checkCard: target [
+
+	^ activeCards anySatisfy: [ :card | card = target]
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> checkCard: cardName [
+Ship >> effectBy: card [
 
-	^ cardHistory anySatisfy: [ :card | card name = cardName]
-]
-
-{ #category : 'accessing' }
-Ship >> currentLap [
-
-	^ currentLap
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> effectBy: arg1 [
-
-	cardHistory add: arg1
+	activeCards add: card
 ]
 
 { #category : 'accessing' }
@@ -73,31 +70,28 @@ Ship >> initializeWithName: arg1 [
 
 	| tmp1 |
 	name := arg1.
-	absPosition := 1.
-	lapPosition := 1.
-	currentLap := 1.
+	position := 1.
 	tmp1 := CardGenerator new.
 	hand := {
 		        tmp1 giveRandomCard.
 		        tmp1 giveRandomCard } asOrderedCollection.
-	cardHistory := OrderedCollection new
+	activeCards := OrderedCollection new
 ]
 
 { #category : 'execution' }
-Ship >> lapPosition [
+Ship >> move: amount [
 
-	^ lapPosition
+	| effects |
+	effects := self calculateEffects.
+	position := position + amount + effects
 ]
 
 { #category : 'execution' }
-Ship >> move: arg1 limitedToSpaces: arg2 andLaps: arg3 [
+Ship >> move: amount limitedTo:maximumTiles [
 
-	| tmp1 |
-	tmp1 := self calculateEffects.
-	absPosition := absPosition + arg1 + tmp1 min: arg2 * arg3 max: 1.
-	self
-		setCurrentLap: arg2;
-		setLapPosition: arg2
+	| effects |
+	effects := self calculateEffects.
+	position := position + amount + effects min: maximumTiles max:1
 ]
 
 { #category : 'accessing' }
@@ -106,10 +100,9 @@ Ship >> name [
 	^ name
 ]
 
-{ #category : 'execution' }
-Ship >> resetToStartOfLap [
-
-	lapPosition := 1
+{ #category : 'accessing' }
+Ship >> position [
+^position
 ]
 
 { #category : 'as yet unclassified' }
@@ -121,34 +114,24 @@ Ship >> searchCardInHand: cardName [
 ]
 
 { #category : 'initialization' }
-Ship >> setCancellationCard: cancellationCardName toTargetCard: targetCardName [
+Ship >> setCard: cardName toTargetCard: targetCard [
 	| card |
-	card := self searchCardInHand: cancellationCardName.
-	card target: targetCardName.
+	card := self searchCardInHand: cardName.
+	card target: targetCard.
 ]
 
 { #category : 'initialization' }
-Ship >> setCurrentLap: arg1 [
-
-	currentLap := absPosition - 1 // arg1 + 1
+Ship >> setCard: cardName toTargetCard: targetCard cancelling: aCard [ 
+	| card |
+	card := self searchCardInHand: cardName.
+	card target: targetCard cancelling: aCard.
 ]
 
 { #category : 'initialization' }
-Ship >> setLapPosition: arg1 [
-
-	lapPosition := absPosition - 1 \\ arg1 + 1
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> useCard: cardName [
-
-	| selectedCard |
-	selectedCard := self searchCardInHand: cardName.
-
-	selectedCard isPlayable.
-
-	hand remove: selectedCard.
-	^ selectedCard
+Ship >> setCard: cardName withTileEffect: lastTile [ 
+		| card |
+	card := self searchCardInHand: cardName.
+	card target: lastTile.
 ]
 
 { #category : 'as yet unclassified' }

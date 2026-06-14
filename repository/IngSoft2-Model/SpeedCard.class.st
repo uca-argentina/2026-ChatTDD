@@ -10,8 +10,8 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-SpeedCard class >> usingCounter: extCounter [
-	^(self new) initializeNameUsingCounter: extCounter.
+SpeedCard class >> usingCounter: counter [
+	^(self new) initializeNameUsingCounter: counter.
 ]
 
 { #category : 'as yet unclassified' }
@@ -35,4 +35,9 @@ SpeedCard >> initializeNameUsingCounter: counter [
 { #category : 'accessing' }
 SpeedCard >> name [
 	^ name
+]
+
+{ #category : 'class management' }
+SpeedCard >> rename: newName [
+	name := newName.
 ]

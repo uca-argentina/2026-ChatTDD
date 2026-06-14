@@ -36,3 +36,8 @@ AccelerationCard >> initializeNameUsingCounter: counter [
 AccelerationCard >> name [
 	^ name
 ]
+
+{ #category : 'class management' }
+AccelerationCard >> rename: newName [
+	name := newName.
+]

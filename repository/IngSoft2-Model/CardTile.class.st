@@ -15,13 +15,19 @@ CardTile class >> default [
 ]
 
 { #category : 'as yet unclassified' }
-CardTile >> giveEffectTo: arg1 among: arg2 limitedToSpaces: arg3 andLaps: arg4 [
+CardTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 
-	arg1 addToHand: cardGenerator giveRandomCard
+	triggeringShip addToHand: cardGenerator giveRandomCard
 ]
 
 { #category : 'initialization' }
 CardTile >> initializeCardTile [
 
 	cardGenerator := CardGenerator new
+]
+
+{ #category : 'as yet unclassified' }
+CardTile >> repeatEffectFor: newTriggeringShip [
+
+self giveEffectTo: newTriggeringShip among: '' in: '' 
 ]

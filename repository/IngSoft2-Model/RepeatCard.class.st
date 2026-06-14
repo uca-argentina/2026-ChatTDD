@@ -2,7 +2,8 @@ Class {
 	#name : 'RepeatCard',
 	#superclass : 'InstantCard',
 	#instVars : [
-		'name'
+		'name',
+		'tile'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -14,17 +15,23 @@ RepeatCard class >> usingCounter: counter [
 ]
 
 { #category : 'as yet unclassified' }
-RepeatCard >> effectTo: affectingShip among: ships inGame: game [ 
-	game applyLastTileEffectFor: affectingShip.
+RepeatCard >> effectTo: ship among: ships [ 
 
+	tile repeatEffectFor: ship
 ]
 
 { #category : 'initialization' }
 RepeatCard >> initializeNameUsingCounter: counter [
 	name := 'repeat', (counter add)asString.
+	tile := nil.
 ]
 
 { #category : 'accessing' }
-RepeatCard >> name [ 
+RepeatCard >> name [
 	^ name
+]
+
+{ #category : 'accessing' }
+RepeatCard >> target: lastTile [
+	tile := lastTile.
 ]

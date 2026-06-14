@@ -5,15 +5,17 @@ Class {
 		'ships',
 		'dice',
 		'board',
-		'totalParsecs',
-		'laps',
 		'turnManager',
-		'cardHistory',
-		'lastTile'
+		'cardHistory'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
+
+{ #category : 'as yet unclassified' }
+SpaceRace class >> withBoard: board andShips: ships andDice: dice [
+	^ self new initializeWithBoard: board andShips: ships withDice: dice
+]
 
 { #category : 'as yet unclassified' }
 SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 andDice: arg6 [
@@ -33,34 +35,25 @@ SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 an
 		  withDice: arg6
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceRace >> activeCards [
+ ^ ships flatCollect: [ :ship | ship activeCards ]
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> activeCardsNames [
+	^ self activeCards collect:[:card | card name].
+]
+
 { #category : 'testing' }
 SpaceRace >> amountOfShips [
 
 	^ ships size
 ]
 
-{ #category : 'execution' }
-SpaceRace >> applyTileEffectFor: ship [
-	|tile|
-	tile:= board at: ship lapPosition.
-	tile
-		giveEffectTo: ship
-		among: ships
-		limitedToSpaces: board size
-		andLaps: laps.
-	lastTile := tile.
-	
-]
-
-{ #category : 'as yet unclassified' }
-SpaceRace >> cardHistory [
-
-	^ cardHistory
-]
-
 { #category : 'as yet unclassified' }
 SpaceRace >> cardHistoryNames [
-	^ self cardHistory collect:[:card | card name].
+	^ cardHistory collect:[:card | card name].
 ]
 
 { #category : 'as yet unclassified' }
@@ -75,66 +68,55 @@ SpaceRace >> finalPositions [
 	self hasEnded ifFalse: [
 		Error signal:
 			'Game is not over. Final positions are not defined yet.' ].
-	^ ships collect: [ :arg1 |
+	^ ships collect: [ :ship |
 			  {
-				  arg1 name.
-				  arg1 currentLap.
-				  arg1 lapPosition } ]
+				  ship name.
+				  board shipLap:ship.
+				  board lapPosition:ship } ]
 ]
 
 { #category : 'execution' }
 SpaceRace >> hasEnded [
 
-	^ ships anySatisfy: [ :arg1 | self isWinner: arg1 ]
+	^ ships anySatisfy: [ :ship | board isWinner: ship ]
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 withDice: arg6 [
+SpaceRace >> initializeWithBoard: aBoard andShips: gameShips withDice: die [
 
-	totalParsecs := arg1.
-	laps := arg3.
-	board := (1 to: arg2) collect: [ :arg7 |
-		         arg4 generateTileWithParsecFactor: totalParsecs / arg2 ].
+	board := aBoard.
 	ships := OrderedCollection new.
-	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
-	dice := arg6.
+	ships := gameShips collect: [ :arg8 | Ship withName: arg8 ] .
+	dice := die.
 	turnManager := TurnManager withTotalTurns: ships size.
-	cardHistory := OrderedCollection new
+	cardHistory := OrderedCollection new.
 ]
 
-{ #category : 'testing' }
-SpaceRace >> isWinner: arg1 [
+{ #category : 'as yet unclassified' }
+SpaceRace >> lapPosition: ship [
 
-	^ arg1 currentLap = laps and: [ arg1 lapPosition = board size ]
-]
-
-{ #category : 'execution' }
-SpaceRace >> moveShip: arg1 [
-
-	| tmp1 |
-	tmp1 := (dice collect: [ :arg2 | arg2 roll ]) sum.
-	arg1 move: tmp1 limitedToSpaces: board size andLaps: laps
+^board lapPosition: (self selectShip: ship)
 ]
 
 { #category : 'execution' }
 SpaceRace >> play [
 
-	| tmp1 |
-	tmp1 := ships at: turnManager currentTurn.
+	| ship roll |
+	ship := ships at: turnManager currentTurn.
+	roll:= (dice collect: [ :aDie | aDie roll ]) sum.
 	self hasEnded ifTrue: [
 		Error signal: 'Game is over. Ships cannot move anymore.' ].
-	self moveShip: tmp1.
-	self hasEnded ifFalse: [ self applyTileEffectFor: tmp1 ].
+	board moveShip: ship with: roll.
+	self hasEnded ifFalse: [ board applyTileEffectFor: ship among:ships ].
 	turnManager changeTurn
 ]
 
 { #category : 'status' }
 SpaceRace >> ranking [
 
-	^ (ships sorted: [ :arg1 :arg2 |
-			   arg1 currentLap * board size + arg1 lapPosition
-			   > (arg2 currentLap * board size + arg2 lapPosition) ]) collect: [
-		  :arg3 | arg3 name ]
+	^ (ships sorted: [ :aShip :anotherShip |
+		   aShip position > anotherShip position ]) collect: [ :ship |
+		  ship name ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -144,28 +126,42 @@ SpaceRace >> selectShip: arg1 [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> setCancellationCard: cancellationCardName fromShip: shipName toTargetCard: targetCardName [ 
-	| ship |
-	(cardHistory anySatisfy: [ :card | card isPermanent ]) ifFalse: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect'  ].
+SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard [
+	
+    | ship |
 	ship := self selectShip:shipName.
-	ship setCancellationCard: cancellationCardName toTargetCard: targetCardName.
+    ship setCard: cardName toTargetCard: targetCard.
+]
+
+{ #category : 'initialization' }
+SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard cancelling: aCard [
+	| ship |
+	ship := self selectShip: shipName.
+	ship setCard: cardName toTargetCard: targetCard cancelling: aCard.
+]
+
+{ #category : 'initialization' }
+SpaceRace >> setCard: cardName fromShip: shipName withTileEffect: lastTile [ 
+	| ship |
+	ship := self selectShip: shipName.
+	ship setCard: cardName withTileEffect: lastTile.
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> shipCardHistoryNames: shipName [ 
-	^ (self selectShip: shipName) cardHistoryNames
+SpaceRace >> shipActiveCardsNames: shipName [ 
+	^ (self selectShip: shipName) activeCardsNames
 ]
 
 { #category : 'testing' }
-SpaceRace >> shipLap: arg1 [
+SpaceRace >> shipLap: ship [
 
-	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) currentLap
+^board shipLap: (self selectShip: ship)
 ]
 
-{ #category : 'testing' }
+{ #category : 'as yet unclassified' }
 SpaceRace >> shipPosition: shipName [
 
-	^ (ships detect: [ :ship | ship name = shipName ]) lapPosition
+	^ (ships detect: [ :ship | ship name = shipName ]) position
 ]
 
 { #category : 'status' }
@@ -180,6 +176,20 @@ SpaceRace >> shipsHand: arg1 [
 	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) hand
 ]
 
+{ #category : 'initialization' }
+SpaceRace >> useCancellationCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCardName [
+
+	| targetCard |
+	
+	self activeCards ifEmpty: [ Error signal: 'Cannot use cancellation card, there are no permanent cards in effect' ].
+	
+	targetCard:= self activeCards detect: [:card | card name = targetCardName ] ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+	
+	 self setCard: cancellationCardName fromShip: shipUsing toTargetCard: targetCard .
+    self useCard: cancellationCardName  fromShip: shipUsing .
+
+]
+
 { #category : 'as yet unclassified' }
 SpaceRace >> useCard: cardName fromShip: shipUsing [
 
@@ -187,8 +197,9 @@ SpaceRace >> useCard: cardName fromShip: shipUsing [
 	ship := self selectShip: shipUsing.
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
-	aCard effectTo: (self selectShip: shipUsing) among: ships inGame: self.
-	cardHistory add: aCard
+	aCard effectTo: 'all' among: ships.
+	
+	cardHistory add: aCard.
 ]
 
 { #category : 'as yet unclassified' }
@@ -196,27 +207,45 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 
 	| ship turnCondition aCard |
 	ship := self selectShip: shipUsing.
+	
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard := ship useCard: cardName withTurnCondition: turnCondition.
-	aCard effectTo: (self selectShip: shipAffected) among: ships inGame: self .
-	cardHistory add: aCard
+	
+	aCard effectTo: (self selectShip: shipAffected) among: ships.
+	
+	cardHistory add: aCard.
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> useCard: arg1 fromShip: arg2 toShip: arg3 cancel: arg4 [
+SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancellingCancel: affectedCardName [
 
-	| tmp1 |
-	tmp1 := self selectShip: arg2.
-	(arg1 isPlayable and: [ (self checkTurn: tmp1) not ]) ifTrue: [
-		Error signal: 'Ship cant use permanent card outside its turn' ].
-	tmp1 useCard: arg1.
-	arg1 effectTo: (self selectShip: arg3) among: ships andCancel: arg4.
-	cardHistory add: arg1
+	| targetCard affectedCard |
+
+	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
+
+	targetCard := cardHistory last.
+
+	affectedCard := self activeCards
+		detect: [ :card | card name = affectedCardName ]
+		ifNone: [ Error signal: 'If last card is cancellation it will not work on a card that isnt in effect' ].
+
+	self setCard: redo fromShip: shipUsing toTargetCard: targetCard cancelling: affectedCard.
+
+	(affectedShip = 'all')
+		ifFalse: [ self useCard: redo fromShip: shipUsing toShip: affectedShip ]
+		ifTrue: [ self useCard: redo fromShip: shipUsing ]
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useRepeatCard: repeat fromShip: shipUsing toShip: affectedShip [
+
+	 self setCard: repeat fromShip: shipUsing withTileEffect: (board lastTile).
+    self useCard: repeat  fromShip: shipUsing toShip: affectedShip .
 ]
 
 { #category : 'status' }
 SpaceRace >> winner [
 
 	self hasEnded ifFalse: [ Error signal: 'Game is not over yet.' ].
-	^ (ships detect: [ :arg1 | self isWinner: arg1 ]) name
+	^ (ships detect: [ :ship | board isWinner: ship ]) name
 ]

@@ -6,7 +6,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Card >> effectTo: arg1 among: arg2 [
-	self subclassResponsibility .
+Card >> effectTo: ship among: ships [
+	^ self subclassResponsibility.
 	
+]
+
+{ #category : 'accessing' }
+Card >> target: targetingCard [
+ 
+]
+
+{ #category : 'as yet unclassified' }
+Card >> target: targetCard cancelling: aCard [
 ]
