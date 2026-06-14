@@ -8,7 +8,8 @@ Class {
 		'totalParsecs',
 		'laps',
 		'turnManager',
-		'cardHistory'
+		'cardHistory',
+		'lastTile'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -39,13 +40,16 @@ SpaceRace >> amountOfShips [
 ]
 
 { #category : 'execution' }
-SpaceRace >> applyTileEffectFor: arg1 [
-
-	(board at: arg1 lapPosition)
-		giveEffectTo: arg1
+SpaceRace >> applyTileEffectFor: ship [
+	|tile|
+	tile:= board at: ship lapPosition.
+	tile
+		giveEffectTo: ship
 		among: ships
 		limitedToSpaces: board size
-		andLaps: laps
+		andLaps: laps.
+	lastTile := tile.
+	
 ]
 
 { #category : 'as yet unclassified' }
@@ -183,7 +187,7 @@ SpaceRace >> useCard: cardName fromShip: shipUsing [
 	ship := self selectShip: shipUsing.
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
-	aCard effectTo: (self selectShip: shipUsing) among: ships.
+	aCard effectTo: (self selectShip: shipUsing) among: ships inGame: self.
 	cardHistory add: aCard
 ]
 
@@ -194,7 +198,7 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 	ship := self selectShip: shipUsing.
 	turnCondition := turnManager turnMatches: (ships indexOf: ship).
 	aCard := ship useCard: cardName withTurnCondition: turnCondition.
-	aCard effectTo: (self selectShip: shipAffected) among: ships.
+	aCard effectTo: (self selectShip: shipAffected) among: ships inGame: self .
 	cardHistory add: aCard
 ]
 

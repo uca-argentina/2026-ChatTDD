@@ -10,3 +10,7 @@ BasicTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSi
  
 	
 ]
+
+{ #category : 'as yet unclassified' }
+BasicTile >> repeatEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [ 
+]

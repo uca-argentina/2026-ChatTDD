@@ -10,3 +10,8 @@ AtomicBombTile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: 
    allShips
        do: [ :ship | ship resetToStartOfLap ].
 ]
+
+{ #category : 'as yet unclassified' }
+AtomicBombTile >> repeatEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+	triggeringShip resetToStartOfLap.
+]
