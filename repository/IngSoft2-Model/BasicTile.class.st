@@ -7,6 +7,10 @@ Class {
 
 { #category : 'execution' }
 BasicTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
- 
 	
+]
+
+{ #category : 'as yet unclassified' }
+BasicTile >> repeatEffectFor: newTriggeringCard [
+	self giveEffectTo: '' among: '' in: ''. 
 ]

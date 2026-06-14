@@ -34,9 +34,9 @@ RedoCard >> name [
 	^ name
 ]
 
-{ #category : 'accessing' }
-RedoCard >> target: targetCard [
-	target := (targetCard deepCopy) rename: name.
+{ #category : 'class management' }
+RedoCard >> rename: newName [
+	name := newName.
 ]
 
 { #category : 'as yet unclassified' }

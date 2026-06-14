@@ -1,11 +1,21 @@
 Class {
 	#name : 'WormHoleTile',
 	#superclass : 'Tile',
+	#instVars : [
+		'board'
+	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'execution' }
 WormHoleTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
-    aBoard moveShip: triggeringShip with: -4
+	board := aBoard .
+    board moveShip: triggeringShip with: -4
+]
+
+{ #category : 'as yet unclassified' }
+WormHoleTile >> repeatEffectFor: newTriggeringShip [
+
+self giveEffectTo: newTriggeringShip among: '' in: board.
 ]

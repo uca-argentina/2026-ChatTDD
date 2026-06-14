@@ -15,7 +15,7 @@ CancellationCard class >> usingCounter: counter [
 ]
 
 { #category : 'as yet unclassified' }
-CancellationCard >> effectTo: aShip among: ships [
+CancellationCard >> effectTo: aShip among: ships [ 
 
 	| affected |
 	affected := ships select: [ :ship | ship checkCard: target ].
@@ -34,7 +34,7 @@ CancellationCard >> name [
 ]
 
 { #category : 'class management' }
-CancellationCard >> rename: newName [ 
+CancellationCard >> rename: newName [
 	name := newName.
 ]
 

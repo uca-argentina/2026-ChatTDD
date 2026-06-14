@@ -27,6 +27,7 @@ HardcodedCardTile >> createCard: cardType [
     name = 'acceleration' ifTrue: [ ^AccelerationCard usingCounter: (counters at:3) ].
     name = 'cancellation' ifTrue: [ ^CancellationCard usingCounter: (counters at:4) ].
 	name = 'redo' ifTrue: [ ^RedoCard usingCounter: (counters at:5) ].
+	name = 'repeat' ifTrue: [ ^RepeatCard usingCounter: (counters at:6) ].
 ]
 
 { #category : 'as yet unclassified' }
@@ -44,6 +45,11 @@ HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 { #category : 'initialization' }
 HardcodedCardTile >> initializeWithTypeCards: typeCards [
 	cards := typeCards asOrderedCollection.
-	counters := { Counter start. Counter start. Counter start. Counter start. Counter start.}.
+	counters := { Counter start. Counter start. Counter start. Counter start. Counter start. Counter start.}.
 	turnManager := TurnManager withTotalTurns: typeCards size
+]
+
+{ #category : 'as yet unclassified' }
+HardcodedCardTile >> repeatEffectFor: newTriggeringShip [ 
+	self giveEffectTo: newTriggeringShip among: '' in: ''.
 ]

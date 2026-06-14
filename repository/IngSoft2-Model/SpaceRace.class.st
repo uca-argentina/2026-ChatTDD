@@ -82,14 +82,14 @@ SpaceRace >> hasEnded [
 ]
 
 { #category : 'initialization' }
-SpaceRace >> initializeWithBoard: aBoard andShips: arg5 withDice: arg6 [
+SpaceRace >> initializeWithBoard: aBoard andShips: gameShips withDice: die [
 
 	board := aBoard.
 	ships := OrderedCollection new.
-	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
-	dice := arg6.
+	ships := gameShips collect: [ :arg8 | Ship withName: arg8 ] .
+	dice := die.
 	turnManager := TurnManager withTotalTurns: ships size.
-	cardHistory := OrderedCollection new
+	cardHistory := OrderedCollection new.
 ]
 
 { #category : 'as yet unclassified' }
@@ -129,15 +129,22 @@ SpaceRace >> selectShip: arg1 [
 SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard [
 	
     | ship |
-ship := self selectShip:shipName.
+	ship := self selectShip:shipName.
     ship setCard: cardName toTargetCard: targetCard.
 ]
 
 { #category : 'initialization' }
-SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard cancelling: aCard [ 
-		| ship |
+SpaceRace >> setCard: cardName fromShip: shipName toTargetCard: targetCard cancelling: aCard [
+	| ship |
 	ship := self selectShip: shipName.
 	ship setCard: cardName toTargetCard: targetCard cancelling: aCard.
+]
+
+{ #category : 'initialization' }
+SpaceRace >> setCard: cardName fromShip: shipName withTileEffect: lastTile [ 
+	| ship |
+	ship := self selectShip: shipName.
+	ship setCard: cardName withTileEffect: lastTile.
 ]
 
 { #category : 'as yet unclassified' }
@@ -210,40 +217,30 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 ]
 
 { #category : 'as yet unclassified' }
-SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip [
-	
-	| targetCard |
-	
-	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
-	
-	targetCard:= cardHistory last.
-	
-	self setCard: redo fromShip: shipUsing  toTargetCard: targetCard.
-	
-	(affectedShip = 'all') 
-		ifFalse: [self useCard: redo fromShip: shipUsing toShip: affectedShip ]
-		ifTrue: [self useCard: redo fromShip: shipUsing ]
-	
-]
-
-{ #category : 'as yet unclassified' }
 SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancellingCancel: affectedCardName [
-	
-	| targetCard newCancelTarget |
+
+	| targetCard affectedCard |
 
 	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
 
 	targetCard := cardHistory last.
 
-	newCancelTarget := self activeCards
+	affectedCard := self activeCards
 		detect: [ :card | card name = affectedCardName ]
-		ifNone: [ Error signal: 'Cannot use cancellation card on a card that isnt in effect' ].
+		ifNone: [ Error signal: 'If last card is cancellation it will not work on a card that isnt in effect' ].
 
-	self setCard: redo fromShip: shipUsing toTargetCard: targetCard cancelling: newCancelTarget.
+	self setCard: redo fromShip: shipUsing toTargetCard: targetCard cancelling: affectedCard.
 
 	(affectedShip = 'all')
 		ifFalse: [ self useCard: redo fromShip: shipUsing toShip: affectedShip ]
 		ifTrue: [ self useCard: redo fromShip: shipUsing ]
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useRepeatCard: repeat fromShip: shipUsing toShip: affectedShip [
+
+	 self setCard: repeat fromShip: shipUsing withTileEffect: (board lastTile).
+    self useCard: repeat  fromShip: shipUsing toShip: affectedShip .
 ]
 
 { #category : 'status' }

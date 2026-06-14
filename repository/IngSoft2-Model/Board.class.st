@@ -3,7 +3,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'laps',
-		'tiles'
+		'tiles',
+		'lastTile',
+		'tile'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -22,18 +24,22 @@ Board class >> withSpaces: spaces andLaps: laps andTileGenerator: tileGenerator 
 
 { #category : 'execution' }
 Board >> applyTileEffectFor: ship among: ships [
+tile:=tiles at: (self lapPosition: ship).
 
-	(tiles at: (self lapPosition: ship))
+	tile
 		giveEffectTo: ship
 		among: ships
-		in: self
+		in: self.
+		
+	lastTile := tile.
 ]
 
 { #category : 'initialization' }
 Board >> initializeWith: length and: someLaps and: tileGenerator and: parsecFactor [
 tiles := (1 to: length) collect: [ :tile |
 tileGenerator generateTileWithParsecFactor: parsecFactor ].
-laps:= someLaps
+laps:= someLaps.
+lastTile := BasicTile new.
 
 ]
 
@@ -46,6 +52,11 @@ Board >> isWinner: aShip [
 { #category : 'as yet unclassified' }
 Board >> lapPosition: ship [
 ^ship position -1\\tiles size+1
+]
+
+{ #category : 'accessing' }
+Board >> lastTile [
+	^ lastTile
 ]
 
 { #category : 'execution' }

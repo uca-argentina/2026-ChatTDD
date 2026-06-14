@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'turnManager',
 		'converter',
-		'valueList'
+		'valueList',
+		'board'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -24,7 +25,8 @@ HyperJumpTile >> currentValueToTile [
 
 { #category : 'execution' }
 HyperJumpTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
-	aBoard moveShip: triggeringShip with:(self currentValueToTile).
+	board := aBoard .
+	board moveShip: triggeringShip with:(self currentValueToTile).
 	turnManager changeTurn.
 ]
 
@@ -34,4 +36,10 @@ HyperJumpTile >> initializeWithParsecFactor: parsecPerTile and: values [
 	valueList := values.
 	turnManager := TurnManager withTotalTurns: valueList size
 	
+]
+
+{ #category : 'as yet unclassified' }
+HyperJumpTile >> repeatEffectFor: newTriggeringShip [
+
+	self giveEffectTo: newTriggeringShip among: '' in: board 
 ]

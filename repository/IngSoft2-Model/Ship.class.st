@@ -121,22 +121,17 @@ Ship >> setCard: cardName toTargetCard: targetCard [
 ]
 
 { #category : 'initialization' }
-Ship >> setCard: cardName toTargetCard: targetCard cancelling: aCard [
+Ship >> setCard: cardName toTargetCard: targetCard cancelling: aCard [ 
 	| card |
 	card := self searchCardInHand: cardName.
 	card target: targetCard cancelling: aCard.
 ]
 
-{ #category : 'as yet unclassified' }
-Ship >> useCard: cardName [
-
-	| selectedCard |
-	selectedCard := self searchCardInHand: cardName.
-
-	selectedCard isPlayable.
-
-	hand remove: selectedCard.
-	^ selectedCard
+{ #category : 'initialization' }
+Ship >> setCard: cardName withTileEffect: lastTile [ 
+		| card |
+	card := self searchCardInHand: cardName.
+	card target: lastTile.
 ]
 
 { #category : 'as yet unclassified' }
