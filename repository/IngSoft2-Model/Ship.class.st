@@ -2,9 +2,7 @@ Class {
 	#name : 'Ship',
 	#superclass : 'Object',
 	#instVars : [
-		'currentLap',
-		'absPosition',
-		'lapPosition',
+		'position',
 		'name',
 		'hand',
 		'activeCards'
@@ -72,9 +70,7 @@ Ship >> initializeWithName: arg1 [
 
 	| tmp1 |
 	name := arg1.
-	absPosition := 1.
-	lapPosition := 1.
-	currentLap := 1.
+	position := 1.
 	tmp1 := CardGenerator new.
 	hand := {
 		        tmp1 giveRandomCard.

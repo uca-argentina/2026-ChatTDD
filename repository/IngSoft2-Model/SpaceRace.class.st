@@ -6,7 +6,7 @@ Class {
 		'dice',
 		'board',
 		'turnManager',
-		'activeCards'
+		'cardHistory'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -89,21 +89,7 @@ SpaceRace >> initializeWithBoard: aBoard andShips: arg5 withDice: arg6 [
 	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
 	dice := arg6.
 	turnManager := TurnManager withTotalTurns: ships size.
-	activeCards := OrderedCollection new
-]
-
-{ #category : 'initialization' }
-SpaceRace >> initializeWithTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 withDice: arg6 [
-
-	totalParsecs := arg1.
-	laps := arg3.
-	board := (1 to: arg2) collect: [ :arg7 |
-		         arg4 generateTileWithParsecFactor: totalParsecs / arg2 ].
-	ships := OrderedCollection new.
-	ships := arg5 collect: [ :arg8 | Ship withName: arg8 ] .
-	dice := arg6.
-	turnManager := TurnManager withTotalTurns: (ships size).
-	cardHistory := OrderedCollection new.
+	cardHistory := OrderedCollection new
 ]
 
 { #category : 'as yet unclassified' }
@@ -220,6 +206,23 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip [
 	
 	| targetCard |
+	
+	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
+	
+	targetCard:= cardHistory last.
+	
+	self setCard: redo fromShip: shipUsing  toTargetCard: targetCard.
+	
+	(affectedShip = 'all') 
+		ifFalse: [self useCard: redo fromShip: shipUsing toShip: affectedShip ]
+		ifTrue: [self useCard: redo fromShip: shipUsing ]
+	
+]
+
+{ #category : 'as yet unclassified' }
+SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancellingCancel: affectedCardName [
+	
+	| targetCard affectedCard |
 	
 	cardHistory ifEmpty: [ Error signal: 'Cannot use redo card, no cards have been played yet' ].
 	

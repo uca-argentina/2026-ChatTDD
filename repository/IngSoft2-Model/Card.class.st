@@ -10,3 +10,8 @@ Card >> effectTo: arg1 among: arg2 [
 	^ self subclassResponsibility.
 	
 ]
+
+{ #category : 'accessing' }
+Card >> target: targetingCard [
+ 
+]
