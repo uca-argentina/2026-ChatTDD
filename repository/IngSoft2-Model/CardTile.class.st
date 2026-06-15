@@ -14,7 +14,7 @@ CardTile class >> default [
 	^ self new initializeCardTile
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 CardTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 
 	triggeringShip addToHand: cardGenerator giveRandomCard
@@ -26,7 +26,7 @@ CardTile >> initializeCardTile [
 	cardGenerator := CardGenerator default.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 CardTile >> repeatEffectFor: newTriggeringShip [
 
 self giveEffectTo: newTriggeringShip among: '' in: '' 

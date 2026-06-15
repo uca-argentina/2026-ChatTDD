@@ -5,43 +5,72 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 TileGenerator >> generateHyperJumpValues [
     | units size |
     units := #('Parsecs' 'Light years').
-    size := (2 + 5 atRandom).
+    size := 2 + (5 atRandom).
     ^ (1 to: size) collect: [ :each |
         { (10 + 90 atRandom).
-          (units at: units size atRandom) }
+          (units atRandom) }
     ]
 ]
 
 { #category : 'execution' }
-TileGenerator >> generateTileWithParsecFactor: arg1 [
+TileGenerator >> generateTileWithParsecFactor: parsecsFactor andChances: chances [
 
-	| tmp1 tmp2 |
-	tmp1 := 100 atRandom.
-	tmp2 := {
+	| number tiles |
+	number := chances sum atRandom.
+	tiles := {
 		        {
-			        30.
-			        [ BasicTile new ] }.
+			        chances first.
+			        [ NoEffectTile new ] }.
 		        {
-			        40.
-			        [ CardTile new ] }.
+			        (chances first: 2) sum.
+			        [ CardTile default ] }.
 		        {
-			        60.
+			        (chances first: 3) sum.
 			        [ WormHoleTile new ] }.
 		        {
-			        80.
+			        (chances first: 4) sum.
 			        [ SpeedUpTile new ] }.
 		        {
-			        90.
+			        (chances first:5) sum.
 			        [ MoonWalkTile withAmountBack: 10 atRandom ] }.
 		        {
-			        98.
-			        [ HyperJumpTile withParsecFactor: arg1 and: self generateHyperJumpValues ] }.
+			        (chances first:6) sum.
+			        [ HyperJumpTile withParsecFactor: parsecsFactor and: self generateHyperJumpValues ] }.
 		        {
-			        100.
+			        (chances first:7) sum.
 			        [ AtomicBombTile new ] } }.
-	^ ((tmp2 detect: [ :arg2 | tmp1 <= (arg2 at: 1) ]) at: 2) value
+	^ ((tiles detect: [ :value | number <= (value at: 1) ]) at: 2) value
+]
+
+{ #category : 'private' }
+TileGenerator >> generateTileWithParsecFactor: parsecsFactor andChances: chances andNumber: number [
+
+	| tiles |
+	tiles := {
+		        {
+			        chances first.
+			        [ NoEffectTile new ] }.
+		        {
+			        (chances first: 2) sum.
+			        [ CardTile default ] }.
+		        {
+			        (chances first: 3) sum.
+			        [ WormHoleTile new ] }.
+		        {
+			        (chances first: 4) sum.
+			        [ SpeedUpTile new ] }.
+		        {
+			        (chances first:5) sum.
+			        [ MoonWalkTile withAmountBack: 10 atRandom ] }.
+		        {
+			        (chances first:6) sum.
+			        [ HyperJumpTile withParsecFactor: parsecsFactor and: self generateHyperJumpValues ] }.
+		        {
+			        (chances first:7) sum.
+			        [ AtomicBombTile new ] } }.
+	^ ((tiles detect: [ :value | number <= (value at: 1) ]) at: 2) value
 ]

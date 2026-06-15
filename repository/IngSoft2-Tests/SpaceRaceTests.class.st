@@ -9,8 +9,8 @@ Class {
 SpaceRaceTests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 	self deny: (aGame hasEnded).
@@ -20,8 +20,8 @@ SpaceRaceTests >> test01WhenTheGameIsNotOverThenTheGameHasNotEnded [
 SpaceRaceTests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 	aGame play.
@@ -32,8 +32,8 @@ SpaceRaceTests >> test02WhenShipPassesFinishLineTheGameHasEnded [
 SpaceRaceTests >> test03WhenTheShipMovesButDoesntCrossFinishLineThenTheGameDoesNotEnd [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 	aGame play.
@@ -45,8 +45,8 @@ SpaceRaceTests >> test04WhenBoardLengthIsZeroThenGameNotCreated [
 
 	| aBoard aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile:= BasicTile new.   
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.   
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	
 	self
 		should: [
@@ -63,8 +63,8 @@ SpaceRaceTests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 
 	| aBoard aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile:= BasicTile new.   
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.   
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	
 	self
 		should: [
@@ -81,8 +81,8 @@ SpaceRaceTests >> test05WhenBoardLengthIsNegativeThenGameNotCreated [
 SpaceRaceTests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	self assert: (aGame amountOfShips) equals: 2.
@@ -92,8 +92,8 @@ SpaceRaceTests >> test06WhenAGameIsCreateWith2ShipsThenTheGameHas2Ships [
 SpaceRaceTests >> test07WhenTwoShipsAreMovedThenBothShipsChangePosition [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -106,8 +106,8 @@ SpaceRaceTests >> test08WhenEachShipMovesThenItMovesItsOwnAmountOfSquares [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -121,8 +121,8 @@ SpaceRaceTests >> test09WhenFirstShipWinsThenTheGameEnds [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -136,8 +136,8 @@ SpaceRaceTests >> test10WhenSecondShipWinsThenTheGameEnds [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5. 7}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -150,8 +150,8 @@ SpaceRaceTests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'maty'. 'lu'. 'teo'. 'eddie' } andDice: {aLoadedDie }.
 	self assert: aGame amountOfShips equals: 4.
@@ -161,8 +161,8 @@ SpaceRaceTests >> test11WhenTheGameIsCreatedWith4ShipsThen4ShipsExist [
 SpaceRaceTests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 	aGame play.
@@ -173,8 +173,8 @@ SpaceRaceTests >> test12WhenTheOnlyPlayerWinsThenThePlayerIsTheWinner [
 SpaceRaceTests >> test13WhenTheGameIsntFinishedThenThereIsNoWinner [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 	aGame play.
@@ -194,8 +194,8 @@ SpaceRaceTests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
 		
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {1. 7}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	
@@ -208,8 +208,8 @@ SpaceRaceTests >> test14WhenSecondPlayerWinsThenIsDeclaredWinner [
 SpaceRaceTests >> test15WhenSomeoneWonThenNoShipCanKeepPlaying [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {6.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon' } andDice: {aLoadedDie }.
 		aGame play.  "la nave gana"
@@ -225,8 +225,8 @@ SpaceRaceTests >> test16WhenTheGameEndedThenFinalPositionOfShipIs5 [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -240,8 +240,8 @@ SpaceRaceTests >> test17WhenAGameIsNotOverThenFinalPositionsAreNotDefined [
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {3.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -261,8 +261,8 @@ SpaceRaceTests >> test18WhenAShipCrossedTheFinishLineThenItsFinalPositionIsTheLa
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {8.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'tie fighter' } andDice: {aLoadedDie }.
 
@@ -275,8 +275,8 @@ SpaceRaceTests >> test19WhenGameWithMultiplePlayersEndsThenReturnsEachPlayerFina
 
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5. 0}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -291,8 +291,8 @@ SpaceRaceTests >> test20WhenGameHasMultipleDiceThenTheShipsShouldMoveTheSumOfThe
 	|aGame aLoadedDie anotherLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {3.}.
 	anotherLoadedDie :=LoadedDie thatRolls: {3.}.
-	aTile:= BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile:= NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/5.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'tie fighter' } andDice: {aLoadedDie. anotherLoadedDie }.
     aGame play.
@@ -305,7 +305,7 @@ SpaceRaceTests >> test21WhenShipLandsOnSpeedUpTileThenItMovesForward4Tiles [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {1.}.
 	aTile := SpeedUpTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 6 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/6.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -318,7 +318,7 @@ SpaceRaceTests >> test22WhenShipsEndsOnASpeedUpTileThenGameEndsAndSpeedUpIsntPla
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
 	aTile := SpeedUpTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 5 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/6.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -333,14 +333,14 @@ SpaceRaceTests >> test22WhenShipsEndsOnASpeedUpTileThenGameEndsAndSpeedUpIsntPla
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test23WhenShip1PlaysThenItsShip2sTurn [
+SpaceRaceTests >> test23WhenShip1PlaysThenItCannotPlayAgainUntilShip2Plays [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {4.}.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 10 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/10.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
-    aGame play.  "juega nave 1, mueve 3"
+    aGame play.  "juega nave 1, mueve 4"
     aGame play.  "juega nave 2, mueve 4"
     self assert: (aGame shipPosition: 'millenium falcon') equals: 5.
     self assert: (aGame shipPosition: 'tie fighter') equals: 5.
@@ -351,7 +351,7 @@ SpaceRaceTests >> test24WhenShipLandsOnSpeedUpAndMovesToAnotherSpeedUpTheEffects
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {2.}.
 	aTile := SpeedUpTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/6.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 
@@ -364,7 +364,7 @@ SpaceRaceTests >> test25WhenShipLandsOnWormHoleTileThenItMovesBack4Tiles [
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {5.}.
 	aTile := WormHoleTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/6.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 
@@ -377,7 +377,7 @@ SpaceRaceTests >> test26WhenShipLandsOnWormHoleTileThenItCannotGoBehindPosition0
 	|aGame aLoadedDie aTile aBoardGenerator aBoard|
 	aLoadedDie := LoadedDie thatRolls: {2.}.
 	aTile := WormHoleTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aBoard := Board withSpaces: 7 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100/6.
    	aGame:= SpaceRace withBoard: aBoard andShips: { 'millenium falcon'. 'tie fighter' } andDice: {aLoadedDie }.
 	aGame play.
@@ -390,7 +390,7 @@ SpaceRaceTests >> test27WhenShipLandsOnMoonWalkTileThenShipIsntAffected [
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 2 }.
 	aTile := MoonWalkTile withAmountBack: 1.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 7
@@ -404,13 +404,13 @@ SpaceRaceTests >> test27WhenShipLandsOnMoonWalkTileThenShipIsntAffected [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTideThenTheOtherShipsMoveBackNTiles [
+SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTileThenTheOtherShipsMoveBackNTiles [
 
 	| aGame aLoadedDie aTile anAmountBack aBoardGenerator |
 	anAmountBack := 1.
 	aLoadedDie := LoadedDie thatRolls: { 2 }.
 	aTile := MoonWalkTile withAmountBack: anAmountBack.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 7
@@ -427,12 +427,12 @@ SpaceRaceTests >> test28WhenSecondShipLandsOnMoonWalkTideThenTheOtherShipsMoveBa
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test29WhenAShipLandsOnAtomicBombTIleThenAllShipsGoBackToTheStart [
+SpaceRaceTests >> test29WhenAShipLandsOnAtomicBombTileThenAllShipsGoBackToTheStart [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 6 }.
 	aTile := AtomicBombTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 8
@@ -454,7 +454,7 @@ SpaceRaceTests >> test30WhenParsecFactorIsEqualOrLessThan0ThenSpaceRaceIsntCreat
 			         { 80. 'Parsecs' }.
 			         { 50. 'Parsecs' }.
 			         { 20. 'Parsecs' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 
 	self
 		should: [
@@ -482,7 +482,7 @@ SpaceRaceTests >> test31WhenAShipLandsOnHyperJumpTileThenTheShipMovesInParsecs [
 			         { 80. 'Parsecs' }.
 			         { 50. 'Parsecs' }.
 			         { 20. 'Parsecs' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 8
@@ -504,7 +504,7 @@ SpaceRaceTests >> test32WhenMultipleShipsLandOnHyperJumpThenJumpDistanceRotates 
 			         { 80. 'Parsecs' }.
 			         { 50. 'Parsecs' }.
 			         { 20. 'Parsecs' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 25
@@ -526,8 +526,8 @@ SpaceRaceTests >> test33WhenSecondShipIsAheadFirstOneThenSecondShipIsFirstInRank
 
 	| aGame aDie aTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3. 4 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 8
@@ -548,8 +548,8 @@ SpaceRaceTests >> test34WhenShipIsPassedByOtherShipThenItFallsInTheRanking [
 
 	| aGame aDie aTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3. 4 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 8
@@ -568,8 +568,8 @@ SpaceRaceTests >> test35WhenTheAmountOfLapsInAGameIsLessThan1ThenGameCannotBeCre
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	self
 		should: [
 				aGame := SpaceRace
@@ -592,8 +592,8 @@ SpaceRaceTests >> test36WhenShipJustCompletesFirstLapThenTheGameHasntEnded [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -607,36 +607,12 @@ SpaceRaceTests >> test36WhenShipJustCompletesFirstLapThenTheGameHasntEnded [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test37WhenTheAmountOfLapsInAGameIsLessThan1ThenGameCannotBeCreated [
+SpaceRaceTests >> test37WhenAShipCompletesALapItsLapIncrements [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
-	self
-		should: [
-				aGame := SpaceRace
-					         withBoard: (Board
-							          withSpaces: 10
-							          andLaps: 0
-							          andTileGenerator: aBoardGenerator
-							          andParsecsPerTile: 100 / 6)
-					         andShips: 1
-					         andDice: { aLoadedDie } ]
-		raise: Error
-		withExceptionDo: [ :error |
-				self
-					assert: error messageText
-					equals: 'Amount of laps cannot be less than 1' ]
-]
-
-{ #category : 'tests' }
-SpaceRaceTests >> test38WhenAShipCompletesALapItsLapIncrements [
-
-	| aGame aLoadedDie aTile aBoardGenerator |
-	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -650,12 +626,12 @@ SpaceRaceTests >> test38WhenAShipCompletesALapItsLapIncrements [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test39WhenAShipCompletesALapThenItReturnsToFirstTile [
+SpaceRaceTests >> test38WhenAShipCompletesALapThenItReturnsToFirstTile [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -669,12 +645,12 @@ SpaceRaceTests >> test39WhenAShipCompletesALapThenItReturnsToFirstTile [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test40WhenShipIsOnLastLapItCannotGoBeyondLastTile [
+SpaceRaceTests >> test39WhenShipIsOnLastLapItCannotGoBeyondLastTile [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 8 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -688,12 +664,12 @@ SpaceRaceTests >> test40WhenShipIsOnLastLapItCannotGoBeyondLastTile [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test41WhenShipFallsOnAtomicBombThenLapsAreKept [
+SpaceRaceTests >> test40WhenShipFallsOnAtomicBombThenLapsAreKept [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 7 }.
 	aTile := AtomicBombTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -707,12 +683,12 @@ SpaceRaceTests >> test41WhenShipFallsOnAtomicBombThenLapsAreKept [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test42WhenShip1IsAheadInLapsThenItIsFirstInRanking [
+SpaceRaceTests >> test41WhenShip1IsAheadInLapsThenItIsFirstInRanking [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5. 1 }.
-	aTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -729,12 +705,12 @@ SpaceRaceTests >> test42WhenShip1IsAheadInLapsThenItIsFirstInRanking [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test43WhenShipOnLap2LandsOnWormHoleThenItCanGoToPreviousLap [
+SpaceRaceTests >> test42WhenShipOnLap2LandsOnWormHoleThenItCanGoToPreviousLap [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
 	aTile := WormHoleTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -749,12 +725,12 @@ SpaceRaceTests >> test43WhenShipOnLap2LandsOnWormHoleThenItCanGoToPreviousLap [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test44WhenShipLandsOnMoonWalkThenOtherShipsCanGoToPreviousLap [
+SpaceRaceTests >> test43WhenShipLandsOnMoonWalkThenOtherShipsCanGoToPreviousLap [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 5 }.
 	aTile := MoonWalkTile withAmountBack: 4.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -770,107 +746,104 @@ SpaceRaceTests >> test44WhenShipLandsOnMoonWalkThenOtherShipsCanGoToPreviousLap 
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test45WhenUsingBoardConstructorBasicTileAppearsBetween35And45Percent [
+SpaceRaceTests >> test44WhenUsingTileConstructorNoEffectTileAppearsWith30PercentChance [
 
-	| constructor tiles cantidadBasic ratio |
+	| constructor tile anotherTile |
 	constructor := TileGenerator new.
-	tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
-	cantidadBasic := (tiles select: [:t | t isKindOf: BasicTile]) size.
-	ratio := cantidadBasic / 10000.
-	self assert: (ratio between: 0.38 and: 0.42).
+	tile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 30.
+	self assert: (tile isKindOf: NoEffectTile).
+	
+	anotherTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 31.
+	self deny: (anotherTile isKindOf: NoEffectTile).
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test46WhenUsingBoardConstructorSpeedUpTileAppearsBetween15And25Percent [
+SpaceRaceTests >> test45WhenUsingTileConstructorSpeedUpTileAppearsWith10PercentChance [
 
-	| constructor tiles cantidadSpeedUp ratio |
+	| constructor tile anotherTile |
 	constructor := TileGenerator new.
-	tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
-	cantidadSpeedUp := (tiles select: [:t | t isKindOf: SpeedUpTile ]) size.
-	ratio := cantidadSpeedUp / 10000.
-	self assert: (ratio between: 0.18 and: 0.22).
+	tile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 80.
+	self assert: (tile isKindOf: SpeedUpTile ).
+	
+	anotherTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 81.
+	self deny: (anotherTile isKindOf: SpeedUpTile ).
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test47WhenUsingBoardConstructorTilesAppearBetweenExpectedValues [
-    | constructor tiles counts total |
+SpaceRaceTests >> test46WhenUsingTileConstructorTilesAppearBetweenExpectedValues [
+    | constructor basicTile cardTile wormHoleTile speedUpTile moonWalkTile hyperJumpTile atomicBombTile |
 	constructor := TileGenerator new.
-    tiles := (1 to: 10000) collect: [:_ | constructor generateTileWithParsecFactor: (100/8)].
-    total := tiles size.
-    
-    counts := Dictionary new.
-    counts at: BasicTile      put: (tiles select: [:t | t isKindOf: BasicTile]) size.
-    counts at: WormHoleTile   put: (tiles select: [:t | t isKindOf: WormHoleTile]) size.
-    counts at: SpeedUpTile    put: (tiles select: [:t | t isKindOf: SpeedUpTile]) size.
-    counts at: MoonWalkTile   put: (tiles select: [:t | t isKindOf: MoonWalkTile]) size.
-    counts at: HyperJumpTile  put: (tiles select: [:t | t isKindOf: HyperJumpTile]) size.
-    counts at: AtomicBombTile put: (tiles select: [:t | t isKindOf: AtomicBombTile]) size.
-    
-    "Verificamos que todos los porcentajes estén dentro del rango esperado"
-    {
-        { BasicTile.      0.38. 0.42 }.
-        { WormHoleTile.   0.18. 0.22 }.
-        { SpeedUpTile.    0.18. 0.22 }.
-        { MoonWalkTile.   0.08. 0.12 }.
-        { HyperJumpTile.  0.06. 0.10 }.
-        { AtomicBombTile. 0.00. 0.04 }.
-    } do: [:entry |
-        | tileClass min max ratio |
-        tileClass := entry at: 1.
-        min       := entry at: 2.
-        max       := entry at: 3.
-        ratio     := (counts at: tileClass) / total.
-        self assert: (ratio between: min and: max)
-		]
+	
+   basicTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 30.
+	self assert: (basicTile isKindOf: NoEffectTile).
+	
+	cardTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 40.
+	self assert: (cardTile isKindOf: CardTile ).
+	
+	wormHoleTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 60.
+	self assert: (wormHoleTile isKindOf: WormHoleTile ).
+	
+	speedUpTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 80.
+	self assert: (speedUpTile isKindOf: SpeedUpTile ).
+	
+	moonWalkTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 90.
+	self assert: (moonWalkTile isKindOf: MoonWalkTile ).
+	
+	hyperJumpTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 98.
+	self assert: (hyperJumpTile isKindOf: HyperJumpTile ).
+	
+	atomicBombTile := constructor generateTileWithParsecFactor: (100/8) andChances: { 30. 10. 20. 20. 10. 8. 2 } andNumber: 100.
+	self assert: (atomicBombTile isKindOf: AtomicBombTile ).
+	
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test48WhenShipIsCreatedThenItStartsWithTwoCards [
+SpaceRaceTests >> test47WhenShipIsCreatedThenItStartsWithTwoCards [
 
-	| tmp1 tmp2 tmp3 tmp4 tmp5 |
-	tmp2 := LoadedDie thatRolls: { 3 }.
-	tmp5 := Card new.
-	tmp3 := BasicTile new.
-	tmp4 := HardcodedBoardGenerator withTileType: tmp3.
-	tmp1 := SpaceRace
+	| aGame aDie aTile constructor aCard |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCard := Card new.
+	aTile := NoEffectTile new.
+	constructor := PredefinedTileGenerator withTileType: aTile.
+	aGame := SpaceRace
 		        withBoard: (Board
 				         withSpaces: 5
 				         andLaps: 1
-				         andTileGenerator: tmp4
+				         andTileGenerator: constructor
 				         andParsecsPerTile: 100 / 6)
 		        andShips: { 'tie fighter' }
-		        andDice: { tmp2 }.
-	self assert: (tmp1 shipsHand: 'tie fighter') size equals: 2
+		        andDice: { aDie }.
+	self assert: (aGame shipsHand: 'tie fighter') size equals: 2
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test49WhenShipLandsOnCardTileThenItReceivesACard [
+SpaceRaceTests >> test48WhenShipLandsOnCardTileThenItReceivesACard [
 
-	| tmp1 tmp2 tmp3 tmp4 tmp5 |
-	tmp2 := LoadedDie thatRolls: { 3 }.
-	tmp5 := Card new.
-	tmp3 := CardTile default.
-	tmp4 := HardcodedBoardGenerator withTileType: tmp3.
-	tmp1 := SpaceRace
+	| aGame aDie aCard constructor aTile |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCard := Card new.
+	aTile := CardTile default.
+	constructor := PredefinedTileGenerator withTileType: aTile.
+	aGame := SpaceRace
 		        withBoard: (Board
 				         withSpaces: 5
 				         andLaps: 1
-				         andTileGenerator: tmp4
+				         andTileGenerator: constructor
 				         andParsecsPerTile: 100 / 6)
 		        andShips: { 'tie fighter' }
-		        andDice: { tmp2 }.
-	tmp1 play.
-	self assert: (tmp1 shipsHand: 'tie fighter') size equals: 3
+		        andDice: { aDie }.
+	aGame play.
+	self assert: (aGame shipsHand: 'tie fighter') size equals: 3
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test50WhenShipUsesCardThenItsDeletedFromItsHand [
+SpaceRaceTests >> test49WhenShipUsesCardThenItsDeletedFromItsHand [
 
 	| aGame aLoadedDie aTile aBoardGenerator overload |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	overload := OverloadCard new.
 	aTile := HardcodedCardTile thatGives: { 'overload' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 5
@@ -889,39 +862,39 @@ SpaceRaceTests >> test50WhenShipUsesCardThenItsDeletedFromItsHand [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test51WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsError [
+SpaceRaceTests >> test50WhenAShipTriesToUseACardThatIsntInItsHandThenItThrowsError [
 
-	| tmp1 tmp2 tmp3 tmp4 tmp5 |
-	tmp2 := LoadedDie thatRolls: { 3 }.
-	tmp5 := OverloadCard new.
-	tmp3 := BasicTile new.
-	tmp4 := HardcodedBoardGenerator withTileType: tmp3.
-	tmp1 := SpaceRace
+	| aGame aDie aTile constructor aCard |
+	aDie := LoadedDie thatRolls: { 3 }.
+	aCard := OverloadCard new.
+	aTile := NoEffectTile new.
+	constructor := PredefinedTileGenerator withTileType: aTile.
+	aGame := SpaceRace
 		        withBoard: (Board
 				         withSpaces: 5
 				         andLaps: 1
-				         andTileGenerator: tmp4
+				         andTileGenerator: constructor
 				         andParsecsPerTile: 100 / 6)
 		        andShips: { 'tie fighter' }
-		        andDice: { tmp2 }.
-	tmp1 play.
+		        andDice: { aDie }.
+	aGame play.
 	self
 		should: [
-		tmp1 useCard: tmp5 fromShip: 'tie fighter' toShip: 'tie fighter' ]
+		aGame useCard: aCard fromShip: 'tie fighter' toShip: 'tie fighter' ]
 		raise: Error
-		withExceptionDo: [ :arg1 |
+		withExceptionDo: [ :error |
 				self
-					assert: arg1 messageText
+					assert: error messageText
 					equals: 'Cant use card that isnt in your hand' ]
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test52WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
+SpaceRaceTests >> test51WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -937,12 +910,12 @@ SpaceRaceTests >> test52WhenACardIsUsedThenTheGamesCardHistoryAddsIt [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test53WhenAShipTriesToUseAPermanentCardOutsideItsTurnThenItIsNotAllowed [
+SpaceRaceTests >> test52WhenAShipTriesToUseAPermanentCardOutsideItsTurnThenItIsNotAllowed [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 5
@@ -967,12 +940,34 @@ SpaceRaceTests >> test53WhenAShipTriesToUseAPermanentCardOutsideItsTurnThenItIsN
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test55WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackInSpaces [
+SpaceRaceTests >> test53WhenOverloadCardAppliedThenShipAffectedMovesTwoSpacesLess [
+
+    | aGame aDie aCardTile aBoardGenerator |
+    aDie := LoadedDie thatRolls: { 3 }.
+    aCardTile := HardcodedCardTile thatGives: { 'overload' }.
+    aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
+    aGame := SpaceRace
+                 withBoard: (Board
+                          withSpaces: 5
+                          andLaps: 1
+                          andTileGenerator: aBoardGenerator
+                          andParsecsPerTile: 100 / 6)
+                 andShips: { 'tie fighter' }
+                 andDice: { aDie }.
+    aGame
+        play;
+        useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter';
+        play.
+    self assert: (aGame shipPosition: 'tie fighter') equals: 5
+]
+
+{ #category : 'tests' }
+SpaceRaceTests >> test54WhenOverloadCardMakesShipMoveBackwardsThenShipGoesBack [
 
 	| aGame aDie aCardTile aBoardGenerator |
-	aDie := LoadedDie thatRolls: { 0 }.
+	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	    aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 5
@@ -983,17 +978,18 @@ SpaceRaceTests >> test55WhenOverloadCardMakesShipGoesBackwardsThenShipGoesBackIn
                  andDice: { aDie }.
 	aGame
 		play;
-		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter'.
+		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter';
+		play.
 	self assert: (aGame shipPosition: 'tie fighter') equals: 1
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test56WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
+SpaceRaceTests >> test55WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'speed' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	    aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 10
@@ -1010,12 +1006,12 @@ SpaceRaceTests >> test56WhenSpeedCardAppliedThenShipAffectedMovesOneSpaceMore [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test57WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
+SpaceRaceTests >> test56WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'acceleration' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 10
@@ -1036,13 +1032,13 @@ SpaceRaceTests >> test57WhenAccelerationCardUsedThenAllShipsMove1SpaceMore [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test58WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyways [
+SpaceRaceTests >> test57WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyways [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1066,13 +1062,13 @@ SpaceRaceTests >> test58WhenInstantCardIsUsedOutsideShipsTurnThenItIsAppliedAnyw
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test59WhenInstantCardIsUsedThenItDoesntShowUpInActiveCards [
+SpaceRaceTests >> test58WhenInstantCardIsUsedThenItDoesntShowUpInActiveCards [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1109,13 +1105,13 @@ SpaceRaceTests >> test59WhenInstantCardIsUsedThenItDoesntShowUpInActiveCards [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test60WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
+SpaceRaceTests >> test59WhenCancellationCardUsedThenASelectedPermanentEffectIsRemovedFromShipAffected [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1154,13 +1150,13 @@ SpaceRaceTests >> test60WhenCancellationCardUsedThenASelectedPermanentEffectIsRe
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test61WhenCancellationCardIsUsedButThereAreNotAnyPermanentsThenItRaisesError [
+SpaceRaceTests >> test60WhenCancellationCardIsUsedButThereAreNotAnyPermanentsThenItRaisesError [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1189,13 +1185,13 @@ SpaceRaceTests >> test61WhenCancellationCardIsUsedButThereAreNotAnyPermanentsThe
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test62WhenCancellationCardTargetsACardNotAffectingAnyShipThenErrorIsRaised [
+SpaceRaceTests >> test61WhenCancellationCardTargetsACardNotAffectingAnyShipThenErrorIsRaised [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1227,13 +1223,13 @@ SpaceRaceTests >> test62WhenCancellationCardTargetsACardNotAffectingAnyShipThenE
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test63WhenShipHasTwoStackedEffectsOfSameTypeThenCancellationRemovesOnlyTheTargetedInstance [
+SpaceRaceTests >> test62WhenShipHasTwoStackedEffectsOfSameTypeThenCancellationRemovesOnlyTheTargetedInstance [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 30
@@ -1275,13 +1271,13 @@ SpaceRaceTests >> test63WhenShipHasTwoStackedEffectsOfSameTypeThenCancellationRe
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test64WhenCancellationCardIsUsedThenOverloadEffectIsRemovedFromShipAffected [
+SpaceRaceTests >> test63WhenCancellationCardIsUsedThenOverloadEffectIsRemovedFromShipAffected [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'overload'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1319,12 +1315,12 @@ SpaceRaceTests >> test64WhenCancellationCardIsUsedThenOverloadEffectIsRemovedFro
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test65WhenCancellationCardIsUsedThenSpeedEffectIsRemovedFromShipAffected [
+SpaceRaceTests >> test64WhenCancellationCardIsUsedThenSpeedEffectIsRemovedFromShipAffected [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'speed'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1365,13 +1361,13 @@ SpaceRaceTests >> test65WhenCancellationCardIsUsedThenSpeedEffectIsRemovedFromSh
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test66WhenCancellationCardIsUsedThenAccelerationEffectIsRemovedOnlyFromShipAffected [
+SpaceRaceTests >> test65WhenCancellationCardIsUsedThenAccelerationEffectIsRemovedOnlyFromShipAffected [
 
 	| aGame aLoadedDie aCardTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives:
 		             { 'acceleration'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 20
@@ -1416,7 +1412,7 @@ SpaceRaceTests >> test66WhenCancellationCardIsUsedThenAccelerationEffectIsRemove
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test67WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYears [
+SpaceRaceTests >> test66WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYears [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 1 }.
@@ -1424,7 +1420,7 @@ SpaceRaceTests >> test67WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYe
 			         { 80. 'Light years' }.
 			         { 50. 'Light years' }.
 			         { 20. 'Light years' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 8
@@ -1438,7 +1434,7 @@ SpaceRaceTests >> test67WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYe
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test68WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYearsAndParsecs [
+SpaceRaceTests >> test67WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYearsAndParsecs [
 
 	| aGame aLoadedDie aTile aBoardGenerator |
 	aLoadedDie := LoadedDie thatRolls: { 1 }.
@@ -1446,7 +1442,7 @@ SpaceRaceTests >> test68WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYe
 			         { 80. 'Parsecs' }.
 			         { 50. 'Light years' }.
 			         { 20. 'Parsecs' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aTile.
 	aGame := SpaceRace
 		         withBoard: (Board
 				          withSpaces: 25
@@ -1464,12 +1460,12 @@ SpaceRaceTests >> test68WhenAShipLandsOnHyperJumpTileThenTheShipCanMoveInLightYe
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test69WhenRedoCardUsedThenItShowsUpInCardHistory [
+SpaceRaceTests >> test68WhenRedoCardUsedThenItShowsUpInCardHistory [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1493,12 +1489,12 @@ SpaceRaceTests >> test69WhenRedoCardUsedThenItShowsUpInCardHistory [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test70WhenRedoCardIsUsedButNoCardHasBeenUsedBeforeThenItThrowsError [
+SpaceRaceTests >> test69WhenRedoCardIsUsedButNoCardHasBeenUsedBeforeThenItThrowsError [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1520,12 +1516,12 @@ SpaceRaceTests >> test70WhenRedoCardIsUsedButNoCardHasBeenUsedBeforeThenItThrows
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test71WhenRedoAffectsAShipThenItsBehaviourIsChanged [
+SpaceRaceTests >> test70WhenRedoAffectsAShipThenItsBehaviourIsChanged [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1547,11 +1543,11 @@ SpaceRaceTests >> test71WhenRedoAffectsAShipThenItsBehaviourIsChanged [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test72WhenRedoTargetsAPermanentCardThenItShouldOnlyBePlayedInShipsTurn [
+SpaceRaceTests >> test71WhenRedoTargetsAPermanentCardThenItShouldOnlyBePlayedInShipsTurn [
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1575,12 +1571,12 @@ SpaceRaceTests >> test72WhenRedoTargetsAPermanentCardThenItShouldOnlyBePlayedInS
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test73WhenRedoCardUsedTargetingAPermanentCardThenItShowsUpInAffectedShipActiveCards [
+SpaceRaceTests >> test72WhenRedoCardUsedTargetingAPermanentCardThenItShowsUpInAffectedShipActiveCards [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1603,11 +1599,11 @@ SpaceRaceTests >> test73WhenRedoCardUsedTargetingAPermanentCardThenItShowsUpInAf
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test74WhenRedoTargetsAnInstantCardThenItCanBePlayedOutsideShipsTurn [
+SpaceRaceTests >> test73WhenRedoTargetsAnInstantCardThenItCanBePlayedOutsideShipsTurn [
 		| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1627,12 +1623,12 @@ SpaceRaceTests >> test74WhenRedoTargetsAnInstantCardThenItCanBePlayedOutsideShip
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test75WhenRedoTargetsSpeedThenShipAffectedByRedoAddsOneToItsRoll [
+SpaceRaceTests >> test74WhenRedoTargetsSpeedThenShipAffectedByRedoAddsOneToItsRoll [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'speed'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1653,11 +1649,11 @@ SpaceRaceTests >> test75WhenRedoTargetsSpeedThenShipAffectedByRedoAddsOneToItsRo
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test76WhenRedoTargetsAccelerationThenAllShipsRollOneMore [
+SpaceRaceTests >> test75WhenRedoTargetsAccelerationThenAllShipsRollOneMore [
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1680,12 +1676,12 @@ SpaceRaceTests >> test76WhenRedoTargetsAccelerationThenAllShipsRollOneMore [
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test77WhenRedoTargetsARedoThenTheOriginalEffectIsAppliedAgain [
+SpaceRaceTests >> test76WhenRedoTargetsARedoThenTheOriginalEffectIsAppliedAgain [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1712,12 +1708,12 @@ SpaceRaceTests >> test77WhenRedoTargetsARedoThenTheOriginalEffectIsAppliedAgain 
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test78WhenRedoTargetsCancellationWithDifferentCardThenThatCardIsRemoved [
+SpaceRaceTests >> test77WhenRedoTargetsCancellationWithDifferentCardThenThatCardIsRemoved [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'speed'. 'cancellation'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1744,44 +1740,12 @@ SpaceRaceTests >> test78WhenRedoTargetsCancellationWithDifferentCardThenThatCard
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test79WhenRedoTargetsCancellationWithDifferentCardThenThatCardIsRemoved [
-
-	| aGame aDie aCardTile aBoardGenerator |
-	aDie := LoadedDie thatRolls: { 3 }.
-	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'speed'. 'cancellation'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
-	aGame := SpaceRace
-                 withBoard: (Board
-                          withSpaces: 15
-                          andLaps: 1
-                          andTileGenerator: aBoardGenerator
-                          andParsecsPerTile: 100 / 6)
-                 andShips: { 'tie fighter'. 'x-wing' }
-                 andDice: { aDie }.
-
-	aGame
-		play;
-		play;
-		useCard: 'overload1' fromShip: 'tie fighter' toShip: 'tie fighter';
-		play;
-		useCard: 'speed1' fromShip: 'x-wing' toShip: 'tie fighter';
-		useCancellationCard: 'cancellation1' fromShip: 'tie fighter' toTargetCard: 'overload1';
-		play.
-
-	aGame
-		useRedoCard: 'redo1' fromShip: 'x-wing' toShip: 'tie fighter' ifCancellingCancel: 'speed1'.
-
-	self assert: (aGame shipActiveCardsNames: 'tie fighter') equals: { } asOrderedCollection.
-	self assert: (aGame cardHistoryNames) equals: { 'overload1'. 'speed1'. 'cancellation1'. 'redo1' } asOrderedCollection
-]
-
-{ #category : 'tests' }
-SpaceRaceTests >> test80WhenRedoCardIsUsedIfCancellingCancelButNoCardHasBeenUsedBeforeThenItThrowsError [ 
+SpaceRaceTests >> test78WhenRedoCardIsUsedIfCancellingCancelButNoCardHasBeenUsedBeforeThenItThrowsError [ 
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'overload'. 'redo' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1804,12 +1768,12 @@ SpaceRaceTests >> test80WhenRedoCardIsUsedIfCancellingCancelButNoCardHasBeenUsed
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test81WhenCancellationTargetsARedoOfSpeedThenItsEffectIsRemoved [ 
+SpaceRaceTests >> test79WhenCancellationTargetsARedoOfSpeedThenItsEffectIsRemoved [ 
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'speed'. 'redo'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1832,12 +1796,12 @@ SpaceRaceTests >> test81WhenCancellationTargetsARedoOfSpeedThenItsEffectIsRemove
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test82WhenCancellationTargetsARedoOfAccelerationThenItsEffectIsRemovedFromAllShips [
+SpaceRaceTests >> test80WhenCancellationTargetsARedoOfAccelerationThenItsEffectIsRemovedFromAllShips [
 
 	| aGame aDie aCardTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'acceleration'. 'redo'. 'cancellation' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1861,12 +1825,12 @@ SpaceRaceTests >> test82WhenCancellationTargetsARedoOfAccelerationThenItsEffectI
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test84WhenLastTileUsedIsABasicTileThenRepeatCardDoesntApplyEffect [
+SpaceRaceTests >> test81WhenLastTileUsedIsABasicTileThenRepeatCardDoesntApplyEffect [
 
     | aGame aDie aCardTile aBoardGenerator aWormHoleTile |
 	aDie := LoadedDie thatRolls: { 3 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
-	aBoardGenerator := HardcodedBoardGenerator withTileType: aCardTile.
+	aBoardGenerator := PredefinedTileGenerator withTileType: aCardTile.
 	aGame := SpaceRace
                  withBoard: (Board
                           withSpaces: 15
@@ -1883,12 +1847,12 @@ SpaceRaceTests >> test84WhenLastTileUsedIsABasicTileThenRepeatCardDoesntApplyEff
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test85WhenLastTileUsedIsAWormHoleTileThenRepeatCardMovesChosenShipBack [
+SpaceRaceTests >> test82WhenLastTileUsedIsAWormHoleTileThenRepeatCardMovesChosenShipBack [
 	| aGame aDie aCardTile aWormHoleTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
 	aWormHoleTile := WormHoleTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aWormHoleTile. aCardTile. }.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aWormHoleTile. aCardTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }
@@ -1904,12 +1868,12 @@ SpaceRaceTests >> test85WhenLastTileUsedIsAWormHoleTileThenRepeatCardMovesChosen
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test86WhenLastTileUsedIsASpeedUpTileThenRepeatCardMovesChosenShipForward [
+SpaceRaceTests >> test83WhenLastTileUsedIsASpeedUpTileThenRepeatCardMovesChosenShipForward [
 	| aGame aDie aCardTile aSpeedUpTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
 	aSpeedUpTile := SpeedUpTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aSpeedUpTile. aCardTile. }.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aSpeedUpTile. aCardTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }
@@ -1925,12 +1889,12 @@ SpaceRaceTests >> test86WhenLastTileUsedIsASpeedUpTileThenRepeatCardMovesChosenS
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test87WhenLastTileUsedIsAMoonWalkTileThenRepeatCardMovesOtherShipsBack [
+SpaceRaceTests >> test84WhenLastTileUsedIsAMoonWalkTileThenRepeatCardMovesOtherShipsBack [
 	| aGame aDie aCardTile aMoonWalkTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
 	aMoonWalkTile := MoonWalkTile withAmountBack: 1.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aCardTile. aCardTile. aMoonWalkTile. }.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aCardTile. aCardTile. aMoonWalkTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }
@@ -1946,12 +1910,12 @@ SpaceRaceTests >> test87WhenLastTileUsedIsAMoonWalkTileThenRepeatCardMovesOtherS
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test88WhenLastTileUsedIsAnAtomicBombTileThenRepeatCardResetsAllShips [
+SpaceRaceTests >> test85WhenLastTileUsedIsAnAtomicBombTileThenRepeatCardResetsAllShips [
 	| aGame aDie aCardTile aBombTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
 	aBombTile := AtomicBombTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aBombTile. aCardTile. }.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aBombTile. aCardTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }
@@ -1967,12 +1931,12 @@ SpaceRaceTests >> test88WhenLastTileUsedIsAnAtomicBombTileThenRepeatCardResetsAl
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test89WhenLastTileUsedIsACardTileThenRepeatCardGivesChosenShipANewCard [ 
+SpaceRaceTests >> test86WhenLastTileUsedIsACardTileThenRepeatCardGivesChosenShipANewCard [ 
 	| aGame aDie aCardTile aBasicTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
-	aBasicTile := BasicTile new.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aBasicTile. aCardTile. }.
+	aBasicTile := NoEffectTile new.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aBasicTile. aCardTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }
@@ -1988,12 +1952,12 @@ SpaceRaceTests >> test89WhenLastTileUsedIsACardTileThenRepeatCardGivesChosenShip
 ]
 
 { #category : 'tests' }
-SpaceRaceTests >> test90WhenLastTileUsedIsAHyperJumpTileThenRepeatCardMovesChosenShip [
+SpaceRaceTests >> test87WhenLastTileUsedIsAHyperJumpTileThenRepeatCardMovesChosenShip [
 	| aGame aDie aCardTile aHyperJumpTile aBoardGenerator |
 	aDie := LoadedDie thatRolls: { 1 }.
 	aCardTile := HardcodedCardTile thatGives: { 'repeat' }.
 	aHyperJumpTile := HyperJumpTile withParsecFactor: 100 / 6 and: { { 2. 'Tiles' } }.
-	aBoardGenerator := HardcodedBoardGenerator withTileTypes: { aHyperJumpTile. aCardTile. }.
+	aBoardGenerator := PredefinedTileGenerator withTileTypes: { aHyperJumpTile. aCardTile. }.
 	aGame := SpaceRace
                  withBoard: (Board withSpaces: 15 andLaps: 1 andTileGenerator: aBoardGenerator andParsecsPerTile: 100 / 6)
                  andShips: { 'tie fighter'. 'x-wing' }

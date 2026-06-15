@@ -10,10 +10,10 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
-MoonWalkTile class >> withAmountBack: arg1 [
+{ #category : 'initialization' }
+MoonWalkTile class >> withAmountBack: number [
 
-	^ self new initializeWithAmountBack: arg1
+	^ self new initializeWithAmountBack: number
 ]
 
 { #category : 'execution' }
@@ -26,12 +26,12 @@ MoonWalkTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 ]
 
 { #category : 'initialization' }
-MoonWalkTile >> initializeWithAmountBack: arg1 [
+MoonWalkTile >> initializeWithAmountBack: number [
 
-	amountBack := arg1
+	amountBack := number
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 MoonWalkTile >> repeatEffectFor: newTriggeringShip [
 
 	self giveEffectTo: newTriggeringShip among: ships in: board 

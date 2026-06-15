@@ -9,22 +9,22 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AccelerationCard class >> usingCounter: counter [ 
 	^(self new) initializeNameUsingCounter: counter.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 AccelerationCard >> effect [
 
 	^ 1
 ]
 
-{ #category : 'as yet unclassified' }
-AccelerationCard >> effectTo: arg1 among: arg2 [
+{ #category : 'executing' }
+AccelerationCard >> effectTo: ship among: ships [
 
 	shipAffected := 'all'.
-	arg2 do: [ :arg3 | arg3 effectBy: self ]
+	ships do: [ :aShip | aShip effectBy: self ]
 ]
 
 { #category : 'initialization' }

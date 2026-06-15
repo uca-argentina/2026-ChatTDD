@@ -11,7 +11,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Board class >> withSpaces: spaces andLaps: laps andTileGenerator: tileGenerator andParsecsPerTile: parsecFactor [
 	laps < 1 ifTrue: [
 		Error signal: 'Amount of laps cannot be less than 1' ].
@@ -39,7 +39,7 @@ Board >> initializeWith: length and: someLaps and: tileGenerator and: parsecFact
 tiles := (1 to: length) collect: [ :tile |
 tileGenerator generateTileWithParsecFactor: parsecFactor ].
 laps:= someLaps.
-lastTile := BasicTile new.
+lastTile := NoEffectTile new.
 
 ]
 
@@ -49,7 +49,7 @@ Board >> isWinner: aShip [
 	^ aShip position = tiles size
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Board >> lapPosition: ship [
 ^ship position -1\\tiles size+1
 ]

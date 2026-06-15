@@ -8,7 +8,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 Counter class >> start [
 	^(self new) initializeCounter.
 ]

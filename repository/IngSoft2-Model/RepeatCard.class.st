@@ -9,12 +9,12 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RepeatCard class >> usingCounter: counter [ 
 	^(self new) initializeNameUsingCounter: counter.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 RepeatCard >> effectTo: ship among: ships [ 
 
 	tile repeatEffectFor: ship

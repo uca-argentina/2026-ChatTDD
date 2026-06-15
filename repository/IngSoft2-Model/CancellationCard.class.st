@@ -9,12 +9,12 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 CancellationCard class >> usingCounter: counter [ 
 	^(self new) initializeNameUsingCounter: counter.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 CancellationCard >> effectTo: aShip among: ships [ 
 
 	| affected |

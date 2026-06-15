@@ -17,7 +17,7 @@ AtomicBombTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
        do: [ :ship | board moveShip: ship with: ((board lapPosition: ship) -1)negated  ].
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 AtomicBombTile >> repeatEffectFor: newTriggeringShip [
 	self giveEffectTo: newTriggeringShip among: ships in: board . 
 ]

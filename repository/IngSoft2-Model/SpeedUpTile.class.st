@@ -14,7 +14,7 @@ SpeedUpTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
    board moveShip: triggeringShip with: 4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 SpeedUpTile >> repeatEffectFor: newTriggeringShip [
 
 self giveEffectTo: newTriggeringShip among: '' in: board.

@@ -14,7 +14,7 @@ UnitConverter class >> withParsecFactor: parsecFactor [
 	^ self new initializeWithParsecFactor: parsecFactor
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 UnitConverter >> convert: amount in: unit to: anotherUnit [
 	| key rate |
 	unit=anotherUnit ifTrue:[^amount].

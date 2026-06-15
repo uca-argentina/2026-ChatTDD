@@ -5,7 +5,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Card >> effectTo: ship among: ships [
 	^ self subclassResponsibility.
 	
@@ -16,6 +16,6 @@ Card >> target: targetingCard [
  
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Card >> target: targetCard cancelling: aCard [
 ]

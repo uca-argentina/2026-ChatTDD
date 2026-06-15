@@ -13,12 +13,12 @@ CardGenerator class >> default [
 ^(self new) initialize.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 CardGenerator >> giveRandomCard [
 
-	| tmp1 tmp2 |
-	tmp1 := 100 atRandom.
-	tmp2 := {
+	| number cards |
+	number := 100 atRandom.
+	cards := {
 		        {
 			        17.
 			        [ OverloadCard usingCounter: (counters at: 1) ] }.
@@ -37,7 +37,7 @@ CardGenerator >> giveRandomCard [
 		        {
 			        100.
 			        [ RepeatCard usingCounter: (counters at: 6) ] } }.
-	^ ((tmp2 detect: [ :arg1 | tmp1 <= (arg1 at: 1) ]) at: 2) value
+	^ ((cards detect: [ :value | number <= (value at: 1) ]) at: 2) value
 ]
 
 { #category : 'initialization' }

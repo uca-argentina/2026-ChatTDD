@@ -8,7 +8,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 Die class >> withSides: amountOfSides [
     amountOfSides < 2 ifTrue: [ Error signal: 'A die must have at least 2 sides' ].
     ^ self new initializeSides: amountOfSides

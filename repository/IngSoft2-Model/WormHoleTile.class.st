@@ -14,7 +14,7 @@ WormHoleTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
     board moveShip: triggeringShip with: -4
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 WormHoleTile >> repeatEffectFor: newTriggeringShip [
 
 self giveEffectTo: newTriggeringShip among: '' in: board.

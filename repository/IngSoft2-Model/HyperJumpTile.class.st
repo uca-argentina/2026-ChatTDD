@@ -11,7 +11,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 HyperJumpTile class >> withParsecFactor: parsecPerTile and: values [
 	^(self new) initializeWithParsecFactor: parsecPerTile and:values.
 ]
@@ -19,7 +19,7 @@ HyperJumpTile class >> withParsecFactor: parsecPerTile and: values [
 { #category : 'private' }
 HyperJumpTile >> currentValueToTile [
 	| value |
-	value:=(valueList at: turnManager currentTurn).
+	value:=(valueList at: turnManager current).
 	^ converter convert:value first in:(value at:2) to:'Tiles'.
 ]
 
@@ -27,18 +27,18 @@ HyperJumpTile >> currentValueToTile [
 HyperJumpTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 	board := aBoard .
 	board moveShip: triggeringShip with:(self currentValueToTile).
-	turnManager changeTurn.
+	turnManager next.
 ]
 
 { #category : 'initialization' }
 HyperJumpTile >> initializeWithParsecFactor: parsecPerTile and: values [
 	converter:= UnitConverter withParsecFactor: parsecPerTile .
 	valueList := values.
-	turnManager := TurnManager withTotalTurns: valueList size
+	turnManager := CircularIterator withTotalTurns: valueList size
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 HyperJumpTile >> repeatEffectFor: newTriggeringShip [
 
 	self giveEffectTo: newTriggeringShip among: '' in: board 

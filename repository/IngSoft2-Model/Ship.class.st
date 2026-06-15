@@ -12,9 +12,9 @@ Class {
 }
 
 { #category : 'accessing' }
-Ship class >> withName: arg1 [
+Ship class >> withName: nameShip [
 
-	^ self new initializeWithName: arg1
+	^ self new initializeWithName: nameShip 
 ]
 
 { #category : 'accessing' }
@@ -22,21 +22,21 @@ Ship >> activeCards [
 ^ activeCards .
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Ship >> activeCardsNames [
 	^ activeCards collect: [ :card | card name ].
 ]
 
 { #category : 'adding' }
-Ship >> addToHand: arg1 [
+Ship >> addToHand: card [
 
-	hand add: arg1
+	hand add: card
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Ship >> calculateEffects [
 
-	^ activeCards sum: [ :arg1 | arg1 effect ] ifEmpty: 0
+	^ activeCards sum: [ :card | card effect ] ifEmpty: 0
 ]
 
 { #category : 'editing keys' }
@@ -47,13 +47,13 @@ Ship >> cancel: target [
 	activeCards remove: cardToCancel.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Ship >> checkCard: target [
 
 	^ activeCards anySatisfy: [ :card | card = target]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Ship >> effectBy: card [
 
 	activeCards add: card
@@ -66,15 +66,15 @@ Ship >> hand [
 ]
 
 { #category : 'initialization' }
-Ship >> initializeWithName: arg1 [
+Ship >> initializeWithName: nameShip [
 
-	| tmp1 |
-	name := arg1.
+	| generator |
+	name := nameShip.
 	position := 1.
-	tmp1 := CardGenerator new.
+	generator := CardGenerator default .
 	hand := {
-		        tmp1 giveRandomCard.
-		        tmp1 giveRandomCard } asOrderedCollection.
+		        generator giveRandomCard.
+		        generator giveRandomCard } asOrderedCollection.
 	activeCards := OrderedCollection new
 ]
 
@@ -105,7 +105,7 @@ Ship >> position [
 ^position
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 Ship >> searchCardInHand: cardName [
 
 	^ hand
@@ -134,7 +134,7 @@ Ship >> setCard: cardName withTileEffect: lastTile [
 	card target: lastTile.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 Ship >> useCard: cardName withTurnCondition: canPlayerUseCard [
 
 	| selectedCard |

@@ -1,5 +1,5 @@
 Class {
-	#name : 'HardcodedBoardGenerator',
+	#name : 'PredefinedTileGenerator',
 	#superclass : 'Object',
 	#instVars : [
 		'turnManager',
@@ -10,25 +10,25 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-HardcodedBoardGenerator class >> withTileType: aTile [
+PredefinedTileGenerator class >> withTileType: aTile [
 	^ self new initializeWithTileTypes: {aTile}
 ]
 
 { #category : 'as yet unclassified' }
-HardcodedBoardGenerator class >> withTileTypes: tiles [
+PredefinedTileGenerator class >> withTileTypes: tiles [
 	^ self new initializeWithTileTypes: tiles
 ]
 
 { #category : 'as yet unclassified' }
-HardcodedBoardGenerator >> generateTileWithParsecFactor: parsecFactor [
+PredefinedTileGenerator >> generateTileWithParsecFactor: parsecFactor [
 	| tile |
-	tile := tileTypes at: turnManager currentTurn.
-	turnManager changeTurn.
+	tile := tileTypes at: turnManager current.
+	turnManager next.
 	^ tile
 ]
 
 { #category : 'initialization' }
-HardcodedBoardGenerator >> initializeWithTileTypes: tiles [
+PredefinedTileGenerator >> initializeWithTileTypes: tiles [
 	tileTypes := tiles asOrderedCollection.
-	turnManager := TurnManager withTotalTurns: tileTypes size.
+	turnManager := CircularIterator withTotalTurns: tileTypes size.
 ]

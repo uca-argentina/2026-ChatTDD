@@ -32,21 +32,21 @@ HardcodedCardTile >> createCard: cardType [
 
 { #category : 'as yet unclassified' }
 HardcodedCardTile >> currentCardType [
- ^ cards at: (turnManager currentTurn)
+ ^ cards at: (turnManager current)
 ]
 
 { #category : 'execution' }
 HardcodedCardTile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 
 	triggeringShip addToHand: (self createCard: (self currentCardType)).
-	turnManager changeTurn.
+	turnManager next.
 ]
 
 { #category : 'initialization' }
 HardcodedCardTile >> initializeWithTypeCards: typeCards [
 	cards := typeCards asOrderedCollection.
 	counters := { Counter start. Counter start. Counter start. Counter start. Counter start. Counter start.}.
-	turnManager := TurnManager withTotalTurns: typeCards size
+	turnManager := CircularIterator withTotalTurns: typeCards size
 ]
 
 { #category : 'as yet unclassified' }

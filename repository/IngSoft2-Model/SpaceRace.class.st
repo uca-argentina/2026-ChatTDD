@@ -12,35 +12,17 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 SpaceRace class >> withBoard: board andShips: ships andDice: dice [
 	^ self new initializeWithBoard: board andShips: ships withDice: dice
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceRace class >> withTotalParsecs: arg1 dividedInSpaces: arg2 andLaps: arg3 andBoardGenerator: arg4 andShips: arg5 andDice: arg6 [
-
-	arg3 < 1 ifTrue: [
-		Error signal: 'Amount of laps cannot be less than 1' ].
-	arg1 <= 0 ifTrue: [
-		Error signal: 'Total parsecs cannot be equal or less than 0' ].
-	arg2 < 1 ifTrue: [
-		Error signal: 'Board spaces cannot be less than 1' ].
-	^ self new
-		  initializeWithTotalParsecs: arg1
-		  dividedInSpaces: arg2
-		  andLaps: arg3
-		  andBoardGenerator: arg4
-		  andShips: arg5
-		  withDice: arg6
-]
-
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> activeCards [
  ^ ships flatCollect: [ :ship | ship activeCards ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> activeCardsNames [
 	^ self activeCards collect:[:card | card name].
 ]
@@ -51,15 +33,15 @@ SpaceRace >> amountOfShips [
 	^ ships size
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> cardHistoryNames [
 	^ cardHistory collect:[:card | card name].
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceRace >> checkTurn: arg1 [
+{ #category : 'accessing' }
+SpaceRace >> checkTurn: ship [
 
-	^ turnManager currentTurn = (ships indexOf: arg1)
+	^ turnManager current = (ships indexOf: ship)
 ]
 
 { #category : 'status' }
@@ -86,13 +68,13 @@ SpaceRace >> initializeWithBoard: aBoard andShips: gameShips withDice: die [
 
 	board := aBoard.
 	ships := OrderedCollection new.
-	ships := gameShips collect: [ :arg8 | Ship withName: arg8 ] .
+	ships := gameShips collect: [ :nameShip | Ship withName: nameShip ] .
 	dice := die.
-	turnManager := TurnManager withTotalTurns: ships size.
+	turnManager := CircularIterator withTotalTurns: ships size.
 	cardHistory := OrderedCollection new.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> lapPosition: ship [
 
 ^board lapPosition: (self selectShip: ship)
@@ -102,13 +84,13 @@ SpaceRace >> lapPosition: ship [
 SpaceRace >> play [
 
 	| ship roll |
-	ship := ships at: turnManager currentTurn.
+	ship := ships at: turnManager current.
 	roll:= (dice collect: [ :aDie | aDie roll ]) sum.
 	self hasEnded ifTrue: [
 		Error signal: 'Game is over. Ships cannot move anymore.' ].
 	board moveShip: ship with: roll.
 	self hasEnded ifFalse: [ board applyTileEffectFor: ship among:ships ].
-	turnManager changeTurn
+	turnManager next
 ]
 
 { #category : 'status' }
@@ -119,10 +101,10 @@ SpaceRace >> ranking [
 		  ship name ]
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceRace >> selectShip: arg1 [
+{ #category : 'accessing' }
+SpaceRace >> selectShip: nameShip [
 
-	^ ships detect: [ :arg2 | arg2 name = arg1 ]
+	^ ships detect: [ :ship | ship name = nameShip ]
 ]
 
 { #category : 'initialization' }
@@ -147,7 +129,7 @@ SpaceRace >> setCard: cardName fromShip: shipName withTileEffect: lastTile [
 	ship setCard: cardName withTileEffect: lastTile.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> shipActiveCardsNames: shipName [ 
 	^ (self selectShip: shipName) activeCardsNames
 ]
@@ -158,22 +140,22 @@ SpaceRace >> shipLap: ship [
 ^board shipLap: (self selectShip: ship)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SpaceRace >> shipPosition: shipName [
 
 	^ (ships detect: [ :ship | ship name = shipName ]) position
 ]
 
 { #category : 'status' }
-SpaceRace >> shipRanking: arg1 [
+SpaceRace >> shipRanking: ship [
 
-	^ self ranking indexOf: arg1
+	^ self ranking indexOf: ship
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceRace >> shipsHand: arg1 [
+{ #category : 'accessing' }
+SpaceRace >> shipsHand: ship [
 
-	^ (ships detect: [ :arg2 | arg2 name = arg1 ]) hand
+	^ (ships detect: [ :aShip | aShip name = ship ]) hand
 ]
 
 { #category : 'initialization' }
@@ -190,25 +172,25 @@ SpaceRace >> useCancellationCard: cancellationCardName fromShip: shipUsing toTar
 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 SpaceRace >> useCard: cardName fromShip: shipUsing [
 
 	| ship turnCondition aCard |
 	ship := self selectShip: shipUsing.
-	turnCondition := turnManager turnMatches: (ships indexOf: ship).
+	turnCondition := turnManager currentMatches: (ships indexOf: ship).
 	aCard:= ship useCard: cardName withTurnCondition: (turnCondition).
 	aCard effectTo: 'all' among: ships.
 	
 	cardHistory add: aCard.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 
 	| ship turnCondition aCard |
 	ship := self selectShip: shipUsing.
 	
-	turnCondition := turnManager turnMatches: (ships indexOf: ship).
+	turnCondition := turnManager currentMatches: (ships indexOf: ship).
 	aCard := ship useCard: cardName withTurnCondition: turnCondition.
 	
 	aCard effectTo: (self selectShip: shipAffected) among: ships.
@@ -216,7 +198,7 @@ SpaceRace >> useCard: cardName fromShip: shipUsing toShip: shipAffected [
 	cardHistory add: aCard.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancellingCancel: affectedCardName [
 
 	| targetCard affectedCard |
@@ -236,7 +218,7 @@ SpaceRace >> useRedoCard: redo fromShip: shipUsing toShip: affectedShip ifCancel
 		ifTrue: [ self useCard: redo fromShip: shipUsing ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 SpaceRace >> useRepeatCard: repeat fromShip: shipUsing toShip: affectedShip [
 
 	 self setCard: repeat fromShip: shipUsing withTileEffect: (board lastTile).

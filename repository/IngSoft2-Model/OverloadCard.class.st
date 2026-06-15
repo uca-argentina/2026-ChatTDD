@@ -10,31 +10,21 @@ Class {
 }
 
 { #category : 'accessing' }
-OverloadCard class >> default [
-	^(self new) initializeName.
-]
-
-{ #category : 'as yet unclassified' }
 OverloadCard class >> usingCounter: counter [ 
 	^(self new) initializeNameUsingCounter: counter.
 ]
 
-{ #category : 'as yet unclassified' }
-OverloadCard >> checkPermanent [
-	self shouldBeImplemented.
-]
-
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 OverloadCard >> effect [
 
 	^  -2
 ]
 
-{ #category : 'as yet unclassified' }
-OverloadCard >> effectTo: arg1 among: arg2 [
+{ #category : 'executing' }
+OverloadCard >> effectTo: ship among: ships [
 
-	shipAffected := arg1 name.
-	arg1 effectBy: self
+	shipAffected := ship name.
+	ship effectBy: self
 ]
 
 { #category : 'initialization' }

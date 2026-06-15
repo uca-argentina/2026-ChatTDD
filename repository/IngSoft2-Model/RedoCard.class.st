@@ -9,12 +9,12 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RedoCard class >> usingCounter: counter [
 	^(self new) initializeNameUsingCounter: counter.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 RedoCard >> effectTo: affectedShip among: ships [
 	target effectTo: affectedShip among: ships .
 ]
@@ -39,7 +39,7 @@ RedoCard >> rename: newName [
 	name := newName.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'executing' }
 RedoCard >> target: targetCard cancelling: aCard [
 	target := (targetCard deepCopy) rename: name.
 	target target: aCard.
