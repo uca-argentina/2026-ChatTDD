@@ -3,7 +3,6 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'dieRolls',
-		'currentIndex',
 		'turnManager'
 	],
 	#category : 'IngSoft2-Tests',
@@ -18,14 +17,14 @@ LoadedDie class >> thatRolls: rolls [
 { #category : 'initialization' }
 LoadedDie >> initializeRolls: rolls [
 	dieRolls := rolls.
-	turnManager := TurnManager withTotalTurns: dieRolls size
+	turnManager := CircularIterator withTotalTurns: dieRolls size
 ]
 
 { #category : 'execution' }
 LoadedDie >> roll [
 
 	| result |
-	result := dieRolls at: turnManager currentTurn.
-	turnManager changeTurn.
+	result := dieRolls at: turnManager current.
+	turnManager next.
 	^result
 ]

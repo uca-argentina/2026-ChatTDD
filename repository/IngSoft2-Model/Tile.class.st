@@ -5,7 +5,7 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
-Tile >> giveEffectTo: triggeringShip among: allShips limitedToSpaces: maxSize andLaps: laps [
+{ #category : 'executing' }
+Tile >> giveEffectTo: triggeringShip among: allShips in: aBoard [
 	self subclassResponsibility 
 ]
